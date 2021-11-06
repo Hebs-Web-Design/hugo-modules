@@ -1,0 +1,9 @@
+[module]
+
+[[module.mounts]]
+source = "nav.js"
+target = "assets/js/nav.js"
+
+[[module.mounts]]
+source = "nav.html"
+target = "layouts/partials/nav.html"
