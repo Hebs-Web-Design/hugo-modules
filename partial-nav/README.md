@@ -15,7 +15,7 @@ Import JS:
 
 ```js
 import Alpine from 'alpinejs';
-import nav from 'js/nav.js'
+import nav from 'js/nav.js';
 
 Alpine.data('nav', nav);
 
