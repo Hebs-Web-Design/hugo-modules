@@ -6,12 +6,12 @@
     </div>
     <div class="{{ $navcollapse }}:flex flex-row h-10 bg-gray-200 divide-x divide-gray-500 divide-opacity-25 hidden">
         {{- range .Site.Menus.main -}}
-        <div class="h-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} bg-red-500 text-white{{ else }} bg-gray-200{{ end }} hover:bg-black hover:text-white text-right"><a class="h-full w-full" href="{{ .URL }}">{{ .Title }}</a></div>
+        <a class="h-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} bg-red-500 text-white{{ else }} bg-gray-200{{ end }} hover:bg-black hover:text-white text-right" href="{{ .URL }}">{{ .Title }}</a>
         {{- end -}}
     </div>
     <div class="flex flex-col bg-gray-200 divide-y divide-gray-500 divide-opacity-25 {{ $navcollapse }}:hidden" x-show="open" @click.outside="close" x-transition x-cloak>
         {{- range .Site.Menus.main -}}
-        <div class="w-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} bg-red-500 text-white{{ else }} bg-gray-100{{ end }} hover:bg-black hover:text-white text-right"><a class="h-full w-full" href="{{ .URL }}">{{ .Title }}</a></div>
+        <a class="h-full w-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} bg-red-500 text-white{{ else }} bg-gray-100{{ end }} hover:bg-black hover:text-white text-right" href="{{ .URL }}">{{ .Title }}</a>
         {{- end -}}
     </div>
 </div>
