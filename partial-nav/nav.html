@@ -9,7 +9,7 @@
         <div class="h-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} bg-red-500 text-white{{ else }} bg-gray-200{{ end }} hover:bg-black hover:text-white text-right"><a class="h-full w-full" href="{{ .URL }}">{{ .Title }}</a></div>
         {{- end -}}
     </div>
-    <div class="flex flex-col bg-gray-200 divide-y divide-gray-500 divide-opacity-25 {{ $navcollapse }}:hidden" x-show="open" @click.outside="open = false" x-transition x-cloak>
+    <div class="flex flex-col bg-gray-200 divide-y divide-gray-500 divide-opacity-25 hidden" x-show="open" @click.outside="open = false" x-transition>
         {{- range .Site.Menus.main -}}
         <div class="w-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} bg-red-500 text-white{{ else }} bg-gray-100{{ end }} hover:bg-black hover:text-white text-right"><a class="h-full w-full" href="{{ .URL }}">{{ .Title }}</a></div>
         {{- end -}}
