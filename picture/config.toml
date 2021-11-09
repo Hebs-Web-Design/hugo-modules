@@ -1,9 +1,9 @@
 [module]
 
 [[module.mounts]]
-source = "nav.js"
-target = "assets/js/nav.js"
+source = "partial/picture.html"
+target = "layouts/partials/picture.html"
 
 [[module.mounts]]
-source = "nav.html"
-target = "layouts/partials/nav.html"
+source = "shortcode/picture.html"
+target = "layouts/shortcodes/picture.html"
