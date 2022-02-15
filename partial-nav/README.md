@@ -29,6 +29,8 @@ Configure:
 
 [params.nav]
 collapse = "md"
+bgactive = "bg-red-500"
+textactive = "text-white"
 ```
 
 Use partial:
