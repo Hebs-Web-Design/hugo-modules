@@ -13,7 +13,7 @@
     </div>
     <div class="{{ $navcollapse }}:flex flex-row h-10 {{ $navbg }} divide-x {{ $navdivide }} divide-opacity-25 hidden">
         {{- range .Site.Menus.main -}}
-        <a class="h-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} {{ $navbgactive }} {{ $navtextactive }}{{ else }} $navbg{{ end }} hover:{{ $navbghover }} hover:{{ $navtexthover }} text-right" href="{{ .URL }}">{{ .Title }}</a>
+        <a class="h-full p-2 inline-block{{ if $currentPage.IsMenuCurrent "main" . }} {{ $navbgactive }} {{ $navtextactive }}{{ else }} {{ $navbg }}{{ end }} hover:{{ $navbghover }} hover:{{ $navtexthover }} text-right" href="{{ .URL }}">{{ .Title }}</a>
         {{- end -}}
     </div>
     <div class="flex flex-col {{ $navbg }} divide-y {{ $navdivide }} divide-opacity-25 {{ $navcollapse }}:hidden" x-show="open" @click.outside="close" x-transition x-cloak>
