@@ -1,0 +1,5 @@
+[module]
+
+[[module.mounts]]
+source = "package"
+target = "assets/js/guacamole-common-js"
