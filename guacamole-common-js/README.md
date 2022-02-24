@@ -14,6 +14,7 @@ Import and use:
 ```js
 import Guacamole from 'guacamole-common-js';
 
+var tunnel = new Guacamole.HTTPTunnel('/guacamole/tunnel');
 var client = new Guacamole.Client(tunnel);
 
 document.body.appendChild(client.getDisplay().getElement());
