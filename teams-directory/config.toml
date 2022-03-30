@@ -1,13 +1,13 @@
 [module]
 
 [[module.mounts]]
-source = "static/"
-target = "static/"
+source = "static/img"
+target = "static/img"
 
 [[module.mounts]]
-source = "assets/js/"
-target = "assets/js/"
+source = "assets/js"
+target = "assets/js"
 
 [[module.mounts]]
-source = "assets/css/"
-target = "assets/css/"
+source = "assets/css"
+target = "assets/css"
