@@ -1,6 +1,19 @@
 {{ with .Site.Params.directory }}
+{{ $scratch := newScratch }}
+{{ if hasPrefix "http" .logo }}
+{{ $scratch.Set "logo" resources.GetRemote .logo }}
+{{ else }}
+{{ $scratch.Set "logo" resources.Get .logo }}
+{{ end }}
+{{ $logo := $scratch.Get "logo" }}
 <picture>
-    {{ with .logoalt }}<source srcset="{{ . }}" media="(prefers-color-scheme: dark)">{{ end }}
-    <img class="inline" src="{{ .logo }}" width="200">
+    {{ with .logoalt }}
+    {{ if hasPrefix "http" . }}
+    <source srcset="{{ (resources.GetRemote .).RelPermalink }}" media="(prefers-color-scheme: dark)">
+    {{ else }}
+    <source srcset="{{ (resources.Get .).RelPermalink }}" media="(prefers-color-scheme: dark)">
+    {{ end }}
+    {{ end }}
+    <img class="inline" src="{{ $logo.RelPermalink }}" width="200">
 </picture>
 {{ end }}
