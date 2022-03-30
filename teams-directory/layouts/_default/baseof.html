@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="{{ .Site.Language.Lang }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{- partial "css.html" . -}}
+    <title>{{.Site.Title }} : {{ .Title }}</title>
+</head>
+<body class="dark:text-white dark:bg-black">
+    {{ block "main" . }}
+    <div id="content" class="text-center"></div>
+    {{ end }}
+    {{- partial "js.html" . -}}
+</body>
+</html>
