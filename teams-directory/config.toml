@@ -9,13 +9,9 @@ source = "static/img"
 target = "static/img"
 
 [[module.mounts]]
-source = "assets/js/data.js"
-target = "assets/js/data.js"
+source = "assets/js"
+target = "assets/js"
 
 [[module.mounts]]
-source = "assets/js/template.js"
-target = "assets/js/template.js"
-
-[[module.mounts]]
-source = "assets/css/main.css"
-target = "assets/css/main.css"
+source = "assets/css"
+target = "assets/css"

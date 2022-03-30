@@ -1,6 +1,6 @@
 {{ with .Site.Params.directory }}
     {{ $scratch := newScratch }}
-    {{ if hasPrefix "http" .logo }}
+    {{ if hasPrefix .logo "http" }}
         {{ $scratch.Set "logo" (resources.GetRemote .logo) }}
     {{ else }}
         {{ $scratch.Set "logo" (resources.Get .logo) }}
@@ -8,7 +8,7 @@
     {{ $logo := $scratch.Get "logo" }}
     <picture>
         {{ with .logoalt }}
-            {{ if hasPrefix "http" . }}
+            {{ if hasPrefix . "http" }}
                 {{ $scratch.Set "logoalt" (resources.GetRemote .) }}
             {{ else }}
                 {{ $scratch.Set "logoalt" (resources.Get .) }}
