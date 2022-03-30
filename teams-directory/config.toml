@@ -9,6 +9,14 @@ source = "static/img"
 target = "static/img"
 
 [[module.mounts]]
+source = "static/icons"
+target = "static/icons"
+
+[[module.mounts]]
+source = "static/favicon.ico"
+target = "static/favicon.ico"
+
+[[module.mounts]]
 source = "assets/js"
 target = "assets/js"
 
