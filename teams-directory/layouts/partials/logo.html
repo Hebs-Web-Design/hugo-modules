@@ -1,4 +1,6 @@
+{{ with .Site.Params.directory }}
 <picture>
-    <source srcset="{{ .Site.Params.logoalt }}" media="(prefers-color-scheme: dark)">
-    <img class="inline" src="{{ .Site.Params.logo }}" width="200">
+    {{ with .logoalt }}<source srcset="{{ . }}" media="(prefers-color-scheme: dark)">{{ end }}
+    <img class="inline" src="{{ .logo }}" width="200">
 </picture>
+{{ end }}
