@@ -124,6 +124,11 @@ function parseAvailability(availability = 'Unknown') {
                 description: 'Do Not Disturb',
                 icon: `/img/presence_dnd.png`
             };
+        case 'PresenceUnknown':
+            return {
+                description: 'Unknown',
+                icon: `/img/presence_unknown.png`
+            };
         case 'OutOfOffice':
             return {
                 description: 'Out Of Office',
