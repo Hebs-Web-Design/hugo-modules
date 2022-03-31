@@ -37,12 +37,26 @@ async function graph(token, url, method = 'get', data = undefined, params = unde
         let response = await axios(request);
         let responsedata = [];
 
+        if (response.data.value === undefined) {
+            throw {
+                message: 'No value returned in reponse',
+                response: response
+            };
+        }
+
         // add to our responsedata array
         responsedata.push(...response.data.value);
 
         // handle paged response
         while (isPaged(response)) {
             response = await graphGet(token, nextData(response));
+
+            if (response.data.value === undefined) {
+                throw {
+                    message: 'No value returned in next reponse',
+                    response: response
+                };
+            }
 
             // add next reponse to responsedata array
             responsedata.push(...response.data.value);
