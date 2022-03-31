@@ -7,6 +7,24 @@
     {{ end }}
     {{ $logo := $scratch.Get "logo" }}
     <picture>
+        {{ with .logosvg }}
+            {{ if hasPrefix . "http" }}
+                {{ $scratch.Set "logosvg" (resources.GetRemote .) }}
+            {{ else }}
+                {{ $scratch.Set "logosvg" (resources.Get .) }}
+            {{ end }}
+            {{ $logosvg := $scratch.Get "logosvg" }}
+        <source srcset="{{ $logosvg.RelPermalink }}" type="image/svg+xml">
+        {{ end }}
+        {{ with .logosvgalt }}
+            {{ if hasPrefix . "http" }}
+                {{ $scratch.Set "logosvgalt" (resources.GetRemote .) }}
+            {{ else }}
+                {{ $scratch.Set "logosvgalt" (resources.Get .) }}
+            {{ end }}
+            {{ $logosvgalt := $scratch.Get "logosvgalt" }}
+        <source srcset="{{ $logosvgalt.RelPermalink }}" media="(prefers-color-scheme: dark)" type="image/svg+xml">
+        {{ end }}
         {{ with .logoalt }}
             {{ if hasPrefix . "http" }}
                 {{ $scratch.Set "logoalt" (resources.GetRemote .) }}

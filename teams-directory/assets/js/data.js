@@ -1,6 +1,10 @@
 import Alpine from 'alpinejs';
 import axios from 'axios';
 import * as msal from '@azure/msal-browser';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 const updateInterval = 30000;
 const presenceBatchMax = 650;
@@ -182,9 +186,13 @@ export default () => ({
         authority: `https://login.microsoftonline.com/${Alpine.store('config').tenantid}`,
         redirectUri: window.location.href
     },
-    list: [],
-    presence: {},
-    message: "",
+    list: Alpine.$persist([]),
+    lastupdate: Alpine.$persist(0),
+    presence: Alpine.$persist({}),
+    showlocation: Alpine.store('config').showlocation,
+    error: '',
+    warning: '',
+    message: '',
     initerror: false,
     token: undefined,
     search: '',
@@ -212,14 +220,14 @@ export default () => ({
                     // Use MSAL to login
                     await this.msalClient.loginRedirect(this.msalRequest);
                 } catch (error) {
-                    this.message = `Error logging in: ${error}`;
+                    this.error = `Error logging in: ${error}`;
                     this.initerror = true;
 
                     return;
                 }
             }
         } catch (error) {
-            this.message = `Error logging in: ${error}`;
+            this.error = `Error logging in: ${error}`;
             this.initerror = true;
 
             return;
@@ -233,20 +241,51 @@ export default () => ({
                 await this.msalClient.acquireTokenRedirect(this.msalRequest).then(tokenResponse => {
                     this.token = tokenResponse.accessToken;
                 }).catch(async error => {
-                    this.message = `Error aquiring token: ${error}`;
+                    this.error = `Error aquiring token: ${error}`;
                     this.initerror = true;
                 });
             } else {
-                this.message = `Error aquiring token: ${error}`;
+                this.error = `Error aquiring token: ${error}`;
                 this.initerror = true;
             }
         }).catch(async error => {
-            this.message = `Error aquiring token: ${error}`;
+            this.error = `Error aquiring token: ${error}`;
             this.initerror = true;
         });
 
         try {
-            let url = '/users';
+            let self = this;
+
+            // do update
+            await this.updateList();
+
+            // signal data is loaded and init is complete
+            this.initdone = true;
+
+            // dont show message if this is not the first update
+            if (this.lastupdate !== undefined) {
+                this.message = 'Updating presence...';
+            }
+
+            // do initial update in background
+            setTimeout(function() {
+                self.update();
+            }, 0);
+
+            // start update interval
+            this.interval = setInterval(function() {
+                self.update();
+            }, this.updateInterval);
+
+        } catch (error) {
+            // signal an error
+            this.initerror = true;
+            console.log(error);
+        }
+    },
+    async updateList() {
+        let url = '/users';
+            var self = this;
 
             // if group was set in config then do request for members
             let group = Alpine.store('config').group;
@@ -255,29 +294,55 @@ export default () => ({
             }
 
             // do intial request
-            let response = await graphGet(this.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
+            if (this.lastupdate !== undefined) {
+                let lastupdate = dayjs.unix(this.lastupdate);
+                let msg = 'message';
 
-            // return sorted list
-            this.list = sortList(response.data);
+                // check if last update is way out of date
+                if (lastupdate.isBefore(dayjs().subtract(7, 'day'))) {
+                    msg = 'warning';
+                }
 
-            // do initial update
-            await this.update();
+                // do update in background as we should have a stored copy
+                setTimeout(async function() {
+                    let lastupdate = dayjs.unix(self.lastupdate);
 
-            // signal data is loaded and init is complete
-            this.initdone = true;
+                    // set a messge for the user
+                    self[msg] = `Using phone list from ${lastupdate.toNow()}. Updating in background...`;
 
-            // start update interval
-            var self = this;
+                    try {
+                        let response = await graphGet(self.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
 
-            this.interval = setInterval(function() {
-                self.update();
-            }, this.updateInterval);
+                        // return sorted list
+                        self.list = sortList(response.data);
+                        self.lastupdate = dayjs().unix();
 
-        } catch (error) {
-            this.message = `Error grabbing phone list.`;
-            this.initerror = true;
-            console.log(error);
-        }
+                        // clear any message
+                        self[msg] = '';
+                    } catch (error) {
+                        if (msg != 'warning') {
+                            // clear any message
+                            self[msg] = '';
+                        }
+                        self.warning = `Error retrieving current phone list. Phone list may be out of date as data was updated ${lastupdate.toNow()}`;
+                        
+                        throw error;
+                    }
+                }, 0);
+            } else {
+                try {
+                    let response = await graphGet(this.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
+
+                    // return sorted list
+                    this.list = sortList(response.data);
+                    this.lastupdate = dayjs().unix();
+                } catch (error) {
+                    this.error = 'Error retrieving phone list.';
+
+                    throw error;
+                }
+            }
+
     },
     getPresenceDescription(id) {
         return this.getPresence(id, true);
@@ -325,6 +390,8 @@ export default () => ({
             };
 
             try {
+                var self = this;
+
                 // do request
                 const response = await graphPost(this.token, '/communications/getPresencesByUserId', data);
 
@@ -341,7 +408,6 @@ export default () => ({
                     clearInterval(this.interval);
 
                     // start update interval again
-                    var self = this;
                     this.interval = setInterval(function() {
                         self.update();
                     }, this.updateInterval);
@@ -353,6 +419,9 @@ export default () => ({
 
                     this.presence[item.id].availability = item.availability;
                 }
+
+                // clear any message
+                this.message = '';
             } catch (error) {
                 // handle if response was throttled
                 if (error.response.status == 429) {
@@ -363,7 +432,6 @@ export default () => ({
                     this.interval = this.interval * 2;
 
                     // start over
-                    var self = this;
                     this.interval = setInterval(function() {
                         self.update();
                     }, this.updateInterval);
@@ -377,6 +445,9 @@ export default () => ({
             // start loop from end next
             start = end;
         }
+    },
+    has(item, property) {
+        return item[property] !== undefined && item[property] !== null;
     },
     value(value, prefix = undefined) {
         let v = value.toLowerCase();

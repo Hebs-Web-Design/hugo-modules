@@ -6,6 +6,7 @@ module.exports = {
             './hugo_stats.json',
             './layouts/**/*.html',
             './assets/**/*.js',
+            './assets/**/*.css',
         ],
         extractors: [
             {

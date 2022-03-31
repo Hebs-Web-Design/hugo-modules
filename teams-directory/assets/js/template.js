@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import persist from '@alpinejs/persist';
 import directory from 'js/data.js';
 
 Alpine.data('directory', directory);
@@ -7,7 +8,8 @@ Alpine.data('directory', directory);
 {{ with .Site.Params.directory }}
 let config = {
     clientid: '{{ .ApplicationId }}',
-    tenantid: '{{ .TenantId }}'
+    tenantid: '{{ .TenantId }}',
+    showlocation: {{ .showLocation | default false }}
 };
 {{ with .Group }}
 config.group = '{{ . }}';
@@ -18,4 +20,5 @@ Alpine.store('config', config);
 
 window.Alpine = Alpine;
 
+Alpine.plugin(persist);
 Alpine.start();
