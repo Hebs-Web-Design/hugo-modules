@@ -37,29 +37,37 @@ async function graph(token, url, method = 'get', data = undefined, params = unde
         let response = await axios(request);
         let responsedata = [];
 
-        if (response.data.value === undefined) {
+        if (response.data.value === undefined && response.data.length !== undefined) {
             throw {
-                message: 'No value returned in reponse',
+                message: 'No value returned in reponse and data was not iterable',
                 response: response
             };
         }
 
         // add to our responsedata array
-        responsedata.push(...response.data.value);
+        if (response.data.value !== undefined) {
+            responsedata.push(...response.data.value);
+        } else {
+            responsedata.push(...response.data);
+        }
 
         // handle paged response
         while (isPaged(response)) {
             response = await graphGet(token, nextData(response));
 
-            if (response.data.value === undefined) {
+            if (response.data.value === undefined && response.data.length !== undefined) {
                 throw {
-                    message: 'No value returned in next reponse',
+                    message: 'No value returned in next reponse and data was not iterable',
                     response: response
                 };
             }
 
             // add next reponse to responsedata array
-            responsedata.push(...response.data.value);
+            if (response.data.value !== undefined) {
+                responsedata.push(...response.data.value);
+            } else {
+                responsedata.push(...response.data);
+            }
         }
 
         // set data to full unpaged response
