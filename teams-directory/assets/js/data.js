@@ -3,8 +3,10 @@ import axios from 'axios';
 import * as msal from '@azure/msal-browser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
 
 const updateInterval = 30000;
 const presenceBatchMax = 650;
@@ -188,6 +190,11 @@ export default () => ({
     },
     list: Alpine.$persist([]),
     lastupdate: Alpine.$persist(0),
+    get lastUpdateText() {
+        let lastupdate = dayjs.unix(this.lastupdate);
+
+        return lastupdate.format('LLL');
+    },
     presence: Alpine.$persist({}),
     showlocation: Alpine.store('config').showlocation,
     error: '',
@@ -263,7 +270,7 @@ export default () => ({
             this.initdone = true;
 
             // dont show message if this is not the first update
-            if (this.lastupdate !== undefined) {
+            if (this.lastupdate > 0) {
                 this.message = 'Updating presence...';
             }
 
@@ -294,7 +301,7 @@ export default () => ({
             }
 
             // do intial request
-            if (this.lastupdate !== undefined) {
+            if (this.lastupdate > 0) {
                 let lastupdate = dayjs.unix(this.lastupdate);
                 let msg = 'message';
 
@@ -308,7 +315,7 @@ export default () => ({
                     let lastupdate = dayjs.unix(self.lastupdate);
 
                     // set a messge for the user
-                    self[msg] = `Using phone list from ${lastupdate.toNow()}. Updating in background...`;
+                    self[msg] = `Using phone list from ${lastupdate.fromNow()}. Updating in background...`;
 
                     try {
                         let response = await graphGet(self.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
@@ -324,7 +331,7 @@ export default () => ({
                             // clear any message
                             self[msg] = '';
                         }
-                        self.warning = `Error retrieving current phone list. Phone list may be out of date as data was updated ${lastupdate.toNow()}`;
+                        self.warning = `Error retrieving current phone list. Phone list may be out of date as data was updated ${lastupdate.fromNow()}`;
                         
                         throw error;
                     }

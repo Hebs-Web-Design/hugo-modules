@@ -99,4 +99,7 @@
             </tbody>
         </table>
     </div>
+    <div class="flex flex-row text-gray-400 dark:text-gray-300 italic" x-show="initdone && ! initerror">
+        <div><span>Phone list data last updated on </span><span x-text="lastUpdateText"></span></div>
+        <div>{{ with .GitInfo }}<span>Running version {{ .AbbreviatedHash }} from {{ .AuthorDate }}</span>{{ end }}</div>
 </div>
