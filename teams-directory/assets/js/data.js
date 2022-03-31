@@ -37,7 +37,7 @@ async function graph(token, url, method = 'get', data = undefined, params = unde
         let response = await axios(request);
         let responsedata = [];
 
-        if (response.data.value === undefined && response.data.length !== undefined) {
+        if (response.data.value === undefined && response.data.length === undefined) {
             throw {
                 message: 'No value returned in reponse and data was not iterable',
                 response: response
@@ -55,7 +55,7 @@ async function graph(token, url, method = 'get', data = undefined, params = unde
         while (isPaged(response)) {
             response = await graphGet(token, nextData(response));
 
-            if (response.data.value === undefined && response.data.length !== undefined) {
+            if (response.data.value === undefined && response.data.length === undefined) {
                 throw {
                     message: 'No value returned in next reponse and data was not iterable',
                     response: response
