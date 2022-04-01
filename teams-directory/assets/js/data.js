@@ -197,9 +197,25 @@ export default () => ({
     },
     presence: Alpine.$persist({}),
     showlocation: Alpine.store('config').showlocation,
-    error: '',
-    warning: '',
-    message: '',
+    notice(type, text) {
+        this[type].message = text;
+        this[type].active = true;
+    },
+    clearnotice(type) {
+        this[type].active = false;
+    },
+    error: {
+        message: '',
+        active: false
+    },
+    warning: {
+        message: '',
+        active: false
+    },
+    info: {
+        message: '',
+        active: false
+    },
     initerror: false,
     token: undefined,
     search: '',
@@ -227,14 +243,14 @@ export default () => ({
                     // Use MSAL to login
                     await this.msalClient.loginRedirect(this.msalRequest);
                 } catch (error) {
-                    this.error = `Error logging in: ${error}`;
+                    this.notice('error', `Error logging in: ${error}`);
                     this.initerror = true;
 
                     return;
                 }
             }
         } catch (error) {
-            this.error = `Error logging in: ${error}`;
+            this.notice('error', `Error logging in: ${error}`);
             this.initerror = true;
 
             return;
@@ -248,15 +264,15 @@ export default () => ({
                 await this.msalClient.acquireTokenRedirect(this.msalRequest).then(tokenResponse => {
                     this.token = tokenResponse.accessToken;
                 }).catch(async error => {
-                    this.error = `Error aquiring token: ${error}`;
+                    this.notice('error', `Error aquiring token: ${error}`);
                     this.initerror = true;
                 });
             } else {
-                this.error = `Error aquiring token: ${error}`;
+                this.notice('error', `Error aquiring token: ${error}`);
                 this.initerror = true;
             }
         }).catch(async error => {
-            this.error = `Error aquiring token: ${error}`;
+            this.notice('error', `Error aquiring token: ${error}`);
             this.initerror = true;
         });
 
@@ -271,7 +287,7 @@ export default () => ({
 
             // dont show message if this is not the first update
             if (this.lastupdate > 0) {
-                this.message = 'Updating presence...';
+                this.notice('info', 'Updating presence...');
             }
 
             // do initial update in background
@@ -303,7 +319,7 @@ export default () => ({
             // do intial request
             if (this.lastupdate > 0) {
                 let lastupdate = dayjs.unix(this.lastupdate);
-                let msg = 'message';
+                let msg = 'info';
 
                 // check if last update is way out of date
                 if (lastupdate.isBefore(dayjs().subtract(7, 'day'))) {
@@ -315,7 +331,7 @@ export default () => ({
                     let lastupdate = dayjs.unix(self.lastupdate);
 
                     // set a messge for the user
-                    self[msg] = `Using phone list from ${lastupdate.fromNow()}. Updating in background...`;
+                    self.notice(msg, `Using phone list from ${lastupdate.fromNow()}. Updating in background...`);
 
                     try {
                         let response = await graphGet(self.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
@@ -325,13 +341,14 @@ export default () => ({
                         self.lastupdate = dayjs().unix();
 
                         // clear any message
-                        self[msg] = '';
+                        self.clearnotice(msg);
                     } catch (error) {
+                        self.notice('warning', `Error retrieving current phone list. Phone list may be out of date as data was updated ${lastupdate.fromNow()}`);
                         if (msg != 'warning') {
                             // clear any message
-                            self[msg] = '';
+                            self.clearnotice(msg);
                         }
-                        self.warning = `Error retrieving current phone list. Phone list may be out of date as data was updated ${lastupdate.fromNow()}`;
+                        
                         
                         throw error;
                     }
@@ -344,7 +361,7 @@ export default () => ({
                     this.list = sortList(response.data);
                     this.lastupdate = dayjs().unix();
                 } catch (error) {
-                    this.error = 'Error retrieving phone list.';
+                    this.notice('error', 'Error retrieving phone list.');
 
                     throw error;
                 }
@@ -373,6 +390,8 @@ export default () => ({
 
         let start = 0;
         let end = 0;
+        let intervalAdjusted = false;
+
         while (end < list.length) {
             let ids = [];
 
@@ -402,8 +421,8 @@ export default () => ({
                 // do request
                 const response = await graphPost(this.token, '/communications/getPresencesByUserId', data);
 
-                // if no error then possibly reduce the interval of updates
-                if (this.updateInterval > updateInterval) {
+                // if no error then possibly reduce the interval of updates for next run, but only once
+                if (this.updateInterval > updateInterval && ! intervalAdjusted) {
                     this.updateInterval = this.updateInterval / 1.5;
 
                     // don't go below smallest interval
@@ -418,6 +437,9 @@ export default () => ({
                     this.interval = setInterval(function() {
                         self.update();
                     }, this.updateInterval);
+
+                    // dont adjust again this run
+                    intervalAdjusted = true;
                 }
 
                 // update presence from response
@@ -428,7 +450,7 @@ export default () => ({
                 }
 
                 // clear any message
-                this.message = '';
+                this.clearnotice('info');
             } catch (error) {
                 // handle if response was throttled
                 if (error.response.status == 429) {
