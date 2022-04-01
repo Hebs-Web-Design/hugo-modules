@@ -33,6 +33,8 @@ tenantId = "YOUR-TENANT-ID-FROM-AZURE-AD"
 # The Object ID of the group to get members of (optional)
 # Without this value all users frm Azure AD that have an "mail" value are retrieved
 group = "YOUR-GROUP-ID-FROM-AZURE-AD"
+# Skip matching users (based on UPN)
+skipUsers = ["usera@example.net", "userb@example.net",]
 # Logos in assets with "alt" versions set in "dark mode"
 logo = "img/logo.png"
 logoAlt = "img/logo-inverted.png"

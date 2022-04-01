@@ -9,11 +9,10 @@ Alpine.data('directory', directory);
 let config = {
     clientid: '{{ .ApplicationId }}',
     tenantid: '{{ .TenantId }}',
-    showlocation: {{ .showLocation | default false }}
+    showlocation: {{ default false .showLocation | jsonify }},
+    {{ with .Group }}group: '{{ . }}',{{ end }}
+    {{ with .SkipUsers }}skipusers: {{ . | jsonify }}{{ end }}
 };
-{{ with .Group }}
-config.group = '{{ . }}';
-{{ end }}
 {{ end }}
 
 Alpine.store('config', config);

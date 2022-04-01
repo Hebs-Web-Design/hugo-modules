@@ -184,19 +184,29 @@ function initMsalClient(clientId) {
     return new msal.PublicClientApplication(msalConfig);
 }
 
-function sortList(list) {
-    return list.sort(function(a, b) {
-        let asplit = a.displayName.split(' ');
-        let bsplit = b.displayName.split(' ');
+function sortList(a, b) {
+    let asplit = a.displayName.split(' ');
+    let bsplit = b.displayName.split(' ');
 
-        let x = (asplit.length > 1) ? asplit.slice(1, asplit.length).join(" ").toLowerCase() : asplit[0].toLowerCase();
-        let y = (bsplit.length > 1) ? bsplit.slice(1, bsplit.length).join(" ").toLowerCase() : bsplit[0].toLowerCase();
+    let x = (asplit.length > 1) ? asplit.slice(1, asplit.length).join(" ").toLowerCase() : asplit[0].toLowerCase();
+    let y = (bsplit.length > 1) ? bsplit.slice(1, bsplit.length).join(" ").toLowerCase() : bsplit[0].toLowerCase();
 
-        if (x < y) { return -1; }
-        if (x > y) { return 1; }
+    if (x < y) { return -1; }
+    if (x > y) { return 1; }
 
-        return 0;
-    });
+    return 0;
+}
+
+function filterList(item) {
+    let skipusers = Alpine.store('config').skipusers;
+
+    // do nothing if setting is not defined
+    if (skipusers === undefined) {
+        return true;
+    }
+
+    // skip items that are in the lisst
+    return !skipusers.includes(item.userPrincipalName);
 }
 
 export default () => ({
@@ -349,9 +359,10 @@ export default () => ({
 
                     try {
                         let response = await graphGet(self.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
+                        let list = response.data.sort(sortList);
 
-                        // return sorted list
-                        self.list = sortList(response.data);
+                        // return sorted and filtered list
+                        self.list = list.filter(filterList);
                         self.lastupdate = dayjs().unix();
 
                         // clear any message
@@ -369,9 +380,10 @@ export default () => ({
             } else {
                 try {
                     let response = await graphGet(this.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
+                    let list = response.data.sort(sortList);
 
-                    // return sorted list
-                    this.list = sortList(response.data);
+                    // return sorted and filtered list
+                    this.list = list.filter(filterList);
                     this.lastupdate = dayjs().unix();
                 } catch (error) {
                     this.notice('error', 'Error retrieving phone list.');
