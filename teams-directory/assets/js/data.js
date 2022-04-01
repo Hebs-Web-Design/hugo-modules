@@ -389,7 +389,7 @@ export default () => ({
     },
     getPresence(id, index = undefined, description = false) {
         // handle unknown presence
-        if (this.presence[id] === undefined && index === undefined) {
+        if (this.presence[id] === undefined || index === undefined) {
             this.presence[id] = initPresence();
         }
 
