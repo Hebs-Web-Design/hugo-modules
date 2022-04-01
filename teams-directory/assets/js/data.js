@@ -98,31 +98,47 @@ function nextData(response) {
 function initPresence() {
     return {
         availability: ['Unknown', 'Unknown'],
+        activity: ['Unknown', 'Unknown'],
         current: 0,
     };
 }
 
-function setAvailability(item, availability) {
+function setPresence(item, availability, activity) {
+    // handle missing activity
+    if (item.activity === undefined) {
+        item.activity = ['Unknown', 'Unknown'];
+    }
+
     // skip any changes if current availability is the same
     if (item.availability[item.current] == availability) {
+        // but update activity regardless
+        item.activity[item.current] = activity;
+
         return item;
     }
 
-    // otherwise toggle availability
-    if (item.current == 0) {
-        item.availability[1] = availability;
-        item.current = 1;
-    } else {
-        item.availability[0] = availability;
-        item.current = 0;
-    }
+    // set new values and return
+    let index = item.current == 0 ? 1 : 0;
+
+    item.availability[index] = availability;
+    item.activity[index] = activity;
+    item.current = index;
 
     return item;
 }
 
-function parseAvailability(availability = 'Unknown') {
+function parsePresence(presence, index = undefined) {
     let iconBase = '/directory/img';
+    
+    if (index === undefined) {
+        index = presence.current;
+    }
 
+    let availability = presence.availability === undefined ? 'Unknown' : presence.availability[index];
+    // let activity = presence.activity === undefined ? 'Unknown' : presence.activity[index];
+    let icon = `${iconBase}/presence_${availability.toLowerCase()}.png`;
+
+    // handle different states
     switch (availability) {
         case 'Away':
         case 'Available':
@@ -131,7 +147,7 @@ function parseAvailability(availability = 'Unknown') {
         case 'Unknown':
             return {
                 description: availability,
-                icon: `${iconBase}/presence_${availability.toLowerCase()}.png`
+                icon: icon
             };
         case 'AvailableIdle':
             return {
@@ -163,21 +179,19 @@ function parseAvailability(availability = 'Unknown') {
                 description: 'Out Of Office',
                 icon: `${iconBase}/presence_oof.png`
             };
-        default:
-            console.log(`Unhandled availability: ${availability}`);
-
-            return {
-                description: 'Unknown',
-                icon: `${iconBase}/presence_unknown.png`
-            };
     }
+
+    return {
+        description: 'Unknown',
+        icon: `${iconBase}/presence_unknown.png`
+    };
 }
 
 function initMsalClient(clientId) {
     const msalConfig = {
         auth: {
           clientId: clientId,
-          redirectUri: `${window.location.protocol}//${window.location.host}/${window.location.pathname}`
+          redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
         }
     };
     
@@ -219,7 +233,7 @@ export default () => ({
             'user.read.all'
         ],
         authority: `https://login.microsoftonline.com/${Alpine.store('config').tenantid}`,
-        redirectUri: window.location.href
+        redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
     },
     list: Alpine.$persist([]),
     lastupdate: Alpine.$persist(0),
@@ -231,9 +245,12 @@ export default () => ({
     presence: Alpine.$persist({}),
     presencelastupdate: Alpine.$persist(0),
     showlocation: Alpine.store('config').showlocation,
-    notice(type, text) {
+    notice(type, text, error = undefined) {
         this[type].message = text;
         this[type].active = true;
+
+        let logmsg = error === undefined ? text : `${text}: ${error}`
+        console.log(`${dayjs().format()} - ${logmsg}`);
     },
     clearnotice(type) {
         this[type].active = false;
@@ -277,14 +294,14 @@ export default () => ({
                     // Use MSAL to login
                     await this.msalClient.loginRedirect(this.msalRequest);
                 } catch (error) {
-                    this.notice('error', `Error logging in: ${error}`);
+                    this.notice('error', 'Error logging in', error);
                     this.initerror = true;
 
                     return;
                 }
             }
         } catch (error) {
-            this.notice('error', `Error logging in: ${error}`);
+            this.notice('error', 'Error logging in', error);
             this.initerror = true;
 
             return;
@@ -298,15 +315,15 @@ export default () => ({
                 await this.msalClient.acquireTokenRedirect(this.msalRequest).then(tokenResponse => {
                     this.token = tokenResponse.accessToken;
                 }).catch(async error => {
-                    this.notice('error', `Error aquiring token: ${error}`);
+                    this.notice('error', 'Error aquiring token', error);
                     this.initerror = true;
                 });
             } else {
-                this.notice('error', `Error aquiring token: ${error}`);
+                this.notice('error', 'Error aquiring token', error);
                 this.initerror = true;
             }
         }).catch(async error => {
-            this.notice('error', `Error aquiring token: ${error}`);
+            this.notice('error', 'Error aquiring token', error);
             this.initerror = true;
         });
 
@@ -332,65 +349,70 @@ export default () => ({
     },
     async updateList() {
         let url = '/users';
-            var self = this;
+        var self = this;
+        var params = {
+            '$filter': 'mail ne null',
+            '$count': 'true',
+            '$select': 'id,displayName,userPrincpalName,businessPhones,jobTitle,mail,officeLocation',
+        }
 
-            // if group was set in config then do request for members
-            let group = Alpine.store('config').group;
-            if (group !== undefined) {
-                url = `/groups/${group}/members`;
+        // if group was set in config then do request for members
+        let group = Alpine.store('config').group;
+        if (group !== undefined) {
+            url = `/groups/${group}/members`;
+        }
+
+        // do intial request
+        if (this.lastupdate > 0) {
+            let lastupdate = dayjs.unix(this.lastupdate);
+            let msg = 'info';
+
+            // check if last update is way out of date
+            if (lastupdate.isBefore(dayjs().subtract(7, 'day'))) {
+                msg = 'warning';
             }
 
-            // do intial request
-            if (this.lastupdate > 0) {
-                let lastupdate = dayjs.unix(this.lastupdate);
-                let msg = 'info';
+            // do update in background as we should have a stored copy
+            setTimeout(async function() {
+                let lastupdate = dayjs.unix(self.lastupdate);
 
-                // check if last update is way out of date
-                if (lastupdate.isBefore(dayjs().subtract(7, 'day'))) {
-                    msg = 'warning';
-                }
+                // set a messge for the user
+                self.notice(msg, `Using phone list from ${lastupdate.fromNow()}. Updating in background...`);
 
-                // do update in background as we should have a stored copy
-                setTimeout(async function() {
-                    let lastupdate = dayjs.unix(self.lastupdate);
-
-                    // set a messge for the user
-                    self.notice(msg, `Using phone list from ${lastupdate.fromNow()}. Updating in background...`);
-
-                    try {
-                        let response = await graphGet(self.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
-                        let list = response.data.sort(sortList);
-
-                        // return sorted and filtered list
-                        self.list = list.filter(filterList);
-                        self.lastupdate = dayjs().unix();
-
-                        // clear any message
-                        self.clearnotice(msg);
-                    } catch (error) {
-                        self.notice('warning', `Error retrieving current phone list. Phone list may be out of date as data was updated ${lastupdate.fromNow()}`);
-                        if (msg != 'warning') {
-                            // clear any message
-                            self.clearnotice(msg);
-                        }
-                         
-                        throw error;
-                    }
-                }, 0);
-            } else {
                 try {
-                    let response = await graphGet(this.token, url, { '$filter': 'mail ne null', '$count': 'true'}, true);
+                    let response = await graphGet(self.token, url, params, true);
                     let list = response.data.sort(sortList);
 
                     // return sorted and filtered list
-                    this.list = list.filter(filterList);
-                    this.lastupdate = dayjs().unix();
-                } catch (error) {
-                    this.notice('error', 'Error retrieving phone list.');
+                    self.list = list.filter(filterList);
+                    self.lastupdate = dayjs().unix();
 
+                    // clear any message
+                    self.clearnotice(msg);
+                } catch (error) {
+                    self.notice('warning', 'Problem retrieving current phone list', `Phone list may be out of date as data was updated ${lastupdate.fromNow()}`);
+                    if (msg != 'warning') {
+                        // clear any message
+                        self.clearnotice(msg);
+                    }
+                        
                     throw error;
                 }
+            }, 0);
+        } else {
+            try {
+                let response = await graphGet(this.token, url, params, true);
+                let list = response.data.sort(sortList);
+
+                // return sorted and filtered list
+                this.list = list.filter(filterList);
+                this.lastupdate = dayjs().unix();
+            } catch (error) {
+                this.notice('error', 'Error retrieving phone list.', error);
+
+                throw error;
             }
+        }
 
     },
     getPresenceDescription(id, index = undefined) {
@@ -411,7 +433,7 @@ export default () => ({
         }
 
         let presence = this.presence[id];
-        let availability = parseAvailability(presence.availability[index]);
+        let availability = parsePresence(presence, index);
         
         if (description) {
             return availability.description;
@@ -429,6 +451,7 @@ export default () => ({
 
         return presence.current;
     },
+    // updates presence data
     async update() {
         let list = this.filteredList;
 
@@ -490,26 +513,35 @@ export default () => ({
                 for (let i = 0; i < response.data.length; i++) {
                     const item = response.data[i];
 
-                    this.presence[item.id] = setAvailability(this.presence[item.id], item.availability);
+                    this.presence[item.id] = setPresence(this.presence[item.id], item.availability, item.activity);
                 }
             } catch (error) {
-                // handle if response was throttled
-                if (error.response.status == 429) {
-                    // clear current interval
-                    clearInterval(this.interval);
+                if (error.response) {
+                    // handle if response was throttled
+                    if (error.response.status == 429) {
+                        // clear current interval
+                        clearInterval(this.interval);
 
-                    // double the interval
-                    this.interval = this.interval * 2;
+                        // double the interval
+                        this.interval = this.interval * 2;
 
-                    // start over
-                    this.interval = setInterval(function() {
-                        self.update();
-                    }, this.updateInterval);
+                        // start over
+                        this.interval = setInterval(function() {
+                            self.update();
+                        }, this.updateInterval);
 
-                    // break out of loop now
-                    break;
+                        console.log(`Request throttled...update interval increased to ${this.updateInterval} ms`);
+
+                        // break out of loop now
+                        break;
+                    }
                 }
+                
+                // Some other error
                 console.log(error);
+
+                // finish up with partial results
+                break;
             }
 
             // start loop from end next
