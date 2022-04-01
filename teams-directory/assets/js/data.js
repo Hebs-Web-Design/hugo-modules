@@ -101,6 +101,12 @@ function initPresence() {
 }
 
 function setAvailability(item, availability) {
+    // skip any changes if current availability is the same
+    if (item.availability[item.current] == availability) {
+        return item;
+    }
+
+    // otherwise toggle availability
     if (item.current == 0) {
         item.availability[1] = availability;
         item.current = 1;
