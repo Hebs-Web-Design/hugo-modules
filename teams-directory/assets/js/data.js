@@ -4,9 +4,11 @@ import * as msal from '@azure/msal-browser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
+dayjs.extend(duration);
 
 const updateInterval = 30000;
 const presenceBatchMax = 650;
@@ -217,6 +219,7 @@ export default () => ({
         return lastupdate.format('LLL');
     },
     presence: Alpine.$persist({}),
+    presencelastupdate: Alpine.$persist(0),
     showlocation: Alpine.store('config').showlocation,
     notice(type, text) {
         this[type].message = text;
@@ -298,8 +301,6 @@ export default () => ({
         });
 
         try {
-            let self = this;
-
             // do update
             await this.updateList();
 
@@ -311,16 +312,8 @@ export default () => ({
                 this.notice('info', 'Updating presence...');
             }
 
-            // do initial update in background
-            setTimeout(function() {
-                self.update();
-            }, 0);
-
-            // start update interval
-            this.interval = setInterval(function() {
-                self.update();
-            }, this.updateInterval);
-
+            // start presence udpates
+            this.startPresenceUpdates();
         } catch (error) {
             // signal an error
             this.initerror = true;
@@ -369,8 +362,7 @@ export default () => ({
                             // clear any message
                             self.clearnotice(msg);
                         }
-                        
-                        
+                         
                         throw error;
                     }
                 }, 0);
@@ -487,9 +479,6 @@ export default () => ({
 
                     this.presence[item.id] = setAvailability(this.presence[item.id], item.availability);
                 }
-
-                // clear any message
-                this.clearnotice('info');
             } catch (error) {
                 // handle if response was throttled
                 if (error.response.status == 429) {
@@ -513,6 +502,12 @@ export default () => ({
             // start loop from end next
             start = end;
         }
+
+        // set lastupdate time
+        this.presencelastupdate = dayjs().unix();
+
+        // clear any outstanding message
+        this.clearnotice('info');
     },
     has(item, property) {
         return item[property] !== undefined && item[property] !== null;
@@ -551,5 +546,58 @@ export default () => ({
     },
     chat(item) {
         return `https://teams.microsoft.com/l/chat/0/0?users=${item.mail}`;
+    },
+    updates() {
+        // skip this is we haven't started up fully yet
+        if (!this.initdone) {
+            return;
+        }
+
+        if (document.hidden) {
+            this.stopPresenceUpdates();
+        } else {
+            this.startPresenceUpdates();
+        }
+    },
+    startLock: false,
+    startPresenceUpdates() {
+        let self = this;
+        let presencelastupdate = dayjs.unix(this.presencelastupdate);
+        let initialUpdateInterval = 0;
+        
+        // basic locking in case event is fired more than once
+        if (this.startLock) {
+            return;
+        } else {
+            this.startLock = true;
+        }
+
+        // stop updates just in case we have been fired twice
+        this.stopPresenceUpdates();
+
+        // set initial presence update interval to next update time if presence was updated recently
+        if (presencelastupdate.isAfter(dayjs().subtract(self.updateInterval, 'ms'))) {
+            let d = dayjs.duration(self.updateInterval).subtract(dayjs().unix() - this.presencelastupdate, 'seconds');
+            
+            // convert duration to milliseconds for setTimeout
+            initialUpdateInterval = d.asMilliseconds();
+        }
+
+        // do initial presence update in background
+        setTimeout(function() {
+            self.update();
+
+            // start update interval
+            self.interval = setInterval(function() {
+                self.update();
+            }, self.updateInterval);
+        }, initialUpdateInterval);
+
+        // release our lock
+        this.startLock = false;
+    },
+    stopPresenceUpdates() {
+        // clear current interval
+        clearInterval(this.interval);
     },
 });
