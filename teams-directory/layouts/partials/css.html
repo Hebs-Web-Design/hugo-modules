@@ -1,13 +1,5 @@
-{{- $css := slice (resources.Get "css/main.css") -}}
-{{- $cssbundle := "css/bundle.css" -}}
-{{- if ($.Param "css") -}}
-{{- $cssbundle = printf "css/bundle-%s.css" .File.ContentBaseName -}}
-{{- range ($.Param "css") -}}
-{{- $css = $css | append (resources.Get .) }}
-{{ printf "<!-- %s -->" . | safeHTML }}
-{{- end -}}
-{{- end -}}
-{{- $css = $css | resources.Concat $cssbundle | resources.PostCSS -}}
+{{- $css := resources.Get "css/directory/main.css" -}}
+{{- $css = $css | resources.PostCSS -}}
 {{- if hugo.IsProduction -}}
 {{- $css = $css | minify | fingerprint | resources.PostProcess -}}
 {{- end -}}

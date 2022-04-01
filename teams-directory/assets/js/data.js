@@ -113,6 +113,8 @@ function setAvailability(item, availability) {
 }
 
 function parseAvailability(availability = 'Unknown') {
+    let iconBase = '/directory/img';
+
     switch (availability) {
         case 'Away':
         case 'Available':
@@ -121,44 +123,44 @@ function parseAvailability(availability = 'Unknown') {
         case 'Unknown':
             return {
                 description: availability,
-                icon: `/img/presence_${availability.toLowerCase()}.png`
+                icon: `${iconBase}/presence_${availability.toLowerCase()}.png`
             };
         case 'AvailableIdle':
             return {
                 description: 'Available',
-                icon: `/img/presence_available.png`
+                icon: `${iconBase}/presence_available.png`
             };
         case 'BeRightBack':
             return {
                 description: 'Be Right Back',
-                icon: `/img/presence_away.png`
+                icon: `${iconBase}/presence_away.png`
             };
         case 'BusyIdle':
             return {
                 description: 'Busy',
-                icon: `/img/presence_busy.png`
+                icon: `${iconBase}/presence_busy.png`
             };
         case 'DoNotDisturb':
             return {
                 description: 'Do Not Disturb',
-                icon: `/img/presence_dnd.png`
+                icon: `${iconBase}/presence_dnd.png`
             };
         case 'PresenceUnknown':
             return {
                 description: 'Unknown',
-                icon: `/img/presence_unknown.png`
+                icon: `${iconBase}/presence_unknown.png`
             };
         case 'OutOfOffice':
             return {
                 description: 'Out Of Office',
-                icon: `/img/presence_oof.png`
+                icon: `${iconBase}/presence_oof.png`
             };
         default:
             console.log(`Unhandled availability: ${availability}`);
 
             return {
                 description: 'Unknown',
-                icon: `/img/presence_unknown.png`
+                icon: `${iconBase}/presence_unknown.png`
             };
     }
 }

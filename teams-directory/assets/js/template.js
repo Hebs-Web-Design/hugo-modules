@@ -1,6 +1,6 @@
 import Alpine from 'alpinejs';
 import persist from '@alpinejs/persist';
-import directory from 'js/data.js';
+import directory from 'js/directory/data.js';
 
 Alpine.data('directory', directory);
 

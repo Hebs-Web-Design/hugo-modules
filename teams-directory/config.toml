@@ -1,25 +1,29 @@
 [module]
 
 [[module.mounts]]
-source = "layouts"
-target = "layouts"
+source = "layouts/directory"
+target = "layouts/directory"
+
+[[module.mounts]]
+source = "layouts/partials"
+target = "layouts/partials/directory"
+
+[[module.mounts]]
+source = "layouts/shortcodes/directory.html"
+target = "layouts/shortcodes/directory.html"
 
 [[module.mounts]]
 source = "static/img"
-target = "static/img"
+target = "static/directory/img"
 
 [[module.mounts]]
 source = "static/icons"
-target = "static/icons"
-
-[[module.mounts]]
-source = "static/favicon.ico"
-target = "static/favicon.ico"
+target = "static/directory/icons"
 
 [[module.mounts]]
 source = "assets/js"
-target = "assets/js"
+target = "assets/js/directory"
 
 [[module.mounts]]
 source = "assets/css"
-target = "assets/css"
+target = "assets/css/directory"
