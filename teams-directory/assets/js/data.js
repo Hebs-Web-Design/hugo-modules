@@ -95,8 +95,21 @@ function nextData(response) {
 
 function initPresence() {
     return {
-        availability: 'Unknown'
+        availability: ['Unknown', 'Unknown'],
+        current: 0,
     };
+}
+
+function setAvailability(item, availability) {
+    if (item.current == 0) {
+        item.availability[1] = availability;
+        item.current = 1;
+    } else {
+        item.availability[0] = availability;
+        item.current = 0;
+    }
+
+    return item;
 }
 
 function parseAvailability(availability = 'Unknown') {
@@ -368,22 +381,40 @@ export default () => ({
             }
 
     },
-    getPresenceDescription(id) {
-        return this.getPresence(id, true);
+    getPresenceDescription(id, index = undefined) {
+        return this.getPresence(id, index, true);
     },
-    getPresence(id, description = false) {
+    getPresenceIcon(id, index = undefined, description = false) {
+        return this.getPresence(id, index, false);
+    },
+    getPresence(id, index = undefined, description = false) {
+        // handle unknown presence
+        if (this.presence[id] === undefined && index === undefined) {
+            this.presence[id] = initPresence();
+        }
+
+        if (index === undefined) {
+            index = this.getCurrentPresenceIndex(id);
+        }
+
+        let presence = this.presence[id];
+        let availability = parseAvailability(presence.availability[index]);
+        
+        if (description) {
+            return availability.description;
+        }
+
+        return availability.icon;
+    },
+    getCurrentPresenceIndex(id) {
         // handle unknown presence
         if (this.presence[id] === undefined) {
             this.presence[id] = initPresence();
         }
 
-        let presence = parseAvailability(this.presence[id].availability);
-        
-        if (description) {
-            return presence.description;
-        }
+        let presence = this.presence[id];
 
-        return presence.icon;
+        return presence.current;
     },
     async update() {
         let list = this.filteredList;
@@ -446,7 +477,7 @@ export default () => ({
                 for (let i = 0; i < response.data.length; i++) {
                     const item = response.data[i];
 
-                    this.presence[item.id].availability = item.availability;
+                    this.presence[item.id] = setAvailability(this.presence[item.id], item.availability);
                 }
 
                 // clear any message

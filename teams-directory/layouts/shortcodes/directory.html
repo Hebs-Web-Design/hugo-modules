@@ -54,7 +54,10 @@
                 <tr class="odd:bg-white even:bg-slate-100 odd:dark:bg-black even:dark:bg-slate-900">
                     <td class="pl-2 md:p-0">
                         <div class="w-full">
-                            <img class="inline" src="/img/presence_unknown.png" :src="getPresence(item.id)" :title="getPresenceDescription(item.id)">
+                            <span class="w-4 h-4 inline-block relative">
+                                <img class="inline absolute m-1 transition-opacity duration-500 motion-reduce:transition-none" src="/img/presence_unknown.png" :src="getPresenceIcon(item.id, 0)" :title="getPresenceDescription(item.id, 0)" :class="getCurrentPresenceIndex(item.id) == 0 ? 'opacity-100' : 'opacity-0'">
+                                <img class="inline absolute m-1 transition-opacity duration-500 motion-reduce:transition-none" src="/img/presence_unknown.png" :src="getPresenceIcon(item.id, 1)" :title="getPresenceDescription(item.id, 1)" :class="getCurrentPresenceIndex(item.id) == 1 ? 'opacity-100' : 'opacity-0'">
+                            </span>
                             <span x-text="item.displayName"></span>
                         </div>
                     </td>
