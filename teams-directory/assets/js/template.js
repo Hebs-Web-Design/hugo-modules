@@ -12,7 +12,7 @@ let config = {
     showlocation: {{ default false .showLocation | jsonify }},
     {{ with .Group }}group: '{{ . }}',{{ end }}
     {{ with .SkipUsers }}skipusers: {{ . | jsonify }},{{ end }}
-    {{ if hugo.IsProduction }}{{ with .UseWorkers }}useworkers: {{ . | jsonify }},{{ end }}{{ end }}
+    {{ if hugo.IsProduction }}{{ with .BaseURL }}baseURL: {{ . | jsonify }},{{ end }}{{ end }}
 };
 {{ end }}
 
