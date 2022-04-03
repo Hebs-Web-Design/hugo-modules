@@ -21,6 +21,10 @@ source = "static/icons"
 target = "static/directory/icons"
 
 [[module.mounts]]
+source = "static/functions/[[path]].js"
+target = "static/functions/[[path]].js"
+
+[[module.mounts]]
 source = "assets/js"
 target = "assets/js/directory"
 

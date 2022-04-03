@@ -25,7 +25,7 @@ async function graph(token, url, method = 'get', data = undefined, params = unde
     let request = {
         url: url,
         method: method,
-        baseURL: 'https://graph.microsoft.com/v1.0/',
+        baseURL: Alpine.store('config').useworkers ? `${window.location.protocol}//${window.location.host}v1.0/` : `https://graph.microsoft.com/v1.0/`,
         headers: {
             'Authorization': `Bearer ${token}`
         },
@@ -249,7 +249,7 @@ export default () => ({
         this[type].message = text;
         this[type].active = true;
 
-        let logmsg = error === undefined ? text : `${text}: ${error}`
+        let logmsg = error === undefined ? text : `${text}: ${error}`;
         console.log(`${dayjs().format()} - ${logmsg}`);
     },
     clearnotice(type) {
@@ -354,7 +354,7 @@ export default () => ({
             '$filter': 'mail ne null',
             '$count': 'true',
             '$select': 'id,displayName,userPrincpalName,businessPhones,jobTitle,mail,officeLocation',
-        }
+        };
 
         // if group was set in config then do request for members
         let group = Alpine.store('config').group;
