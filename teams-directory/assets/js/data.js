@@ -354,7 +354,7 @@ export default () => ({
         var params = {
             '$filter': 'mail ne null',
             '$count': 'true',
-            '$select': 'id,displayName,userPrincpalName,businessPhones,jobTitle,mail,officeLocation',
+            '$select': 'id,displayName,userPrincipalName,businessPhones,jobTitle,mail,officeLocation',
         };
 
         // if group was set in config then do request for members
