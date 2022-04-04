@@ -22,7 +22,7 @@ async function graphPost(token, url, data) {
 }
 
 async function graph(token, url, method = 'get', data = undefined, params = undefined, eventual = false, json = false) {
-    let baseURL = Alpine.store('config').baseURL !== undefined ? Alpine.store('config').baseURL : 'https://graph.microsoft.com/v1.0/';
+    let baseURL = Alpine.store('config').useworker ? `${window.location.protocol}//${window.location.host}/v1.0/` : 'https://graph.microsoft.com/v1.0/';
     let request = {
         url: url,
         method: method,
