@@ -460,7 +460,7 @@ export default () => ({
         let end = 0;
         let intervalAdjusted = false;
 
-        console.log(`${dayjs().format()} - Starting presence update...`);
+        console.log(`${dayjs().format()} - Starting scheduled presence update...`);
 
         while (end < list.length) {
             let ids = [];
