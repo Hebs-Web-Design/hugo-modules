@@ -1,6 +1,6 @@
 {{ with .Site.Params.directory }}
 {{ if .UseWorker }}
-{{ $worker := resources.Get "js/directory/_worker.js" | js.Build "_worker.js" }}
+{{ $worker := resources.Get "js/directory/_worker.js" }}
 {{ $worker.Publish }}
 {{ end }}
 {{ end }}
