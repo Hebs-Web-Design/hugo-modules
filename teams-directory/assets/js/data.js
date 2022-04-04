@@ -460,6 +460,8 @@ export default () => ({
         let end = 0;
         let intervalAdjusted = false;
 
+        console.log(`${dayjs().format()} - Starting presence update...`);
+
         while (end < list.length) {
             let ids = [];
 
@@ -471,6 +473,8 @@ export default () => ({
             } else {
                 end = list.length;
             }
+
+            console.log(`${dayjs().format()} - Doing from ${start} to ${end - 1}...`);
 
             for (let i = start; i < end; i++) {
                 const item = list[i];
@@ -516,6 +520,8 @@ export default () => ({
 
                     this.presence[item.id] = setPresence(this.presence[item.id], item.availability, item.activity);
                 }
+
+                console.log(`${dayjs().format()} - Done from ${start} to ${end - 1}...`);
             } catch (error) {
                 if (error.response) {
                     // handle if response was throttled
@@ -531,7 +537,7 @@ export default () => ({
                             self.update();
                         }, this.updateInterval);
 
-                        console.log(`Request throttled...update interval increased to ${this.updateInterval} ms`);
+                        console.log(`${dayjs().format()} - Request throttled...update interval increased to ${this.updateInterval} ms`);
 
                         // break out of loop now
                         break;
@@ -539,7 +545,7 @@ export default () => ({
                 }
                 
                 // Some other error
-                console.log(error);
+                console.log(`${dayjs().format()} - ${error}`);
 
                 // finish up with partial results
                 break;
