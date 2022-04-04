@@ -1,5 +1,5 @@
-{{- $js := resources.Get "js/directory/template.js" | resources.ExecuteAsTemplate "js/directory//main.js" . | js.Build -}}
-{{- if hugo.IsProduction -}}
-{{- $js = $js | minify | fingerprint -}}
-{{- end -}}
+{{- $js := resources.Get "js/directory/template.js" | resources.ExecuteAsTemplate "js/directory/main.js" . | js.Build }}
+{{- if hugo.IsProduction }}
+{{- $js = $js | minify | fingerprint }}
+{{- end }}
 <script src="{{ $js.RelPermalink }}"></script>
