@@ -465,6 +465,7 @@ export default () => ({
         while (end < list.length) {
             let ids = [];
 
+            // set end based on maximum bath size
             if (list.length > presenceBatchMax) {
                 end = end + presenceBatchMax;
                 if (end > list.length) {
@@ -473,8 +474,6 @@ export default () => ({
             } else {
                 end = list.length;
             }
-
-            console.log(`${dayjs().format()} - Doing from ${start} to ${end - 1}...`);
 
             for (let i = start; i < end; i++) {
                 const item = list[i];
@@ -488,8 +487,6 @@ export default () => ({
             };
 
             try {
-                var self = this;
-
                 // do request
                 const response = await graphPost(this.token, '/communications/getPresencesByUserId', data);
 
@@ -502,13 +499,7 @@ export default () => ({
                         this.updateInterval = updateInterval;
                     }
 
-                    // clear current interval
-                    clearInterval(this.interval);
-
-                    // start update interval again
-                    this.interval = setInterval(function() {
-                        self.update();
-                    }, this.updateInterval);
+                    this.startPresenceUpdates(false);
 
                     // dont adjust again this run
                     intervalAdjusted = true;
@@ -520,24 +511,17 @@ export default () => ({
 
                     this.presence[item.id] = setPresence(this.presence[item.id], item.availability, item.activity);
                 }
-
-                console.log(`${dayjs().format()} - Done from ${start} to ${end - 1}...`);
             } catch (error) {
                 if (error.response) {
                     // handle if response was throttled
                     if (error.response.status == 429) {
-                        // clear current interval
-                        clearInterval(this.interval);
-
                         // double the interval
                         this.interval = this.interval * 2;
 
-                        // start over
-                        this.interval = setInterval(function() {
-                            self.update();
-                        }, this.updateInterval);
-
                         console.log(`${dayjs().format()} - Request throttled...update interval increased to ${this.updateInterval} ms`);
+
+                        // restart updates with new interval
+                        this.startPresenceUpdates(false);
 
                         // break out of loop now
                         break;
@@ -552,7 +536,7 @@ export default () => ({
             }
 
             // start loop from end next
-            start = end;
+            start = end - 1;
         }
 
         // set lastupdate time
@@ -612,7 +596,7 @@ export default () => ({
         }
     },
     startLock: false,
-    startPresenceUpdates() {
+    startPresenceUpdates(doinitial = true) {
         let self = this;
         let presencelastupdate = dayjs.unix(this.presencelastupdate);
         let initialUpdateInterval = 0;
@@ -627,28 +611,42 @@ export default () => ({
         // stop updates just in case we have been fired twice
         this.stopPresenceUpdates();
 
-        // set initial presence update interval to next update time if presence was updated recently
-        if (presencelastupdate.isAfter(dayjs().subtract(self.updateInterval, 'ms'))) {
-            let d = dayjs.duration(self.updateInterval).subtract(dayjs().unix() - this.presencelastupdate, 'seconds');
-            
-            // convert duration to milliseconds for setTimeout
-            initialUpdateInterval = d.asMilliseconds();
-        }
+        if (doinitial) {
+            console.log(`${dayjs().format()} - Starting presence update interval...`);
 
-        // do initial presence update in background
-        setTimeout(function() {
-            self.update();
+            // set initial presence update interval to next update time if presence was updated recently
+            if (presencelastupdate.isAfter(dayjs().subtract(self.updateInterval, 'ms'))) {
+                let d = dayjs.duration(self.updateInterval).subtract(dayjs().unix() - this.presencelastupdate, 'seconds');
+                
+                // convert duration to milliseconds for setTimeout
+                initialUpdateInterval = d.asMilliseconds();
+            }
+
+            // do initial presence update in background
+            setTimeout(function() {
+                self.update();
+
+                // start update interval
+                self.interval = setInterval(function() {
+                    self.update();
+                }, self.updateInterval);
+            }, initialUpdateInterval);
+        } else {
+            console.log(`${dayjs().format()} - Starting presence update interval (no intial update)...`);
 
             // start update interval
             self.interval = setInterval(function() {
                 self.update();
             }, self.updateInterval);
-        }, initialUpdateInterval);
+        }
 
         // release our lock
         this.startLock = false;
     },
     stopPresenceUpdates() {
+
+        console.log(`${dayjs().format()} - Stopping presence update interval...`);
+
         // clear current interval
         clearInterval(this.interval);
     },
