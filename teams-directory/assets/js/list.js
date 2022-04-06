@@ -77,12 +77,13 @@ function sortList(a, b) {
         bsplit = b[name].split(' ');
     }
 
+    // compare values
     let x = (asplit.length > 1) ? asplit.slice(1, asplit.length).join(" ").toLowerCase() : asplit[0].toLowerCase();
     let y = (bsplit.length > 1) ? bsplit.slice(1, bsplit.length).join(" ").toLowerCase() : bsplit[0].toLowerCase();
 
+    // return results
     if (x < y) { return -1; }
     if (x > y) { return 1; }
-
     return 0;
 }
 

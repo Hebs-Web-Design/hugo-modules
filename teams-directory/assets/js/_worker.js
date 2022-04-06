@@ -3,6 +3,7 @@ export default {
         const url = new URL(request.url);
         
         if (url.pathname.startsWith('/v1.0/')) {
+            /* 
             // handle api reequests
             let response;
             let cache = caches.default;
@@ -40,7 +41,12 @@ export default {
             }
 
             // return back to browser
-            return response;
+            return response; */
+
+            let url = new URL(request.url);
+            url.hostname = "graph.microsoft.com";
+
+            return await fetch(url, request);
         }
         // Otherwise, serve the static assets.
         // Without this, the Worker will error and no assets will be served.
