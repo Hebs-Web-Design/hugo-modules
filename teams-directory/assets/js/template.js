@@ -1,8 +1,10 @@
 import Alpine from 'alpinejs';
 import persist from '@alpinejs/persist';
-import directory from 'js/directory/directory.js';
+import list from 'js/directory/list.js';
+import item from 'js/directory/item.js';
 
-Alpine.data('directory', directory);
+Alpine.data('list', list);
+Alpine.data('item', item);
 
 // site specific config
 {{ with .Site.Params.directory }}

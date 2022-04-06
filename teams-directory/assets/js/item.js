@@ -1,22 +1,26 @@
-// this is totally unused currently
+function initPresence() {
+    return {
+        availability: ['Unknown', 'Unknown'],
+        activity: ['Unknown', 'Unknown'],
+        current: 0,
+    };
+}
+
 export default (item = {
-        name: '',
-        title: '',
-        location: undefined,
-        phone: undefined,
+        id: '',
+        displayName: '',
+        jobTitle: '',
+        officeLocation: undefined,
+        businessPhones: undefined,
         mail: undefined,
-    }, presence = [
-        { availability: 'Unknown', activity: 'Unknown' },
-        { availability: 'Unknown', activity: 'Unknown' },
-    ],
-    current = 0) => ({
-    name: item.name !== undefined ? item.name : '',
-    title: item.title !== undefined ? item.title : '',
-    location: item.location !== undefined ? item.location : undefined,
-    phone: item.phone !== undefined ? item.phone : undefined,
+    }, presence = initPresence()) => ({
+    id: item.id !== undefined ? item.id : '',
+    name: item.displayName !== undefined ? item.displayName : '',
+    title: item.jobTitle !== undefined ? item.jobTitle : '',
+    location: item.officeLocation !== undefined ? item.officeLocation : undefined,
+    phone: item.businessPhones !== null && item.businessPhones !== undefined && item.businessPhones.length > 0 ? item.businessPhones[0] : undefined,
     mail: item.mail !== undefined ? item.mail : undefined,
-    presence: presence !== undefined ? presence : [ { availability: 'Unknown', activity: 'Unknown' }, { availability: 'Unknown', activity: 'Unknown' } ],
-    current: current !== undefined ? current : 0,
+    presence: presence !== undefined ? presence : initPresence(),
     getPresenceDescription(index = undefined) {
         return this.getPresence(index, true);
     },
@@ -26,7 +30,7 @@ export default (item = {
     getPresence(index = undefined, description = false) {
         // handle unspecified index
         if (index === undefined) {
-            index = this.current;
+            index = this.presence.current;
         }
 
         let availability = this.parsePresence(index);
@@ -41,11 +45,11 @@ export default (item = {
         let iconBase = '/directory/img';
         
         if (index === undefined) {
-            index = this.current;
+            index = this.presence.current;
         }
     
-        let availability = this.presence[index].availability;
-        let activity = this.presence[index].activity;
+        let availability = this.presence.availability[index];
+        let activity = this.presence.activity[index];
         let icon = `${iconBase}/presence_${availability.toLowerCase()}.png`;
     
         // handle different states
@@ -110,42 +114,22 @@ export default (item = {
             icon: `${iconBase}/presence_unknown.png`
         };
     },
-    has(property) {
-        return this[property] !== undefined && this[property] !== null;
+    get callto() {
+        return `callto:${this.mail}`;
     },
-    value(value, prefix = undefined) {
-        let v = value.toLowerCase();
-
-        if (prefix !== undefined) {
-            return `${prefix}:${v}`;
-        }
-
-        return v;
+    get mailto() {
+        return `mailto:${this.mail}`;
     },
-    callto() {
-        return this.value(this.mail, 'callto');
+    get tel() {
+        return `tel:${this.phone}`;
     },
-    mailto() {
-        return this.value(this.mail, 'mailto');
-    },
-    hastel() {
-        return this.phone !== null && this.phone !== undefined && this > 0;
-    },
-    tel(text = false) {
-        if (this.hastel()) {
-            if (text) {
-                return `${this.phone}`;
-            }
-            
-            return `tel:${this.phone}`;
-        }
-
-        return '';
-    },
-    telText() {
-        return this.tel(true);
-    },
-    chat() {
+    get chat() {
         return `https://teams.microsoft.com/l/chat/0/0?users=${this.mail}`;
+    },
+    get hasphone() {
+        return this.phone !== null && this.phone !== undefined && this.phone !== '';
+    },
+    get haslocation() {
+        return this.location !== null && this.location !== undefined && this.location !== '';
     },
 });

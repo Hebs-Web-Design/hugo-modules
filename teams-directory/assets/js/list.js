@@ -444,41 +444,12 @@ export default () => ({
         }
 
     },
-    getPresenceDescription(id, index = undefined) {
-        return this.getPresence(id, index, true);
-    },
-    getPresenceIcon(id, index = undefined, description = false) {
-        return this.getPresence(id, index, false);
-    },
-    getPresence(id, index = undefined, description = false) {
-        // handle unknown presence
-        if (this.presence[id] === undefined) {
+    getPresenceById(id) {
+        if (this.presence[id] !== undefined) {
             this.presence[id] = initPresence();
         }
 
-        // handle unspecified index
-        if (index === undefined) {
-            index = this.getCurrentPresenceIndex(id);
-        }
-
-        let presence = this.presence[id];
-        let availability = parsePresence(presence, index);
-        
-        if (description) {
-            return availability.description;
-        }
-
-        return availability.icon;
-    },
-    getCurrentPresenceIndex(id) {
-        // handle unknown presence
-        if (this.presence[id] === undefined) {
-            this.presence[id] = initPresence();
-        }
-
-        let presence = this.presence[id];
-
-        return presence.current;
+        return this.presence[id];
     },
     // updates presence data
     async update() {
