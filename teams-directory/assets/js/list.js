@@ -329,7 +329,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         };
 
         // if group was set in config then do request for members
-        if (group !== undefined || group === '') {
+        if (group !== undefined && group !== '') {
             url = `/groups/${group}/members`;
         }
 
