@@ -53,80 +53,6 @@ function setPresence(item, availability, activity) {
     return item;
 }
 
-function parsePresence(presence, index = undefined) {
-    let iconBase = '/directory/img';
-    
-    if (index === undefined) {
-        index = presence.current;
-    }
-
-    let availability = presence.availability === undefined ? 'Unknown' : presence.availability[index];
-    let activity = presence.activity === undefined ? 'Unknown' : presence.activity[index];
-    let icon = `${iconBase}/presence_${availability.toLowerCase()}.png`;
-
-    // handle different states
-    switch (availability) {
-        case 'Away':
-        case 'Available':
-        case 'Offline':
-        case 'Unknown':
-            return {
-                description: availability,
-                icon: icon
-            };
-        case 'Busy':
-            // handle different busy states
-            let description = availability;
-            switch (activity) {
-                case 'InACall':
-                    description = 'In a call';
-                    break;
-                case 'InAMeeting':
-                    description = 'In a meeting';
-                    break;
-            } 
-            return {
-                description: description,
-                icon: icon
-            };
-        case 'AvailableIdle':
-            return {
-                description: 'Available',
-                icon: `${iconBase}/presence_available.png`
-            };
-        case 'BeRightBack':
-            return {
-                description: 'Be Right Back',
-                icon: `${iconBase}/presence_away.png`
-            };
-        case 'BusyIdle':
-            return {
-                description: 'Busy',
-                icon: `${iconBase}/presence_busy.png`
-            };
-        case 'DoNotDisturb':
-            return {
-                description: 'Do Not Disturb',
-                icon: `${iconBase}/presence_dnd.png`
-            };
-        case 'PresenceUnknown':
-            return {
-                description: 'Unknown',
-                icon: `${iconBase}/presence_unknown.png`
-            };
-        case 'OutOfOffice':
-            return {
-                description: 'Out Of Office',
-                icon: `${iconBase}/presence_oof.png`
-            };
-    }
-
-    return {
-        description: 'Unknown',
-        icon: `${iconBase}/presence_unknown.png`
-    };
-}
-
 function initMsalClient(clientId) {
     const msalConfig = {
         auth: {
@@ -151,21 +77,18 @@ function sortList(a, b) {
     return 0;
 }
 
-function filterList(item) {
-    let skipusers = Alpine.store('config').skipusers;
-
-    // do nothing if setting is not defined
-    if (skipusers === undefined) {
-        return true;
-    }
-
-    // skip items that are in the lisst
-    return !skipusers.includes(item.userPrincipalName);
-}
-
-export default () => ({
+export default ({ tenantid = '', clientid = '', group = '', skipusers = [], showlocation = false, useworker = false }) => ({
     initdone: false,
     list: Alpine.$persist([]),
+    filterList(item) {
+        // do nothing if setting is not defined or empty
+        if (skipusers === undefined || skipusers.length == 0) {
+            return true;
+        }
+    
+        // skip items that are in the lisst
+        return !skipusers.includes(item.userPrincipalName);
+    },
     get filteredList() {
         let search = this.search.toLowerCase();
 
@@ -188,11 +111,11 @@ export default () => ({
         return this.presence[id];
     },
     presencelastupdate: Alpine.$persist(0),
-    showlocation: Alpine.store('config').showlocation,
-    msalClient: initMsalClient(Alpine.store('config').clientid),
+    showlocation: showlocation,
+    msalClient: initMsalClient(clientid),
     loginRequest: {
         scopes: ['user.read'],
-        authority: `https://login.microsoftonline.com/${Alpine.store('config').tenantid}`,
+        authority: `https://login.microsoftonline.com/${tenantid}`,
         redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
     },
     tokenRequest: {
@@ -201,7 +124,7 @@ export default () => ({
             'presence.read.all',
             'user.read.all'
         ],
-        authority: `https://login.microsoftonline.com/${Alpine.store('config').tenantid}`,
+        authority: `https://login.microsoftonline.com/${tenantid}`,
         redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
     },
     accountId: '',
@@ -234,7 +157,7 @@ export default () => ({
             // get access token
             const response = await this.getToken(this.tokenRequest);
         
-            let baseURL = Alpine.store('config').useworker ? `${window.location.protocol}//${window.location.host}/v1.0/` : 'https://graph.microsoft.com/v1.0/';
+            let baseURL = useworker ? `${window.location.protocol}//${window.location.host}/v1.0/` : 'https://graph.microsoft.com/v1.0/';
             let request = {
                 url: url,
                 method: method,
@@ -395,8 +318,7 @@ export default () => ({
         };
 
         // if group was set in config then do request for members
-        let group = Alpine.store('config').group;
-        if (group !== undefined) {
+        if (group !== undefined || group === '') {
             url = `/groups/${group}/members`;
         }
 
@@ -422,7 +344,7 @@ export default () => ({
                     let list = response.data.sort(sortList);
 
                     // return sorted and filtered list
-                    self.list = list.filter(filterList);
+                    self.list = list.filter(self.filterList);
                     self.lastupdate = dayjs().unix();
 
                     // clear any message
@@ -443,7 +365,7 @@ export default () => ({
                 let list = response.data.sort(sortList);
 
                 // return sorted and filtered list
-                this.list = list.filter(filterList);
+                this.list = list.filter(this.filterList);
                 this.lastupdate = dayjs().unix();
             } catch (error) {
                 this.notice('error', 'Error retrieving phone list.', error);
