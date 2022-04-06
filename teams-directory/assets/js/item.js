@@ -1,35 +1,35 @@
-function initPresence() {
-    return {
-        availability: ['Unknown', 'Unknown'],
-        activity: ['Unknown', 'Unknown'],
-        current: 0,
-    };
-}
-
-// this is totally unused currently 
-export default () => ({
-    displayName: '',
-    jobTitle: '',
-    officeLocation: '',
-    presence: initPresence(),
+// this is totally unused currently
+export default (item = {
+        name: '',
+        title: '',
+        location: undefined,
+        phone: undefined,
+        mail: undefined,
+    }, presence = [
+        { availability: 'Unknown', activity: 'Unknown' },
+        { availability: 'Unknown', activity: 'Unknown' },
+    ],
+    current = 0) => ({
+    name: item.name !== undefined ? item.name : '',
+    title: item.title !== undefined ? item.title : '',
+    location: item.location !== undefined ? item.location : undefined,
+    phone: item.phone !== undefined ? item.phone : undefined,
+    mail: item.mail !== undefined ? item.mail : undefined,
+    presence: presence !== undefined ? presence : [ { availability: 'Unknown', activity: 'Unknown' }, { availability: 'Unknown', activity: 'Unknown' } ],
+    current: current !== undefined ? current : 0,
     getPresenceDescription(index = undefined) {
         return this.getPresence(index, true);
     },
-    getPresenceIcon(index = undefined, description = false) {
+    getPresenceIcon(index = undefined) {
         return this.getPresence(index, false);
     },
     getPresence(index = undefined, description = false) {
-        // handle unknown presence
-        if (this.presence === undefined) {
-            this.presence = initPresence();
-        }
-
         // handle unspecified index
         if (index === undefined) {
-            index = this.currentPresenceIndex();
+            index = this.current;
         }
 
-        let availability = parsePresence(this.presence, index);
+        let availability = this.parsePresence(index);
         
         if (description) {
             return availability.description;
@@ -37,23 +37,15 @@ export default () => ({
 
         return availability.icon;
     },
-    get currentPresenceIndex() {
-        // handle unknown presence
-        if (this.presence === undefined) {
-            this.presence = initPresence();
-        }
-
-        return this.presence.current;
-    },
     parsePresence(index = undefined) {
         let iconBase = '/directory/img';
         
         if (index === undefined) {
-            index = this.currentPresenceIndex();
+            index = this.current;
         }
     
-        let availability = this.presence.availability[index];
-        let activity = this.presence.activity[index];
+        let availability = this.presence[index].availability;
+        let activity = this.presence[index].activity;
         let icon = `${iconBase}/presence_${availability.toLowerCase()}.png`;
     
         // handle different states
@@ -117,5 +109,43 @@ export default () => ({
             description: 'Unknown',
             icon: `${iconBase}/presence_unknown.png`
         };
-    }
+    },
+    has(property) {
+        return this[property] !== undefined && this[property] !== null;
+    },
+    value(value, prefix = undefined) {
+        let v = value.toLowerCase();
+
+        if (prefix !== undefined) {
+            return `${prefix}:${v}`;
+        }
+
+        return v;
+    },
+    callto() {
+        return this.value(this.mail, 'callto');
+    },
+    mailto() {
+        return this.value(this.mail, 'mailto');
+    },
+    hastel() {
+        return this.phone !== null && this.phone !== undefined && this > 0;
+    },
+    tel(text = false) {
+        if (this.hastel()) {
+            if (text) {
+                return `${this.phone}`;
+            }
+            
+            return `tel:${this.phone}`;
+        }
+
+        return '';
+    },
+    telText() {
+        return this.tel(true);
+    },
+    chat() {
+        return `https://teams.microsoft.com/l/chat/0/0?users=${this.mail}`;
+    },
 });
