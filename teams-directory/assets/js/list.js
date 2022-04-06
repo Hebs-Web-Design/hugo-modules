@@ -166,6 +166,13 @@ function filterList(item) {
 export default () => ({
     initdone: false,
     list: Alpine.$persist([]),
+    get filteredList() {
+        let search = this.search.toLowerCase();
+
+        return this.list.filter(
+            i => i.displayName.toLowerCase().includes(search)
+        );
+    },
     lastupdate: Alpine.$persist(0),
     get lastUpdateText() {
         let lastupdate = dayjs.unix(this.lastupdate);
@@ -173,6 +180,13 @@ export default () => ({
         return lastupdate.format('LLL');
     },
     presence: Alpine.$persist({}),
+    getPresenceById(id) {
+        if (this.presence[id] === undefined) {
+            this.presence[id] = initPresence();
+        }
+
+        return this.presence[id];
+    },
     presencelastupdate: Alpine.$persist(0),
     showlocation: Alpine.store('config').showlocation,
     msalClient: initMsalClient(Alpine.store('config').clientid),
@@ -327,13 +341,6 @@ export default () => ({
     search: '',
     interval: undefined,
     updateInterval: updateInterval,
-    get filteredList() {
-        let search = this.search.toLowerCase();
-
-        return this.list.filter(
-            i => i.displayName.toLowerCase().includes(search)
-        );
-    },
     async init() {
         try {
             let response = await this.msalClient.handleRedirectPromise();
@@ -444,13 +451,6 @@ export default () => ({
         }
 
     },
-    getPresenceById(id) {
-        if (this.presence[id] !== undefined) {
-            this.presence[id] = initPresence();
-        }
-
-        return this.presence[id];
-    },
     // updates presence data
     async update() {
         let list = this.filteredList;
@@ -543,44 +543,6 @@ export default () => ({
 
         // clear any outstanding message
         this.clearnotice('info');
-    },
-    has(item, property) {
-        return item[property] !== undefined && item[property] !== null;
-    },
-    value(value, prefix = undefined) {
-        let v = value.toLowerCase();
-
-        if (prefix !== undefined) {
-            return `${prefix}:${v}`;
-        }
-
-        return v;
-    },
-    callto(item) {
-        return this.value(item.mail, 'callto');
-    },
-    mailto(item) {
-        return this.value(item.mail, 'mailto');
-    },
-    hastel(item) {
-        return item.businessPhones !== null && item.businessPhones !== undefined && item.businessPhones.length > 0;
-    },
-    tel(item, text = false) {
-        if (this.hastel(item)) {
-            if (text) {
-                return `${item.businessPhones[0]}`;
-            }
-            
-            return `tel:${item.businessPhones[0]}`;
-        }
-
-        return '';
-    },
-    telText(item) {
-        return this.tel(item, true);
-    },
-    chat(item) {
-        return `https://teams.microsoft.com/l/chat/0/0?users=${item.mail}`;
     },
     updates() {
         // skip this is we haven't started up fully yet
