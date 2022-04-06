@@ -201,6 +201,8 @@ export default () => ({
             'presence.read.all',
             'user.read.all'
         ],
+        authority: `https://login.microsoftonline.com/${Alpine.store('config').tenantid}`,
+        redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
     },
     accountId: '',
     async getToken(request) {
