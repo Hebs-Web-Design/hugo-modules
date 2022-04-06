@@ -13,81 +13,6 @@ dayjs.extend(duration);
 const updateInterval = 30000;
 const presenceBatchMax = 650;
 
-async function graphGet(token, url, params = undefined, eventual = false) {
-    return await graph(token, url, 'get', undefined, params, eventual);
-}
-
-async function graphPost(token, url, data) {
-    return await graph(token, url, 'post', data);
-}
-
-async function graph(token, url, method = 'get', data = undefined, params = undefined, eventual = false, json = false) {
-    let baseURL = Alpine.store('config').useworker ? `${window.location.protocol}//${window.location.host}/v1.0/` : 'https://graph.microsoft.com/v1.0/';
-    let request = {
-        url: url,
-        method: method,
-        baseURL: baseURL,
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-        params: params,
-        data: data
-    };
-
-    if (eventual) {
-        request.headers['ConsistencyLevel'] = 'eventual';
-    }
-
-    if (json) {
-        request.headers['Content-Type'] = 'application/json';
-    }
-
-    try {
-        let response = await axios(request);
-        let responsedata = [];
-
-        if (response.data.value === undefined && response.data.length === undefined) {
-            throw {
-                message: 'No value returned in reponse and data was not iterable',
-                response: response
-            };
-        }
-
-        // add to our responsedata array
-        if (response.data.value !== undefined) {
-            responsedata.push(...response.data.value);
-        } else {
-            responsedata.push(...response.data);
-        }
-
-        // handle paged response
-        while (isPaged(response)) {
-            response = await graphGet(token, nextData(response));
-
-            if (response.data.value === undefined && response.data.length === undefined) {
-                throw {
-                    message: 'No value returned in next reponse and data was not iterable',
-                    response: response
-                };
-            }
-
-            // add next reponse to responsedata array
-            if (response.data.value !== undefined) {
-                responsedata.push(...response.data.value);
-            } else {
-                responsedata.push(...response.data);
-            }
-        }
-
-        // set data to full unpaged response
-        response.data = responsedata;
-
-        return response;
-    } catch (error) {
-        throw error;
-    }
-}
-
 function isPaged(response) {
     return response.data['@odata.nextLink'] !== undefined;
 }
@@ -136,18 +61,32 @@ function parsePresence(presence, index = undefined) {
     }
 
     let availability = presence.availability === undefined ? 'Unknown' : presence.availability[index];
-    // let activity = presence.activity === undefined ? 'Unknown' : presence.activity[index];
+    let activity = presence.activity === undefined ? 'Unknown' : presence.activity[index];
     let icon = `${iconBase}/presence_${availability.toLowerCase()}.png`;
 
     // handle different states
     switch (availability) {
         case 'Away':
         case 'Available':
-        case 'Busy':
         case 'Offline':
         case 'Unknown':
             return {
                 description: availability,
+                icon: icon
+            };
+        case 'Busy':
+            // handle different busy states
+            let description = availability;
+            switch (activity) {
+                case 'InACall':
+                    description = 'In a call';
+                    break;
+                case 'InAMeeting':
+                    description = 'In a meeting';
+                    break;
+            } 
+            return {
+                description: description,
                 icon: icon
             };
         case 'AvailableIdle':
@@ -226,16 +165,6 @@ function filterList(item) {
 
 export default () => ({
     initdone: false,
-    msalClient: undefined,
-    msalRequest: {
-        scopes: [
-            'groupmember.read.all',
-            'presence.read.all',
-            'user.read.all'
-        ],
-        authority: `https://login.microsoftonline.com/${Alpine.store('config').tenantid}`,
-        redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
-    },
     list: Alpine.$persist([]),
     lastupdate: Alpine.$persist(0),
     get lastUpdateText() {
@@ -246,30 +175,155 @@ export default () => ({
     presence: Alpine.$persist({}),
     presencelastupdate: Alpine.$persist(0),
     showlocation: Alpine.store('config').showlocation,
+    msalClient: initMsalClient(Alpine.store('config').clientid),
+    loginRequest: {
+        scopes: ['user.read'],
+        authority: `https://login.microsoftonline.com/${Alpine.store('config').tenantid}`,
+        redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
+    },
+    tokenRequest: {
+        scopes: [
+            'groupmember.read.all',
+            'presence.read.all',
+            'user.read.all'
+        ],
+    },
+    accountId: '',
+    async getToken(request) {
+        const currentAcc = this.msalClient.getAccountByHomeId(this.accountId);
+    
+        if (currentAcc) {
+            request.account = currentAcc;
+            return await this.msalClient.acquireTokenSilent(request).catch(async (error) => {
+                // silent token aquistion failed
+                if (error instanceof msal.InteractionRequiredAuthError) {
+                    // fallback to interaction when silent call fails
+                    this.msalClient.acquireTokenRedirect(request);
+                } else {
+                    throw error;
+                }
+            });
+        } else {
+            throw 'Could not get current account information';
+        }
+    },
+    async graphGet(url, params = undefined, eventual = false) {
+        return await this.graph(url, 'get', undefined, params, eventual);
+    },
+    async graphPost(url, data) {
+        return await this.graph(url, 'post', data);
+    },
+    async graph(url, method = 'get', data = undefined, params = undefined, eventual = false, json = false) {
+        try {
+            // get access token
+            const response = await this.getToken(this.tokenRequest);
+        
+            let baseURL = Alpine.store('config').useworker ? `${window.location.protocol}//${window.location.host}/v1.0/` : 'https://graph.microsoft.com/v1.0/';
+            let request = {
+                url: url,
+                method: method,
+                baseURL: baseURL,
+                headers: {
+                    'Authorization': `Bearer ${response.accessToken}`
+                },
+                params: params,
+                data: data
+            };
+    
+            if (eventual) {
+                request.headers['ConsistencyLevel'] = 'eventual';
+            }
+    
+            if (json) {
+                request.headers['Content-Type'] = 'application/json';
+            }
+    
+            try {
+                let response = await axios(request);
+                let responsedata = [];
+    
+                if (response.data.value === undefined && response.data.length === undefined) {
+                    throw {
+                        message: 'No value returned in reponse and data was not iterable',
+                        response: response
+                    };
+                }
+    
+                // add to our responsedata array
+                if (response.data.value !== undefined) {
+                    responsedata.push(...response.data.value);
+                } else {
+                    responsedata.push(...response.data);
+                }
+    
+                // handle paged response
+                while (isPaged(response)) {
+                    response = await this.graphGet(nextData(response));
+    
+                    if (response.data.value === undefined && response.data.length === undefined) {
+                        throw {
+                            message: 'No value returned in next reponse and data was not iterable',
+                            response: response
+                        };
+                    }
+    
+                    // add next reponse to responsedata array
+                    if (response.data.value !== undefined) {
+                        responsedata.push(...response.data.value);
+                    } else {
+                        responsedata.push(...response.data);
+                    }
+                }
+    
+                // set data to full unpaged response
+                response.data = responsedata;
+    
+                return response;
+            } catch (error) {
+                throw error;
+            }
+        } catch (error) {
+            throw error;
+        }
+    },
     notice(type, text, error = undefined) {
-        this[type].message = text;
-        this[type].active = true;
+        if (this.notices[type] !== undefined) {
+            this.notices[type].message = text;
+            this.notices[type].active = true;
 
-        let logmsg = error === undefined ? text : `${text}: ${error}`;
-        console.log(`${dayjs().format()} - ${logmsg}`);
+            let logmsg = error === undefined ? text : `${text}: ${error}`;
+            console.log(`${dayjs().format()} - ${logmsg}`);
+        }
     },
     clearnotice(type) {
-        this[type].active = false;
+        if (this.notices[type] !== undefined) {
+            this.notices[type].active = false;
+        }
     },
-    error: {
-        message: '',
-        active: false
+    notices: {
+        error: {
+            message: '',
+            active: false
+        },
+        warning: {
+            message: '',
+            active: false
+        },
+        info: {
+            message: '',
+            active: false
+        },
     },
-    warning: {
-        message: '',
-        active: false
+    get error() {
+        return this.notices.error;
     },
-    info: {
-        message: '',
-        active: false
+    get warning() {
+        return this.notices.warning;
+    },
+    get info() {
+        return this.notices.info;
     },
     initerror: false,
-    token: undefined,
     search: '',
     interval: undefined,
     updateInterval: updateInterval,
@@ -281,52 +335,26 @@ export default () => ({
         );
     },
     async init() {
-        this.msalClient = initMsalClient(Alpine.store('config').clientid);
-
         try {
-            let authenticationResult = await this.msalClient.handleRedirectPromise();
+            let response = await this.msalClient.handleRedirectPromise();
+    
+            if (response === null) {
+                // do sign in via redirect
+                this.msalClient.loginRedirect(this.loginRequest);
 
-            // set the active account if possible
-            if (authenticationResult !== null) {
-                this.msalClient.setActiveAccount(authenticationResult.account);
-            } else {
-                // No user signed in
-                try {
-                    // Use MSAL to login
-                    await this.msalClient.loginRedirect(this.msalRequest);
-                } catch (error) {
-                    this.notice('error', 'Error logging in', error);
-                    this.initerror = true;
-
-                    return;
-                }
+                return;
             }
+
+            // got a valid response
+            this.accountId = response.account.homeAccountId;
+    
+            
         } catch (error) {
             this.notice('error', 'Error logging in', error);
             this.initerror = true;
 
             return;
         }
-        
-        await this.msalClient.acquireTokenSilent(this.msalRequest).then(tokenResponse => {
-            this.token = tokenResponse.accessToken;
-        }).catch(async (error) => {
-            if (error instanceof msal.InteractionRequiredAuthError) {
-                // fallback to interaction when silent call fails
-                await this.msalClient.acquireTokenRedirect(this.msalRequest).then(tokenResponse => {
-                    this.token = tokenResponse.accessToken;
-                }).catch(async error => {
-                    this.notice('error', 'Error aquiring token', error);
-                    this.initerror = true;
-                });
-            } else {
-                this.notice('error', 'Error aquiring token', error);
-                this.initerror = true;
-            }
-        }).catch(async error => {
-            this.notice('error', 'Error aquiring token', error);
-            this.initerror = true;
-        });
 
         try {
             // do update
@@ -381,7 +409,7 @@ export default () => ({
                 self.notice(msg, `Using phone list from ${lastupdate.fromNow()}. Updating in background...`);
 
                 try {
-                    let response = await graphGet(self.token, url, params, true);
+                    let response = await self.graphGet(url, params, true);
                     let list = response.data.sort(sortList);
 
                     // return sorted and filtered list
@@ -402,7 +430,7 @@ export default () => ({
             }, 0);
         } else {
             try {
-                let response = await graphGet(this.token, url, params, true);
+                let response = await graphGet(url, params, true);
                 let list = response.data.sort(sortList);
 
                 // return sorted and filtered list
@@ -488,7 +516,7 @@ export default () => ({
 
             try {
                 // do request
-                const response = await graphPost(this.token, '/communications/getPresencesByUserId', data);
+                const response = await this.graphPost('/communications/getPresencesByUserId', data);
 
                 // if no error then possibly reduce the interval of updates for next run, but only once
                 if (this.updateInterval > updateInterval && ! intervalAdjusted) {
