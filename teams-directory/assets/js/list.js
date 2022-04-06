@@ -65,17 +65,19 @@ function initMsalClient(clientId) {
 }
 
 function sortList(a, b) {
+    let name = 'displayName';
+
     // handle missing data
-    if (a.displayName === undefined || a.displayName === null) {
-        a.displayName = '';
+    if (a[name] === undefined || a[name] === null) {
+        a[name] = '';
     }
-    if (b.displayName === undefined || b.displayName === null) {
-        b.displayName = '';
+    if (b[name] === undefined || b[name] === null) {
+        b[name] = '';
     }
 
     // split name
-    let asplit = a.displayName.split(' ');
-    let bsplit = b.displayName.split(' ');
+    let asplit = a[name].split(' ');
+    let bsplit = b[name].split(' ');
 
     let x = (asplit.length > 1) ? asplit.slice(1, asplit.length).join(" ").toLowerCase() : asplit[0].toLowerCase();
     let y = (bsplit.length > 1) ? bsplit.slice(1, bsplit.length).join(" ").toLowerCase() : bsplit[0].toLowerCase();
