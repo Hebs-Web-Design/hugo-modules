@@ -65,6 +65,15 @@ function initMsalClient(clientId) {
 }
 
 function sortList(a, b) {
+    // handle missing data
+    if (a.displayName === undefined || a.displayName === null) {
+        a.displayName = '';
+    }
+    if (b.displayName === undefined || b.displayName === null) {
+        b.displayName = '';
+    }
+
+    // split name
     let asplit = a.displayName.split(' ');
     let bsplit = b.displayName.split(' ');
 
