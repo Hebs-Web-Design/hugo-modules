@@ -437,7 +437,7 @@ export default () => ({
             }, 0);
         } else {
             try {
-                let response = await graphGet(url, params, true);
+                let response = await this.graphGet(url, params, true);
                 let list = response.data.sort(sortList);
 
                 // return sorted and filtered list
