@@ -1,6 +1,6 @@
-{{ with .Site.Params.directory }}
-{{ if .UseWorker }}
-{{ $worker := resources.Get "js/directory/_worker.js" }}
-{{ $worker.Publish }}
-{{ end }}
-{{ end }}
+{{- with .Site.Params.directory }}
+{{- if .UseWorker }}
+{{- $worker := resources.Get "js/directory/_worker.js" | resources.ExecuteAsTemplate "_worker.js" . }}
+{{- $worker.Publish }}
+{{- end }}
+{{- end }}
