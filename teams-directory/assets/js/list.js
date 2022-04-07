@@ -78,8 +78,8 @@ function sortList(a, b) {
     }
 
     // compare values
-    let x = (asplit.length > 1) ? asplit.slice(1, asplit.length).join(" ").toLowerCase() : asplit[0].toLowerCase();
-    let y = (bsplit.length > 1) ? bsplit.slice(1, bsplit.length).join(" ").toLowerCase() : bsplit[0].toLowerCase();
+    let x = (asplit.length > 1) ? asplit.slice(1, asplit.length).join(' ').toLowerCase() : asplit[0].toLowerCase();
+    let y = (bsplit.length > 1) ? bsplit.slice(1, bsplit.length).join(' ').toLowerCase() : bsplit[0].toLowerCase();
 
     // return results
     if (x < y) { return -1; }
@@ -95,16 +95,21 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         if (skipusers === undefined || skipusers.length == 0) {
             return true;
         }
+
+        // ensure attribute exists and is a string
+        let userPrincipalName = item.userPrincipalName === undefined || item.userPrincipalName === null ? '' : `${item.userPrincipalName}`;
     
         // skip items that are in the lisst
-        return !skipusers.includes(item.userPrincipalName);
+        return !skipusers.includes(userPrincipalName);
     },
     get filteredList() {
         let search = this.search.toLowerCase();
 
-        return this.list.filter(
-            i => i.displayName.toLowerCase().includes(search)
-        );
+        return this.list.filter(function (item) {
+            let displayName = item.displayName === undefined || item.displayName === null ? '' : `${item.displayName}`;
+
+            return displayName.toLowerCase().includes(search);
+        });
     },
     lastupdate: Alpine.$persist(0),
     get lastUpdateText() {
