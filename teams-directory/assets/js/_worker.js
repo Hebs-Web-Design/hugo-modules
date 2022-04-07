@@ -3,7 +3,6 @@ export default {
         const url = new URL(request.url);
         
         if (url.pathname.startsWith('/v1.0/')) {
-            /* 
             // handle api reequests
             let response;
             let cache = caches.default;
@@ -34,20 +33,21 @@ export default {
             // make request to origin and attempt to cache
             if (!response) {
                 let url = new URL(request.url);
-                url.hostname = "graph.microsoft.com";
+                url.hostname = 'graph.microsoft.com';
 
                 response = await fetch(url, request);
-                context.waitUntil(cache.put(cacheKey, response.clone()));
+                
+                // tweak response headers to allow caching for 30 seconds
+                let cacheResponse = response.clone();
+                cacheResponse.headers.set('cache-control', 'max-age=30');
+
+                context.waitUntil(cache.put(cacheKey, cacheResponse));
             }
 
             // return back to browser
-            return response; */
-
-            let url = new URL(request.url);
-            url.hostname = "graph.microsoft.com";
-
-            return await fetch(url, request);
+            return response;
         }
+
         // Otherwise, serve the static assets.
         // Without this, the Worker will error and no assets will be served.
         return env.ASSETS.fetch(request);
