@@ -38,11 +38,11 @@ export default {
                 response = await fetch(url, request);
                 
                 // tweak response headers to allow caching for 30 seconds
-                response = new Response(response.body, response);
-                response.headers.set('Cache-Control', 'max-age=30');
+                let cacheResponse = new Response(response.body, response);
+                cacheResponse.headers.set('Cache-Control', 'max-age=30');
 
                 // save to cache if possible
-                context.waitUntil(cache.put(cacheKey, response));
+                context.waitUntil(cache.put(cacheKey, cacheResponse));
             }
 
             // return back to browser
