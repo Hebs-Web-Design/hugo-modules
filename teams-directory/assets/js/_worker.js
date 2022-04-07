@@ -39,7 +39,7 @@ export default {
                 
                 try {
                     // tweak response headers to allow caching for 30 seconds
-                    let cacheResponse = response.clone();
+                    let cacheResponse = new Response(response.body, response);
                     cacheResponse.headers.set('cache-control', 'max-age=30');
 
                     // save to cache if possible
