@@ -37,16 +37,12 @@ export default {
 
                 response = await fetch(url, request);
                 
-                try {
-                    // tweak response headers to allow caching for 30 seconds
-                    let cacheResponse = new Response(response.body, response);
-                    cacheResponse.headers.set('cache-control', 'max-age=30');
+                // tweak response headers to allow caching for 30 seconds
+                response = new Response(response.body, response);
+                response.headers.set('Cache-Control', 'max-age=30');
 
-                    // save to cache if possible
-                    context.waitUntil(cache.put(cacheKey, cacheResponse));
-                } catch (error) {
-                    console.log(error);
-                }
+                // save to cache if possible
+                context.waitUntil(cache.put(cacheKey, response));
             }
 
             // return back to browser
