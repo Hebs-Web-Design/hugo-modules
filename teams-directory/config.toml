@@ -31,11 +31,3 @@ target = "assets/css/directory"
 [[module.mounts]]
 source = "assets/static"
 target = "assets/static/directory"
-
-[[module.mounts]]
-source = "node_modules/leaflet/dist/leaflet.css"
-target = "assets/vendor/leaflet.css"
-
-[[module.mounts]]
-source = "node_modules/leaflet/dist/images"
-target = "static/vendor/leaflet/images"
