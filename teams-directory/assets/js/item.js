@@ -130,4 +130,15 @@ export default (item = {
     get haslocation() {
         return this.location !== null && this.location !== undefined && this.location !== '';
     },
+
+    // modal stuff
+    open: false,
+    toggle() {
+        this.open = !this.open;
+
+        this.getProfilePicture();
+    },
+    close() {
+        this.open = false;
+    },
 });

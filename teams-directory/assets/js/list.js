@@ -176,7 +176,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         try {
             // get access token
             const response = await this.getToken(this.tokenRequest);
-        
+
             let baseURL = useworker ? `${window.location.protocol}//${window.location.host}/v1.0/` : 'https://graph.microsoft.com/v1.0/';
             let request = {
                 url: url,
