@@ -51,11 +51,11 @@ export default (item = {
         let availability = this.presence.availability[index];
         let activity = this.presence.activity[index];
         let icon = `${iconBase}/presence_${availability.toLowerCase()}.png`;
+        let description = availability;
     
         // handle different states
         switch (availability) {
             case 'Away':
-            case 'Available':
             case 'Offline':
             case 'Unknown':
                 return {
@@ -64,7 +64,6 @@ export default (item = {
                 };
             case 'Busy':
                 // handle different busy states
-                let description = availability;
                 switch (activity) {
                     case 'InACall':
                         description = 'In a call';
@@ -93,8 +92,18 @@ export default (item = {
                     icon: `${iconBase}/presence_busy.png`
                 };
             case 'DoNotDisturb':
+                description = 'Do Not Disturb';
+                // handle different DoNotDisturb states
+                switch (activity) {
+                    case 'Presenting':
+                        description = 'Presenting';
+                        break;
+                    case 'UrgentInterruptionsOnly':
+                        description = 'Focusing';
+                        break;
+                }
                 return {
-                    description: 'Do Not Disturb',
+                    description: description,
                     icon: `${iconBase}/presence_dnd.png`
                 };
             case 'PresenceUnknown':
