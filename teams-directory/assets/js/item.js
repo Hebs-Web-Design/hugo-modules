@@ -147,7 +147,7 @@ export default (item = {
     locations: locations,
     mapdone: false,
     hasMapLocation() {
-        let location = this.location;
+        let location = this.location.toLowerCase();
 
         return this.locations[location] !== undefined || this.defaultlocation !== undefined;
     },
