@@ -24,6 +24,7 @@
     {{- if .Site.Params.Directory.ShowFooter }}
         <div class="flex flex-col md:flex-row text-center md:text-left md:justify-between text-gray-400 dark:text-gray-300 italic" x-show="initdone && ! initerror" x-cloak>
             <div><span>List last updated on </span><span x-text="lastUpdateText"></span></div>
+            <div><span>Presence last updated </span><span x-text="presenceLastUpdateText"></span></div>
             <div>{{ with .GitInfo }}<span>Running revision {{ .AbbreviatedHash }}</span>{{ end }}</div>
         </div>
     {{- end }}

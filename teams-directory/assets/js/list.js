@@ -126,6 +126,11 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         return this.presence[id];
     },
     presencelastupdate: Alpine.$persist(0),
+    get presenceLastUpdateText() {
+        let lastupdate = dayjs.unix(this.presencelastupdate);
+
+        return lastupdate.fromNow();
+    },
     showlocation: showlocation,
     msalClient: initMsalClient(clientid),
     loginRequest: {
@@ -316,7 +321,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
             }
 
             // start presence udpates
-            this.startPresenceUpdates();
+            this.startPresenceUpdates(true);
         } catch (error) {
             // signal an error
             this.initerror = true;
@@ -392,8 +397,8 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
     // updates presence data
     async update() {
+        var self = this;
         let list = this.filteredList;
-
         let start = 0;
         let end = 0;
         let intervalAdjusted = false;
@@ -437,7 +442,8 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                         this.updateInterval = updateInterval;
                     }
 
-                    this.startPresenceUpdates(false);
+                    // restart updates with new interval
+                    // this.startPresenceUpdates(false);
 
                     // dont adjust again this run
                     intervalAdjusted = true;
@@ -459,7 +465,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                         console.log(`${dayjs().format()} - Request throttled...update interval increased to ${this.updateInterval} ms`);
 
                         // restart updates with new interval
-                        this.startPresenceUpdates(false);
+                        // this.startPresenceUpdates(false);
 
                         // break out of loop now
                         break;
@@ -482,6 +488,16 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
 
         // clear any outstanding message
         this.clearnotice('info');
+
+        // set up next update as long as we visible
+        if (!document.hidden) {
+            console.log(`${dayjs().format()} - Next presence update in ${this.updateInterval} ms...`);
+            this.interval.push(setTimeout(function() {
+                self.update();
+            }, this.updateInterval));
+        } else {
+            console.log(`${dayjs().format()} - Skipping next presence update.`);
+        }
     },
     updates() {
         // skip this is we haven't started up fully yet
@@ -490,69 +506,55 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         }
 
         // stop/start updates depending on visiblity of page 
-        if (document.hidden) {
-            this.stopPresenceUpdates();
-        } else {
+        if (!document.hidden) {
             this.startPresenceUpdates();
         }
     },
     startLock: false,
-    startPresenceUpdates(doinitial = true) {
-        let self = this;
+    startPresenceUpdates() {
+        var self = this;
         let presencelastupdate = dayjs.unix(this.presencelastupdate);
-        let initialUpdateInterval = 0;
+        let intialUpdateInterval = this.updateInterval;
         
         // basic locking in case event is fired more than once
         if (this.startLock) {
-            console.log(`${dayjs().format()} - Start presence update already requested...skpping...`);
+            console.log(`${dayjs().format()} - Start presence already requested...skpping...`);
             return;
         }
         
         // take lock
         this.startLock = true;
 
-        // stop updates just in case we have been fired twice
+        // stop any pending updates just in case
         this.stopPresenceUpdates();
 
-        if (doinitial) {
-            console.log(`${dayjs().format()} - Starting presence update interval...`);
-
-            // set initial presence update interval to next update time if presence was updated recently
-            if (presencelastupdate.isAfter(dayjs().subtract(self.updateInterval, 'ms'))) {
-                let d = dayjs.duration(self.updateInterval).subtract(dayjs().unix() - this.presencelastupdate, 'seconds');
-                
-                // convert duration to milliseconds for setTimeout
-                initialUpdateInterval = d.asMilliseconds();
-            }
-
-            // do initial presence update in background
-            setTimeout(function() {
-                self.update();
-
-                // start update interval
-                self.interval.push(setInterval(function() {
-                    self.update();
-                }, self.updateInterval));
-            }, initialUpdateInterval);
+        // set initial presence update interval to next update time if presence was updated recently
+        if (presencelastupdate.isAfter(dayjs().subtract(intialUpdateInterval, 'ms'))) {
+            let d = dayjs.duration(intialUpdateInterval).subtract(dayjs().unix() - this.presencelastupdate, 'seconds');
+            
+            // convert duration to milliseconds for setTimeout
+            intialUpdateInterval = d.asMilliseconds();
         } else {
-            console.log(`${dayjs().format()} - Starting presence update interval (no intial update)...`);
-
-            // start update interval
-            self.interval.push(setInterval(function() {
-                self.update();
-            }, self.updateInterval));
+            // update overdue
+            intialUpdateInterval = 0;
         }
+
+        console.log(`${dayjs().format()} - Starting presence update in ${intialUpdateInterval} ms...`);
+
+        // do initial update
+        setTimeout(function() {
+            self.update();
+        }, intialUpdateInterval);
 
         // release our lock
         this.startLock = false;
     },
     stopPresenceUpdates() {
-
-        console.log(`${dayjs().format()} - Stopping presence update interval(s) (found ${this.interval.length})...`);
+        // clear any timeouts
+        console.log(`${dayjs().format()} - Stopping presence update timer(s) (found ${this.interval.length})...`);
 
         for (i = 0; i < this.interval.length; i++) {
-            // clear current interval
-            clearInterval(this.interval.pop());
+            clearTimeout(this.interval.pop());
         }
     },
 });
