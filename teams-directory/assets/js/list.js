@@ -29,6 +29,13 @@ function initPresence() {
     };
 }
 
+function initProfilePicture() {
+    return {
+        loaded: false,
+        src: '/directory/img/profile_placeholder.png',
+    };
+}
+
 function setPresence(item, availability, activity) {
     // handle missing activity
     if (item.activity === undefined) {
@@ -87,7 +94,7 @@ function sortList(a, b) {
     return 0;
 }
 
-export default ({ tenantid = '', clientid = '', group = '', skipusers = [], showlocation = false, useworker = false }) => ({
+export default ({ tenantid = '', clientid = '', group = '', skipusers = [], showlocation = false, useworker = false, locations = {}, defaultlocation = undefined, }) => ({
     initdone: false,
     list: Alpine.$persist([]),
     filterList(item) {
@@ -206,7 +213,6 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
 
                 // return immediately if reponse is not JSON
                 if (!response.headers['content-type'].startsWith('application/json')) {
-                    console.log(`Content-Type: ${response.headers['content-type']}`);
                     return response;
                 }
 
@@ -566,22 +572,21 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
 
         clearTimeout(this.timeout);
     },
+
+    // profile image handling
     profileImage: {},
     async getProfileImageById(id) {
         if (this.profileImage[id] === undefined) {
-            this.profileImage[id] = {
-                loaded: false,
-                src: '/directory/img/profile_placeholder.png',
-            };
+            this.profileImage[id] = initProfilePicture();
         }
 
         if (this.profileImage[id].loaded) {
-            console.log(`Image for ${id} loaded already`);
             return;
         }
 
-        console.log(`Loading image via 'GET /users/${id}/photo/$value'`);
         try {
+            this.profileImage[id].loading = true;
+
             const response = await this.graphGetBlob(`/users/${id}/photo/$value`);
 
             let src = URL.createObjectURL(response.data);
@@ -597,12 +602,20 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
     getProfileImageSrcById(id) {
         if (this.profileImage[id] === undefined) {
-            this.profileImage[id] = {
-                loaded: false,
-                src: '/directory/img/profile_placeholder.png',
-            };
+            this.profileImage[id] = initProfilePicture();
         }
 
         return this.profileImage[id].src;
-    }
+    },
+    isProfileImageLoadedById(id) {
+        if (this.profileImage[id] === undefined) {
+            this.profileImage[id] = initProfilePicture();
+        }
+
+        return this.profileImage[id].loaded;
+    },
+
+    // location map handling
+    locations: locations,
+    defaultlocation: defaultlocation,
 });

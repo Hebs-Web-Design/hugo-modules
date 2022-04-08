@@ -1,3 +1,5 @@
+import L from 'leaflet';
+
 function initPresence() {
     return {
         availability: ['Unknown', 'Unknown'],
@@ -10,14 +12,14 @@ export default (item = {
         id: '',
         displayName: '',
         jobTitle: '',
-        officeLocation: undefined,
-        businessPhones: undefined,
+        officeLocation: '',
+        businessPhones: '',
         mail: undefined,
-    }, presence = initPresence()) => ({
+    }, presence = initPresence(), locations = {}, defaultlocation = undefined) => ({
     id: item.id !== undefined ? item.id : '',
     name: item.displayName !== undefined ? item.displayName : '',
     title: item.jobTitle !== undefined ? item.jobTitle : '',
-    location: item.officeLocation !== undefined ? item.officeLocation : undefined,
+    location: item.officeLocation !== null && item.officeLocation !== undefined ? item.officeLocation : '',
     phone: item.businessPhones !== null && item.businessPhones !== undefined && item.businessPhones.length > 0 ? item.businessPhones[0] : undefined,
     mail: item.mail !== undefined ? item.mail : undefined,
     presence: presence !== undefined ? presence : initPresence(),
@@ -139,5 +141,52 @@ export default (item = {
     close() {
         this.open = false;
     },
-    
+
+    // location map handling
+    defaultlocation: defaultlocation,
+    locations: locations,
+    mapdone: false,
+    hasMapLocation() {
+        let location = this.location;
+
+        return this.locations[location] !== undefined || this.defaultlocation !== undefined;
+    },
+    initMap(element) {
+        if (!this.mapdone && this.hasMapLocation()) {
+            try {
+                let map = L.map(element, {
+                    dragging: false,
+                    zoomControl: false,
+                });
+                let location = this.getLocation();
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                }).addTo(map);
+                L.marker(location).addTo(map);
+                
+                map.setView(location, 13);
+            } catch (error) {
+                console.log(error);
+            }
+
+            this.mapdone = true;
+        }
+    },
+    getLocation() {
+        let location = this.location;
+
+        if (this.locations[location] !== undefined) {
+            console.log(`Found location for ${location} = ${this.locations[location]}`);
+            return this.locations[location];
+        }
+
+        if (this.defaultlocation !== undefined) {
+            console.log(`Using default location`);
+            return this.defaultlocation;
+        }
+
+        return [0, 0];
+    }
 });
