@@ -55,9 +55,20 @@ export default (item = {
     
         // handle different states
         switch (availability) {
-            case 'Away':
             case 'Offline':
             case 'Unknown':
+                return {
+                    description: availability,
+                    icon: icon
+                };
+            case 'Away':
+                // handle different away states
+                switch (activity) {
+                    case 'OutOfOffice':
+                        description = 'Out of Office';
+                        icon = `${iconBase}/presence_oof.png`;
+                        break;
+                }
                 return {
                     description: availability,
                     icon: icon
