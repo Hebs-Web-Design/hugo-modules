@@ -1,0 +1,9 @@
+/*
+  Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-eval' static.cloudflareinsights.com; connect-src 'self' login.microsoftonline.com graph.microsoft.com cloudflareinsights.com; style-src 'self'; object-src 'none'; report-uri https://hebswebdesign.report-uri.com/r/d/csp/enforce
+  Referrer-Policy: no-referrer-when-downgrade
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1
+
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex

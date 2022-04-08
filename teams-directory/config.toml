@@ -27,3 +27,7 @@ target = "assets/js/directory"
 [[module.mounts]]
 source = "assets/css"
 target = "assets/css/directory"
+
+[[module.mounts]]
+source = "assets/static"
+target = "assets/static/directory"

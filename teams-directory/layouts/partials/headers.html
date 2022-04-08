@@ -1,0 +1,6 @@
+{{- with .Site.Params.directory }}
+{{- if .DeployHeaders }}
+{{- $worker := resources.Get "static/directory/_headers" | resources.ExecuteAsTemplate "_headers" . }}
+{{- $worker.Publish }}
+{{- end }}
+{{- end }}
