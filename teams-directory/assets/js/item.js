@@ -55,83 +55,61 @@ export default (item = {
     
         // handle different states
         switch (availability) {
-            case 'Offline':
-            case 'Unknown':
-                return {
-                    description: availability,
-                    icon: icon
-                };
             case 'Away':
                 // handle different away states
-                switch (activity) {
-                    case 'OutOfOffice':
-                        description = 'Out of Office';
-                        icon = `${iconBase}/presence_oof.png`;
-                        break;
+                if (activity == 'OutOfOffice') {
+                    description = 'Out of Office';
+                    icon = `${iconBase}/presence_oof.png`;
                 }
-                return {
-                    description: availability,
-                    icon: icon
-                };
+
+                break;
             case 'Busy':
                 // handle different busy states
-                switch (activity) {
-                    case 'InACall':
-                        description = 'In a call';
-                        break;
-                    case 'InAMeeting':
-                        description = 'In a meeting';
-                        break;
-                } 
-                return {
-                    description: description,
-                    icon: icon
-                };
+                if (activity == 'InACall') {
+                    description = 'In a call';
+                } else if (activity == 'InAMeeting') {
+                    description = 'In a meeting';
+                }
+
+                break;
             case 'AvailableIdle':
-                return {
-                    description: 'Available',
-                    icon: `${iconBase}/presence_available.png`
-                };
+                description = 'Available';
+                icon = `${iconBase}/presence_available.png`;
+
+                break;
             case 'BeRightBack':
-                return {
-                    description: 'Be Right Back',
-                    icon: `${iconBase}/presence_away.png`
-                };
+                description = 'Be Right Back';
+                icon = `${iconBase}/presence_away.png`;
+
+                break;
             case 'BusyIdle':
-                return {
-                    description: 'Busy',
-                    icon: `${iconBase}/presence_busy.png`
-                };
+                description = 'Busy';
+                icon = `${iconBase}/presence_busy.png`;
+
+                break;
             case 'DoNotDisturb':
                 description = 'Do Not Disturb';
+                icon = `${iconBase}/presence_dnd.png`;
+
                 // handle different DoNotDisturb states
-                switch (activity) {
-                    case 'Presenting':
-                        description = 'Presenting';
-                        break;
-                    case 'UrgentInterruptionsOnly':
-                        description = 'Focusing';
-                        break;
+                if (activity == 'Presenting') {
+                    description = 'Presenting';
+                } else if (activity == 'UrgentInterruptionsOnly') {
+                    description = 'Focusing';
                 }
-                return {
-                    description: description,
-                    icon: `${iconBase}/presence_dnd.png`
-                };
+                
+                break;
             case 'PresenceUnknown':
-                return {
-                    description: 'Unknown',
-                    icon: `${iconBase}/presence_unknown.png`
-                };
-            case 'OutOfOffice':
-                return {
-                    description: 'Out Of Office',
-                    icon: `${iconBase}/presence_oof.png`
-                };
+                description = 'Unknown';
+                icon = `${iconBase}/presence_unknown.png`;
+
+                break;
         }
     
+        // return presence info
         return {
-            description: 'Unknown',
-            icon: `${iconBase}/presence_unknown.png`
+            description: description,
+            icon: icon,
         };
     },
     get callto() {
