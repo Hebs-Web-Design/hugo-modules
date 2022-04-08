@@ -165,7 +165,7 @@ export default (item = {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 }).addTo(map);
                 L.marker(location).addTo(map);
-                
+
                 map.setView(location, 13);
             } catch (error) {
                 console.log(error);
@@ -175,15 +175,13 @@ export default (item = {
         }
     },
     getLocation() {
-        let location = this.location;
+        let location = this.location.toLowerCase();
 
         if (this.locations[location] !== undefined) {
-            console.log(`Found location for ${location} = ${this.locations[location]}`);
             return this.locations[location];
         }
 
         if (this.defaultlocation !== undefined) {
-            console.log(`Using default location`);
             return this.defaultlocation;
         }
 
