@@ -64,7 +64,7 @@
                         </div>
                     </td>
                     <td class="hidden lg:table-cell w-min truncate"><span :title="title" x-text="title"></span></td>
-                    <td class="w-min" x-show="showlocation">
+                    <td class="w-6 lg:w-auto" x-show="showlocation">
                         <div class="truncate" x-show="haslocation">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="inline" viewBox="0 0 16 16">
                                 <title x-text="location"></title>
@@ -74,7 +74,7 @@
                             <span class="hidden lg:inline" :title="location" x-text="location"></span>
                         </div>
                     </td>
-                    <td>
+                    <td class="w-6 lg:w-auto">
                         <div class="truncate">
                             <a title="Email" :href="mailto">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="inline" viewBox="0 0 16 16">
