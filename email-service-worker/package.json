@@ -1,0 +1,12 @@
+{
+  "comments": {
+    "dependencies": {
+      "@glenstack/cf-workers-hcaptcha": "project"
+    },
+    "devDependencies": {}
+  },
+  "dependencies": {
+    "@glenstack/cf-workers-hcaptcha": "^1.0.0"
+  },
+  "devDependencies": {}
+}

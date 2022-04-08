@@ -38,7 +38,8 @@ export default {
                 response = await fetch(url, request);
                 
                 // tweak response headers to allow caching for 30 seconds
-                let cacheResponse = new Response(response.body, response);
+                let cacheBody = await response.clone().text();
+                let cacheResponse = new Response(cacheBody, response);
                 cacheResponse.headers.set('Cache-Control', 'max-age=30');
 
                 // save to cache if possible
@@ -69,4 +70,4 @@ async function sha256(message) {
     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
     
     return hashHex;
-  }
+}
