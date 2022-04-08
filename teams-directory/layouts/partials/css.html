@@ -1,6 +1,5 @@
 {{- $css := resources.Get "css/directory/main.css" }}
-{{- $css = $css | resources.PostCSS }}
-{{- $css = slice $css (resources.Get "vendor/css/leaflet.css") | resources.Concat "js/bundle.js"}}
+{{- $css = slice $css (resources.Get "vendor/css/leaflet.css") | resources.Concat "js/bundle.css" | resources.PostCSS }}
 {{- if hugo.IsProduction }}
 {{- $css = $css | minify | fingerprint | resources.PostProcess }}
 {{- else if (and .Site.IsServer (fileExists "hugo_stats.json")) }}
