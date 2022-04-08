@@ -1,4 +1,4 @@
-{{- $css := slice (resources.Get "css/directory/main.css") (resources.Get "css/directory/leaflet.css") | resources.Concat "css/directory/bundle.css" | resources.PostCSS }}
+{{- $css := resources.Get "css/directory/main.css" | resources.PostCSS }}
 {{- if hugo.IsProduction }}
 {{- $css = $css | minify | fingerprint | resources.PostProcess }}
 {{- else if (and .Site.IsServer (fileExists "hugo_stats.json")) }}
@@ -7,4 +7,9 @@
 {{- else if .Site.IsServer }}
 {{- $css = $css | resources.ExecuteAsTemplate (printf "main.%v.css" now.UnixMilli) . }}
 {{- end }}
+{{- $leaflet := resources.Get "css/directory/leaflet.css" }}
+{{- if hugo.IsProduction }}
+{{- $leaflet = $leaflet | minify | fingerprint | resources.PostProcess }}
+{{- end }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+<link rel="stylesheet" href="{{ $leaflet.RelPermalink }}">
