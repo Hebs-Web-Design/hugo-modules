@@ -34,7 +34,7 @@ target = "assets/static/directory"
 
 [[module.mounts]]
 source = "node_modules/leaflet/dist/leaflet.css"
-target = "assets/css/leaflet.css"
+target = "assets/css/directory/leaflet.css"
 
 [[module.mounts]]
 source = "node_modules/leaflet/dist/images"
