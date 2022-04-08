@@ -279,7 +279,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
     initerror: false,
     search: '',
-    interval: undefined,
+    interval: [],
     updateInterval: updateInterval,
     async init() {
         try {
@@ -489,6 +489,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
             return;
         }
 
+        // stop/start updates depending on visiblity of page 
         if (document.hidden) {
             this.stopPresenceUpdates();
         } else {
@@ -503,10 +504,12 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         
         // basic locking in case event is fired more than once
         if (this.startLock) {
+            console.log(`${dayjs().format()} - Start presence update already requested...skpping...`);
             return;
-        } else {
-            this.startLock = true;
         }
+        
+        // take lock
+        this.startLock = true;
 
         // stop updates just in case we have been fired twice
         this.stopPresenceUpdates();
@@ -527,17 +530,17 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                 self.update();
 
                 // start update interval
-                self.interval = setInterval(function() {
+                self.interval.push(setInterval(function() {
                     self.update();
-                }, self.updateInterval);
+                }, self.updateInterval));
             }, initialUpdateInterval);
         } else {
             console.log(`${dayjs().format()} - Starting presence update interval (no intial update)...`);
 
             // start update interval
-            self.interval = setInterval(function() {
+            self.interval.push(setInterval(function() {
                 self.update();
-            }, self.updateInterval);
+            }, self.updateInterval));
         }
 
         // release our lock
@@ -545,9 +548,11 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
     stopPresenceUpdates() {
 
-        console.log(`${dayjs().format()} - Stopping presence update interval...`);
+        console.log(`${dayjs().format()} - Stopping presence update interval(s) (found ${this.interval.length})...`);
 
-        // clear current interval
-        clearInterval(this.interval);
+        for (i = 0; i < this.interval.length; i++) {
+            // clear current interval
+            clearInterval(this.interval.pop());
+        }
     },
 });
