@@ -169,10 +169,13 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     async graphGet(url, params = undefined, eventual = false) {
         return await this.graph(url, 'get', undefined, params, eventual);
     },
+    async graphGetBlob(url, params = undefined) {
+        return await this.graph(url, 'get', undefined, params, false, false, 'blob');
+    },
     async graphPost(url, data) {
         return await this.graph(url, 'post', data);
     },
-    async graph(url, method = 'get', data = undefined, params = undefined, eventual = false, json = false) {
+    async graph(url, method = 'get', data = undefined, params = undefined, eventual = false, json = false, responseType = 'json') {
         try {
             // get access token
             const response = await this.getToken(this.tokenRequest);
@@ -186,7 +189,8 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                     'Authorization': `Bearer ${response.accessToken}`
                 },
                 params: params,
-                data: data
+                data: data,
+                responseType: responseType,
             };
     
             if (eventual) {
@@ -199,6 +203,13 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     
             try {
                 let response = await axios(request);
+
+                // return immediately if reponse is not JSON
+                if (!response.headers['content-type'].startsWith('application/json')) {
+                    console.log(`Content-Type: ${response.headers['content-type']}`);
+                    return response;
+                }
+
                 let responsedata = [];
     
                 if (response.data.value === undefined && response.data.length === undefined) {
@@ -555,4 +566,43 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
 
         clearTimeout(this.timeout);
     },
+    profileImage: {},
+    async getProfileImageById(id) {
+        if (this.profileImage[id] === undefined) {
+            this.profileImage[id] = {
+                loaded: false,
+                src: '/directory/img/profile_placeholder.png',
+            };
+        }
+
+        if (this.profileImage[id].loaded) {
+            console.log(`Image for ${id} loaded already`);
+            return;
+        }
+
+        console.log(`Loading image via 'GET /users/${id}/photo/$value'`);
+        try {
+            const response = await this.graphGetBlob(`/users/${id}/photo/$value`);
+
+            let src = URL.createObjectURL(response.data);
+            this.profileImage[id] = {
+                src: src,
+                loaded: true,
+            };
+        } catch (error) {
+            // don't try again
+            this.profileImage[id].loaded = true;
+            console.log(`${dayjs().format()} - ${error}`);
+        }
+    },
+    getProfileImageSrcById(id) {
+        if (this.profileImage[id] === undefined) {
+            this.profileImage[id] = {
+                loaded: false,
+                src: '/directory/img/profile_placeholder.png',
+            };
+        }
+
+        return this.profileImage[id].src;
+    }
 });

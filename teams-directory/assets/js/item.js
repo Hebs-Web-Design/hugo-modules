@@ -135,10 +135,9 @@ export default (item = {
     open: false,
     toggle() {
         this.open = !this.open;
-
-        this.getProfilePicture();
     },
     close() {
         this.open = false;
     },
+    
 });

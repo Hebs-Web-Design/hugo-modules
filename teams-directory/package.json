@@ -1,6 +1,7 @@
 {
   "comments": {
     "dependencies": {
+      "@alpinejs/intersect": "project",
       "@alpinejs/persist": "project",
       "@azure/msal-browser": "project",
       "@microsoft/microsoft-graph-client": "project",
@@ -16,6 +17,7 @@
     "devDependencies": {}
   },
   "dependencies": {
+    "@alpinejs/intersect": "^3.9.6",
     "@alpinejs/persist": "^3.9.5",
     "@azure/msal-browser": "^2.22.1",
     "@microsoft/microsoft-graph-client": "^3.0.2",
