@@ -9,7 +9,7 @@
 {{- end }}
 {{- $leaflet := resources.Get "css/directory/leaflet.css" }}
 {{- if hugo.IsProduction }}
-{{- $leaflet = $leaflet | minify | fingerprint | resources.PostProcess }}
+{{- $leaflet = $leaflet | minify | fingerprint }}
 {{- end }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 <link rel="stylesheet" href="{{ $leaflet.RelPermalink }}">
