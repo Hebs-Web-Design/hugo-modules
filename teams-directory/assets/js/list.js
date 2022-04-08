@@ -284,7 +284,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
     initerror: false,
     search: '',
-    interval: [],
+    timeout: 0,
     updateInterval: updateInterval,
     async init() {
         try {
@@ -492,7 +492,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         // set up next update as long as we visible
         if (!document.hidden) {
             console.log(`${dayjs().format()} - Next presence update in ${this.updateInterval} ms...`);
-            this.interval = setTimeout(function() {
+            this.timeout = setTimeout(function() {
                 self.update();
             }, this.updateInterval);
         } else {
@@ -553,6 +553,6 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         // clear any timeouts
         console.log(`${dayjs().format()} - Stopping pending presence update...`);
 
-        clearTimeout(this.interval);
+        clearTimeout(this.timeout);
     },
 });
