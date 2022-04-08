@@ -460,7 +460,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                     // handle if response was throttled
                     if (error.response.status == 429) {
                         // double the interval
-                        this.interval = this.interval * 2;
+                        this.updateInterval = this.updateInterval * 2;
 
                         console.log(`${dayjs().format()} - Request throttled...update interval increased to ${this.updateInterval} ms`);
 
@@ -492,9 +492,9 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         // set up next update as long as we visible
         if (!document.hidden) {
             console.log(`${dayjs().format()} - Next presence update in ${this.updateInterval} ms...`);
-            this.interval.push(setTimeout(function() {
+            this.interval = setTimeout(function() {
                 self.update();
-            }, this.updateInterval));
+            }, this.updateInterval);
         } else {
             console.log(`${dayjs().format()} - Skipping next presence update.`);
         }
@@ -551,10 +551,8 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
     stopPresenceUpdates() {
         // clear any timeouts
-        console.log(`${dayjs().format()} - Stopping presence update timer(s) (found ${this.interval.length})...`);
+        console.log(`${dayjs().format()} - Stopping pending presence update...`);
 
-        for (i = 0; i < this.interval.length; i++) {
-            clearTimeout(this.interval.pop());
-        }
+        clearTimeout(this.interval);
     },
 });
