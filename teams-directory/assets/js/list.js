@@ -65,7 +65,10 @@ function initMsalClient(clientId) {
         auth: {
           clientId: clientId,
           redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
-        }
+        },
+        cache: {
+            cacheLocation: 'sessionStorage',
+        },
     };
     
     return new msal.PublicClientApplication(msalConfig);
