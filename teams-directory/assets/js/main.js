@@ -1,6 +1,7 @@
 import Alpine from 'alpinejs';
 import persist from '@alpinejs/persist';
 import intersect from '@alpinejs/intersect';
+import focus from '@alpinejs/focus'
 import list from 'js/directory/list.js';
 import item from 'js/directory/item.js';
 
@@ -11,6 +12,7 @@ window.Alpine = Alpine;
 
 Alpine.plugin(persist);
 Alpine.plugin(intersect);
+Alpine.plugin(focus);
 
 // global stuff
 {{- with .Site.Params.directory }}
