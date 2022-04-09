@@ -21,6 +21,10 @@ source = "static/icons"
 target = "static/directory/icons"
 
 [[module.mounts]]
+source = "static/leaflet"
+target = "static/directory/leaflet"
+
+[[module.mounts]]
 source = "assets/js"
 target = "assets/js/directory"
 

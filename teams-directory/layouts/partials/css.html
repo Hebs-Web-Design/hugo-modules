@@ -1,15 +1,6 @@
-{{- $css := resources.Get "css/directory/main.css" | resources.PostCSS }}
+{{- $options := (dict "includePaths" (slice "node_modules")) }}
+{{- $css := resources.Get "css/directory/main.scss" | resources.ToCSS $options | resources.PostCSS }}
 {{- if hugo.IsProduction }}
 {{- $css = $css | minify | fingerprint | resources.PostProcess }}
-{{- else if (and .Site.IsServer (fileExists "hugo_stats.json")) }}
-{{- $hash := getJSON "hugo_stats.json" | printf "%v" | sha256 }}
-{{- $css = $css | resources.ExecuteAsTemplate (printf "css/directory/main.%v.css" $hash) . }}
-{{- else if .Site.IsServer }}
-{{- $css = $css | resources.ExecuteAsTemplate (printf "main.%v.css" now.UnixMilli) . }}
-{{- end }}
-{{- $leaflet := resources.Get "vendor/leaflet/leaflet.css" }}
-{{- if hugo.IsProduction }}
-{{- $leaflet = $leaflet | minify | fingerprint }}
 {{- end }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
-<link rel="stylesheet" href="{{ $leaflet.RelPermalink }}">

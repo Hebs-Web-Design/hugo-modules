@@ -56,12 +56,12 @@
                 <tr class="odd:bg-white even:bg-slate-100 odd:dark:bg-black even:dark:bg-slate-900" x-data="item(entry, getPresenceById(entry.id), locations, defaultlocation)">
                     <td class="pl-2 md:p-0 cursor-pointer" @click="toggle">
                         <template x-teleport="body">
-                            <div class="absolute w-screen h-screen top-0 left-0 z-40 backdrop-blur-sm" x-show="open" x-transition>
+                            <div class="fixed w-screen h-screen top-0 left-0 z-40 backdrop-blur-sm" x-show="open" x-transition>
                                 <div class="flex flex-col lg:flex-row place-content-center bg-white dark:bg-black w-screen h-screen lg:w-1/2 lg:h-1/2 lg:mx-auto lg:mt-[12.5%] justify-items-start lg:rounded-lg lg:border-2" @click.outside="close">
-                                    <div class="flex-none p-4 w-56 h-56 border-2 rounded-lg mt-4 lg:ml-4 mx-auto">
+                                    <div class="flex-none w-56 h-56 mt-4 lg:ml-4 mx-auto">
                                         <div class="relative">
-                                            <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none" src="/directory/img/profile_placeholder.png" :class="isProfileImageLoadedById(id) ? 'opacity-0' : 'opacity-100'" x-intersect="getProfileImageById(id)">
-                                            <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none" :src="getProfileImageSrcById(id)" :class="isProfileImageLoadedById(id) ? 'opacity-100' : 'opacity-0'">
+                                            <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none object-contain w-56 h-56 -mt-0.5 border-2 rounded-lg" src="/directory/img/profile_placeholder.png" :class="isProfileImageLoadedById(id) ? 'opacity-0' : 'opacity-100'" x-intersect="getProfileImageById(id)">
+                                            <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none object-contain w-56 h-56 -mt-0.5 border-2 rounded-lg" :src="getProfileImageSrcById(id)" :class="isProfileImageLoadedById(id) ? 'opacity-100' : 'opacity-0'">
                                         </div>
                                     </div>
                                     <div class="flex-auto flex flex-col p-4" x-id="['map']">

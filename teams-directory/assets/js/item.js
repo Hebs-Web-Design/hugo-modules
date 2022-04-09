@@ -1,5 +1,7 @@
 import L from 'leaflet';
 
+L.Icon.Default.imagePath = '/directory/leaflet/';
+
 function initPresence() {
     return {
         availability: ['Unknown', 'Unknown'],
@@ -156,7 +158,7 @@ export default (item = {
             try {
                 let map = L.map(element, {
                     dragging: false,
-                    zoomControl: false,
+                    zoomControl: true,
                 });
                 let location = this.getLocation();
 
@@ -166,7 +168,7 @@ export default (item = {
                 }).addTo(map);
                 L.marker(location).addTo(map);
 
-                map.setView(location, 13);
+                map.setView(location, 15);
             } catch (error) {
                 console.log(error);
             }
