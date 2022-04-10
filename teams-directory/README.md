@@ -14,7 +14,7 @@ type: directory
 {{< directory >}}
 ```
 
-## App Registration
+## Azure AD App Registration
 
 This requires an App Registration in your Azure AD tenant as follows:
 
@@ -47,7 +47,7 @@ logo = "img/logo.png"
 logoAlt = "img/logo-inverted.png"
 logoSvg = "img/logo.svg"
 logoAlt = "img/logo-inverted.svg"
-# Show the location of users (Office Location in Azure AD) in list
+# Show the location of users ("Office Location" in Azure AD) in list
 showLocation = false
 # Show footer containing last update time and version/hash of site (if GitInfo is enabled)
 showFooter = false
@@ -63,6 +63,16 @@ defaultLocation = "Perth Office"
 "Sydney Office" = [-33.7697, 150.8024]
 ```
 
+### Attributes
+
+The following Azure AD attributes are shown in the directory:
+
+* displayName
+* mail
+* officeLocation
+* businessPhones[0]
+* jobTitle
+
 ### Locations and Maps
 
 The users "Office Location" is used to display a map based on a match being
@@ -76,7 +86,7 @@ Enabling the "useWorker" option will deploy a "_worker.js" file to enable
 proxying of MS Graph API via a Cloudflare Worker.
 
 The goal of this is to eventually enable caching of API responses, however
-this is not yet working.
+this is **not working** currently.
 
 ### Headers
 
