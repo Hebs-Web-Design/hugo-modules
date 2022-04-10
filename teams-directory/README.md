@@ -20,6 +20,13 @@ This requires an App Registration in your Azure AD tenant as follows:
 
 1. TODO
 
+The required Microsoft Graph API permissions granted to the App Registration are:
+
+* User.Read
+* User.Read.All
+* Presence.Read.All
+* Groupmember.Read.All
+
 ## Site Config
 
 ```toml
@@ -44,4 +51,33 @@ logoAlt = "img/logo-inverted.svg"
 showLocation = false
 # Show footer containing last update time and version/hash of site (if GitInfo is enabled)
 showFooter = false
+# Deploy _headers file for Cloudflare Pages
+deployHeaders = false
+# Deploy _worker.js file for Cloudflare Pages
+useWorker = false
+# Default location for OpenSteetMap maps
+defaultLocation = "Perth Office"
+
+[params.directory.locations]
+"Perth Office" = [-31.9560, 115.8606]
+"Sydney Office" = [-33.7697, 150.8024]
 ```
+
+### Locations and Maps
+
+The users "Office Location" is used to display a map based on a match being
+found under "locations" or based on the "defaultLocation" set.
+
+## Cloudflare Pages specific features
+
+### Functions
+
+Enabling the "useWorker" option will deploy a "_worker.js" file to enable
+proxying of MS Graph API via a Cloudflare Worker.
+
+The goal of this is to eventually enable caching of API responses, however
+this is not yet working.
+
+### Headers
+
+This deploys a file named "_headers" to implement HTTP headers via Cloudflare Pages.

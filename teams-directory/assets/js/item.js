@@ -17,7 +17,7 @@ export default (item = {
         officeLocation: '',
         businessPhones: '',
         mail: undefined,
-    }, presence = initPresence(), locations = {}, defaultlocation = undefined) => ({
+    }, presence = initPresence(), locations = {}, defaultlocation = '') => ({
     id: item.id !== undefined ? item.id : '',
     name: item.displayName !== undefined ? item.displayName : '',
     title: item.jobTitle !== undefined ? item.jobTitle : '',
@@ -151,7 +151,23 @@ export default (item = {
     hasMapLocation() {
         let location = this.location.toLowerCase();
 
-        return this.locations[location] !== undefined || this.defaultlocation !== undefined;
+        // is there a specific location match
+        if (this.locations[location] !== undefined) {
+            return true;
+        }
+
+        // is there no default location defined
+        if (this.defaultlocation === undefined || this.defaultlocation == '') {
+            return false;
+        }
+        
+        // is default location valid
+        if (this.locations[this.defaultlocation] === undefined) {
+            return true;
+        }
+
+        // if not then false
+        return false;
     },
     initMap(element) {
         if (!this.mapdone && this.hasMapLocation()) {
@@ -179,12 +195,13 @@ export default (item = {
     getLocation() {
         let location = this.location.toLowerCase();
 
+        // try specific location
         if (this.locations[location] !== undefined) {
             return this.locations[location];
         }
 
-        if (this.defaultlocation !== undefined) {
-            return this.defaultlocation;
+        if (this.defaultlocation !== undefined && this.locations[this.defaultlocation] !== undefined) {
+            return this.locations[this.defaultlocation];
         }
 
         return [0, 0];
