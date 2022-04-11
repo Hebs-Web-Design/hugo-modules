@@ -58,6 +58,13 @@ useWorker = false
 # Default location for OpenSteetMap maps
 defaultLocation = "Perth Office"
 
+# Maps confguration (optional)
+[params.directory.maps]
+# Service to use for maps. Either "mapbox" or "openstreetmap" (default)
+service = "mapbox"
+# API key for Mapbox (not required for OpenStreetMap maps)
+apiKey = "MAPBOX-API-KEY"
+
 [params.directory.locations]
 "Perth Office" = [-31.9560, 115.8606]
 "Sydney Office" = [-33.7697, 150.8024]

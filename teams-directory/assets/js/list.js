@@ -97,7 +97,7 @@ function sortList(a, b) {
     return 0;
 }
 
-export default ({ tenantid = '', clientid = '', group = '', skipusers = [], showlocation = false, useworker = false, locations = {}, defaultlocation = undefined, }) => ({
+export default ({ tenantid = '', clientid = '', group = '', skipusers = [], showlocation = false, useworker = false, locations = {}, defaultlocation = undefined, mapservice = 'openstreetmap', mapsapikey = '' }) => ({
     initdone: false,
     list: Alpine.$persist([]),
     filterList(item) {
@@ -621,4 +621,6 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     // location map handling
     locations: locations,
     defaultlocation: defaultlocation,
+    mapservice: mapservice,
+    mapsapikey: mapsapikey,
 });

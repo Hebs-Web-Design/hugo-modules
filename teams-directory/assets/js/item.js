@@ -17,7 +17,7 @@ export default (item = {
         officeLocation: '',
         businessPhones: [],
         mail: undefined,
-    }, presence = initPresence(), locations = {}, defaultlocation = '') => ({
+    }, presence = initPresence(), locations = {}, defaultlocation = '', mapservice = 'openstreetmap', mapsapikey = '') => ({
     id: item.id !== undefined ? item.id : '',
     name: item.displayName !== undefined ? item.displayName : '',
     title: item.jobTitle !== undefined ? item.jobTitle : '',
@@ -147,6 +147,8 @@ export default (item = {
     // location map handling
     defaultlocation: defaultlocation,
     locations: locations,
+    mapservice: mapservice,
+    mapsapikey: mapsapikey,
     mapdone: false,
     hasMapLocation() {
         let location = this.location.toLowerCase();
@@ -178,10 +180,19 @@ export default (item = {
                 });
                 let location = this.getLocation();
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                }).addTo(map);
+                if (this.mapservice == "mapbox" && this.mapsapikey !== '') {
+                    L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${this.mapsapikey}`, {
+                        attribution: '&copy <a href="https://www.mapbox.com/feedback/">Mapbox</a> &copy <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        tileSize: 512,
+                        zoomOffset: -1
+                    }).addTo(map);
+                } else {
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    }).addTo(map);
+                }
+
                 L.marker(location).addTo(map);
 
                 map.setView(location, 15);
@@ -200,8 +211,14 @@ export default (item = {
             return this.locations[location];
         }
 
-        if (this.defaultlocation !== undefined && this.locations[this.defaultlocation] !== undefined) {
-            return this.locations[this.defaultlocation];
+        console.log(this.defaultlocation);
+        console.log(this.locations[this.defaultlocation]);
+        if (this.defaultlocation !== undefined) {
+            location = this.defaultlocation.toLowerCase();
+
+            if (this.locations[location] !== undefined) {
+                return this.locations[location];
+            }
         }
 
         return [0, 0];

@@ -33,6 +33,14 @@ window.directoryconfig = {
     defaultlocation: {{ . | jsonify }},
     {{- end }}
     {{ if hugo.IsProduction }} useworker: {{ default "false" .UseWorker }},{{ end }}
+    {{- with .Maps }}
+    {{- with .Service }}
+    mapservice: '{{ . }}',
+    {{- end }}
+    {{- with .ApiKey }}
+    mapsapikey: '{{ . }}',
+    {{- end }}
+    {{- end }}
 };
 {{- end }}
 Alpine.start();

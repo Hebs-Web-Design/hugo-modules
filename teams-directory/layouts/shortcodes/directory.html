@@ -53,12 +53,12 @@
     <table class="table-fixed w-full">
         <tbody>
             <template x-for="(entry, index) in filteredList" :key="entry.id">
-                <tr class="odd:bg-white even:bg-slate-100 odd:dark:bg-black even:dark:bg-slate-900" x-data="item(entry, getPresenceById(entry.id), locations, defaultlocation)">
+                <tr class="odd:bg-white even:bg-slate-100 odd:dark:bg-black even:dark:bg-slate-900" x-data="item(entry, getPresenceById(entry.id), locations, defaultlocation, mapservice, mapsapikey)">
                     <td class="pl-2 md:p-0 cursor-pointer" @click="toggle">
                         <template x-teleport="body">
                             <div class="fixed w-screen h-screen top-0 left-0 z-40 backdrop-blur-sm" x-show="open" x-trap.noscroll="open" x-transition>
-                                <div class="flex flex-col lg:flex-row place-content-center bg-white dark:bg-black w-screen h-screen lg:w-1/2 lg:h-1/2 lg:mx-auto lg:mt-[12.5%] justify-items-start lg:rounded-lg lg:border-2" @click.outside="close">
-                                    <div class="flex-none w-56 h-56 mt-4 lg:ml-4 mx-auto">
+                                <div class="flex flex-col md:flex-row place-content-center bg-white dark:bg-black w-screen h-screen lg:w-1/2 lg:h-1/2 lg:mx-auto lg:mt-[12.5%] justify-items-start lg:rounded-lg lg:border-2" @click.outside="close">
+                                    <div class="flex-none w-56 h-56 mt-4 md:ml-4 mx-auto">
                                         <div class="relative">
                                             <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none object-contain w-56 h-56 -mt-0.5 border-2 rounded-lg" src="/directory/img/profile_placeholder.png" :class="isProfileImageLoadedById(id) ? 'opacity-0' : 'opacity-100'" x-intersect="getProfileImageById(id)">
                                             <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none object-contain w-56 h-56 -mt-0.5 border-2 rounded-lg" :src="getProfileImageSrcById(id)" :class="isProfileImageLoadedById(id) ? 'opacity-100' : 'opacity-0'">
@@ -85,12 +85,12 @@
                                         <div x-show="haslocation"><span class="font-bold">Location: </span><span x-text="location"></span></div>
                                         <div class="h-full" x-show="hasMapLocation" :id="$id('map')" x-intersect="initMap($id('map'))"></div>
                                     </div>
-                                    <div class="flex-none justify-self-end cursor-pointer lg:w-6 lg:m-0 mx-auto" title="Close" @click="close">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="hidden lg:inline" viewBox="0 0 16 16">
+                                    <div class="flex-none justify-self-end cursor-pointer md:w-6 md:m-0 mx-auto" title="Close" @click="close">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="hidden md:inline" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                                         </svg>
-                                        <button class="rounded-full lg:hidden px-4 py-2 bg-slate-500 mb-4 text-white" @click="close">Close</button> 
+                                        <button class="rounded-full md:hidden px-4 py-2 bg-slate-500 mb-4 text-white" @click="close">Close</button> 
                                     </div>
                                 </div>
                             </div>
