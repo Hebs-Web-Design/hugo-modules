@@ -83,7 +83,7 @@
                                             </a>
                                         </div>
                                         <div x-show="haslocation"><span class="font-bold">Location: </span><span x-text="location"></span></div>
-                                        <div class="h-full" x-show="hasMapLocation" :id="$id('map')" x-intersect="initMap($id('map'))"></div>
+                                        <div class="h-full rounded-lg" x-show="hasMapLocation" :id="$id('map')" x-intersect="initMap($id('map'))"></div>
                                     </div>
                                     <div class="flex-none justify-self-end cursor-pointer md:w-6 md:m-0 mx-auto" title="Close" @click="close">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="hidden md:inline" viewBox="0 0 16 16">
