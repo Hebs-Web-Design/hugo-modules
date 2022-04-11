@@ -15,7 +15,7 @@ export default (item = {
         displayName: '',
         jobTitle: '',
         officeLocation: '',
-        businessPhones: '',
+        businessPhones: [],
         mail: undefined,
     }, presence = initPresence(), locations = {}, defaultlocation = '') => ({
     id: item.id !== undefined ? item.id : '',
