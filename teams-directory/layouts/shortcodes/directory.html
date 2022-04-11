@@ -41,7 +41,7 @@
     x-cloak></div>
 </div>
 <div x-show="initdone && ! initerror" x-transition x-cloak>
-    <div class="flex flex-row" x-show="initdone && ! initerror" x-transition x-cloak>
+    <div class="flex flex-row sticky top-0 bg-white dark:bg-black z-10" x-show="initdone && ! initerror" x-transition x-cloak>
         <div class="md:flex-auto">
             {{ partialCached "directory/logo.html" . }}
             <span class="hidden md:inline grow pl-4 text-2xl align-middle">{{ .Site.Title }}</span>
@@ -50,7 +50,7 @@
             <input class="form-input rounded-full inline-block dark:text-black" type="search" x-model.debounce="search" placeholder="Search...">
         </div>
     </div>
-    <table class="table-fixed w-full">
+    <table class="table-fixed w-full pt-16">
         <tbody>
             <template x-for="(entry, index) in filteredList" :key="entry.id">
                 <tr class="odd:bg-white even:bg-slate-100 odd:dark:bg-black even:dark:bg-slate-900" x-data="item(entry, getPresenceById(entry.id), locations, defaultlocation, mapservice, mapsapikey)">
