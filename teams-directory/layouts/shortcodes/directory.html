@@ -1,5 +1,5 @@
-{{ partial "directory/worker.html" . }}
-{{ partial "directory/headers.html" . }}
+{{ partialCached "directory/worker.html" . }}
+{{ partialCached "directory/headers.html" . }}
 <div class="animate-bounce text-center text-xl font-semibold pt-16 flex flex-col" x-show="! initdone || initerror">
     <div>{{ partialCached "directory/logo.html" . }}</div>
     <div class="font-normal text-2xl">{{ .Site.Title }}</div>
@@ -57,15 +57,23 @@
                     <td class="pl-2 md:p-0 cursor-pointer" @click="toggle">
                         <template x-teleport="body">
                             <div class="fixed w-screen h-screen top-0 left-0 z-40 backdrop-blur-sm" x-show="open" x-trap.noscroll="open" x-transition>
-                                <div class="flex flex-col md:flex-row place-content-center bg-white dark:bg-black w-screen h-screen lg:w-1/2 lg:h-1/2 lg:mx-auto lg:mt-[12.5%] justify-items-start lg:rounded-lg lg:border-2" @click.outside="close">
-                                    <div class="flex-none w-56 h-56 mt-4 md:ml-4 mx-auto">
+                                <div class="flex flex-col sm:flex-row place-content-center bg-white dark:bg-black w-screen h-screen lg:w-1/2 md:h-1/2 lg:mx-auto md:mt-[12.5%] justify-items-start lg:rounded-lg lg:border-2" @click.outside="close">
+                                    <div class="flex-none w-56 h-56 mt-2 md:mt-4 sm:ml-2 md:ml-4 mx-auto">
                                         <div class="relative">
-                                            <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none object-contain w-56 h-56 -mt-0.5 border-2 rounded-lg" src="/directory/img/profile_placeholder.png" :class="isProfileImageLoadedById(id) ? 'opacity-0' : 'opacity-100'" x-intersect="getProfileImageById(id)">
+                                            <picture>
+                                                <source srcset="/directory/img/profile_placeholder_alt.png" media="(prefers-color-scheme: dark)">
+                                                <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none object-contain w-56 h-56 -mt-0.5 border-2 rounded-lg" src="/directory/img/profile_placeholder.png" :class="isProfileImageLoadedById(id) ? 'opacity-0' : 'opacity-100'" x-intersect="getProfileImageById(id)">
+                                            </picture>
                                             <img class="inline absolute transition-opacity duration-500 motion-reduce:transition-none object-contain w-56 h-56 -mt-0.5 border-2 rounded-lg" :src="getProfileImageSrcById(id)" :class="isProfileImageLoadedById(id) ? 'opacity-100' : 'opacity-0'">
                                         </div>
                                     </div>
-                                    <div class="flex-auto flex flex-col p-4" x-id="['map']">
+                                    <div class="flex-auto flex flex-col py-2 px-4 sm:pt-4" x-id="['map']">
                                         <div><span class="font-bold">Name: </span><span x-text="name"></span></div>
+                                        <div>
+                                            <span class="font-bold">Presence: </span>
+                                            <img class="inline-block m-1" src="/directory/img/presence_unknown.png" :src="getPresenceIcon" :title="getPresenceDescription">
+                                            <span x-text="getPresenceDescription"></span>
+                                        </div>
                                         <div class="tuncate"><span class="font-bold">Title: </span><span x-text="title"></span></div>
                                         <div class="tuncate"><span class="font-bold">Email: </span><a title="Email" :href="mailto" x-text="mail"></a></div>
                                         <div x-show="hasphone"><span class="font-bold">Phone: </span><a title="Phone Call" :href="tel" x-text="phone"></a></div>
@@ -85,12 +93,12 @@
                                         <div x-show="haslocation"><span class="font-bold">Location: </span><span x-text="location"></span></div>
                                         <div class="h-full rounded-lg" x-show="hasMapLocation" :id="$id('map')" x-intersect="initMap($id('map'))"></div>
                                     </div>
-                                    <div class="flex-none justify-self-end cursor-pointer md:w-6 md:m-0 mx-auto" title="Close" @click="close">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="hidden md:inline" viewBox="0 0 16 16">
+                                    <div class="flex-none justify-self-end cursor-pointer sm:w-6 sm:m-0 mx-auto" title="Close" @click="close">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="hidden sm:inline" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                                         </svg>
-                                        <button class="rounded-full md:hidden px-4 py-2 bg-slate-500 mb-4 text-white" @click="close">Close</button> 
+                                        <button class="rounded-full sm:hidden px-4 py-2 bg-slate-500 mb-4 text-white" @click="close">Close</button> 
                                     </div>
                                 </div>
                             </div>

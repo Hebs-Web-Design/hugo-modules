@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{- partial "directory/css.html" . }}
+    {{- partialCached "directory/css.html" . }}
     <title>{{ .Site.Title }} : {{ .Title }}</title>
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/directory/icons/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/directory/icons/apple-touch-icon-114x114.png" />
@@ -29,6 +29,6 @@
         </div>
     {{- end }}
     </div>
-    {{- partial "directory/js.html" . }}
+    {{- partialCached "directory/js.html" . }}
 </body>
 </html>
