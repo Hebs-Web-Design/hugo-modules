@@ -3,14 +3,6 @@ import { initPresence } from './functions';
 
 L.Icon.Default.imagePath = '/directory/leaflet/';
 
-/* function initPresence() {
-    return {
-        availability: ['Unknown', 'Unknown'],
-        activity: ['Unknown', 'Unknown'],
-        current: 0,
-    };
-} */
-
 export default ({
         id = '',
         displayName = '',
