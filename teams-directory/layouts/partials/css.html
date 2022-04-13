@@ -2,5 +2,10 @@
 {{- $css := resources.Get "css/directory/main.scss" | resources.ToCSS $options | resources.PostCSS }}
 {{- if hugo.IsProduction }}
 {{- $css = $css | minify | fingerprint | resources.PostProcess }}
+{{- else if (and .Site.IsServer (fileExists "hugo_stats.json")) }}
+{{- $hash := getJSON "hugo_stats.json" | printf "%v" | sha256 }}
+{{- $css = $css | resources.ExecuteAsTemplate (printf "css/directory/main.%v.css" $hash) . }}
+{{- else }}
+{{- $css = $css | resources.ExecuteAsTemplate (printf "css/directory/main.%v.css" now.UnixMilli) .  }}
 {{- end }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">

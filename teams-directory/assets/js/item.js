@@ -1,29 +1,34 @@
 import L from 'leaflet';
+import { initPresence } from './functions';
 
 L.Icon.Default.imagePath = '/directory/leaflet/';
 
-function initPresence() {
+/* function initPresence() {
     return {
         availability: ['Unknown', 'Unknown'],
         activity: ['Unknown', 'Unknown'],
         current: 0,
     };
-}
+} */
 
-export default (item = {
-        id: '',
-        displayName: '',
-        jobTitle: '',
-        officeLocation: '',
-        businessPhones: [],
-        mail: undefined,
-    }, presence = initPresence(), locations = {}, defaultlocation = '', mapservice = 'openstreetmap', mapsapikey = '') => ({
-    id: item.id !== undefined ? item.id : '',
-    name: item.displayName !== undefined ? item.displayName : '',
-    title: item.jobTitle !== undefined ? item.jobTitle : '',
-    location: item.officeLocation !== null && item.officeLocation !== undefined ? item.officeLocation : '',
-    phone: item.businessPhones !== null && item.businessPhones !== undefined && item.businessPhones.length > 0 ? item.businessPhones[0] : undefined,
-    mail: item.mail !== undefined ? item.mail : undefined,
+export default ({
+        id = '',
+        displayName = '',
+        jobTitle = '',
+        officeLocation = '',
+        businessPhones = [],
+        mail = '',
+        presence = initPresence(),
+        locations = {},
+        defaultlocation = '',
+        mapservice = 'openstreetmap',
+        mapsapikey = '' }) => ({
+    id: id !== undefined ? id : '',
+    name: displayName !== undefined ? displayName : '',
+    title: jobTitle !== undefined ? jobTitle : '',
+    location: officeLocation !== null && officeLocation !== undefined ? officeLocation : '',
+    phone: businessPhones !== null && businessPhones !== undefined && businessPhones.length > 0 ? businessPhones[0] : undefined,
+    mail: mail !== undefined ? mail : '',
     presence: presence !== undefined ? presence : initPresence(),
     getPresenceDescription(index = undefined) {
         return this.getPresence(index, true);
@@ -143,7 +148,6 @@ export default (item = {
     close() {
         this.open = false;
     },
-
     // location map handling
     defaultlocation: defaultlocation,
     locations: locations,
@@ -197,7 +201,7 @@ export default (item = {
 
                 map.setView(location, 15);
             } catch (error) {
-                console.log(error);
+                console.log(`Map init error: ${error}`);
             }
 
             this.mapdone = true;
@@ -211,8 +215,6 @@ export default (item = {
             return this.locations[location];
         }
 
-        console.log(this.defaultlocation);
-        console.log(this.locations[this.defaultlocation]);
         if (this.defaultlocation !== undefined) {
             location = this.defaultlocation.toLowerCase();
 
