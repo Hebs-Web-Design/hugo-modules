@@ -381,9 +381,6 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                         this.updateInterval = updateInterval;
                     }
 
-                    // restart updates with new interval
-                    // this.startPresenceUpdates(false);
-
                     // dont adjust again this run
                     intervalAdjusted = true;
                 }
@@ -402,9 +399,6 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                         this.updateInterval = this.updateInterval * 2;
 
                         console.log(`${dayjs().format()} - Request throttled...update interval increased to ${this.updateInterval} ms`);
-
-                        // restart updates with new interval
-                        // this.startPresenceUpdates(false);
 
                         // break out of loop now
                         break;
@@ -517,9 +511,11 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                 loaded: true,
             };
         } catch (error) {
-            // don't try again
-            this.profileImage[id].loaded = true;
-            console.log(`${dayjs().format()} - ${error}`);
+            // don't try again if there was an error in the response
+            if (error.response) {
+                this.profileImage[id].loaded = true;
+                console.log(`${dayjs().format()} - ${error}`);
+            }
         }
     },
     getProfileImageSrcById(id) {
