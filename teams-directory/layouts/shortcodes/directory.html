@@ -61,8 +61,8 @@
     </div>
     <table class="table-fixed w-full pt-16">
         <tbody>
-            <template x-for="(entry, index) in filteredList" :key="entry.id">
-                <tr class="odd:bg-white even:bg-slate-100 odd:dark:bg-black even:dark:bg-slate-900" x-data="item(getItem(entry))">
+            <template x-for="(entry, index) in list" :key="entry.id">
+                <tr class="odd:bg-white even:bg-slate-100 odd:dark:bg-black even:dark:bg-slate-900" x-data="item(getItem(entry))" x-show="isVisible(search)">
                     <td class="pl-2 md:p-0 cursor-pointer" @click="toggle">
                         <template x-teleport="body">
                             <div

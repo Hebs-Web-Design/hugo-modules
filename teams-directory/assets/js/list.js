@@ -38,11 +38,17 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         }
 
         // otherwise return filtered list
-        return this.list.filter(function (item) {
-            let displayName = item.displayName === undefined || item.displayName === null ? '' : `${item.displayName.toLowerCase()}`;
+        let filtered = [];
+        for (let i = 0; i < this.list.length; i++) {
+            const item = this.list[i];
+            const displayName = item.displayName === undefined || item.displayName === null ? '' : `${item.displayName.toLowerCase()}`;
 
-            return displayName.includes(search);
-        });
+            if (displayName.includes(search)) {
+                filtered.push(item);
+            }
+        }
+
+        return filtered;
     },
     lastupdate: Alpine.$persist(0),
     get lastUpdateText() {
@@ -343,7 +349,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     // updates presence data
     async update() {
         var self = this;
-        let list = this.filteredList;
+        let list = this.list;
         let start = 0;
         let end = 0;
         let intervalAdjusted = false;
@@ -541,7 +547,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
 
     // item passing
-    getItem({ id = '', displayName = '', jobTitle = '', officeLocation = '', businessPhones = [], mail = ''}) {
+    getItem({ id = '', displayName = '', jobTitle = '', officeLocation = '', businessPhones = [], mail = '' }) {
         return {
             id: id,
             displayName: displayName,

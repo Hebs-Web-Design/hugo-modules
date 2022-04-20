@@ -14,7 +14,8 @@ export default ({
         locations = {},
         defaultlocation = '',
         mapservice = 'openstreetmap',
-        mapsapikey = '' }) => ({
+        mapsapikey = '',
+    }) => ({
     id: id !== undefined ? id : '',
     name: displayName !== undefined ? displayName : '',
     title: jobTitle !== undefined ? jobTitle : '',
@@ -216,5 +217,16 @@ export default ({
         }
 
         return [0, 0];
-    }
+    },
+
+    // search stuff
+    isVisible(search = '') {
+        if (search == '') {
+            return true;
+        }
+
+        const name = this.name.toLowerCase();
+
+        return name.includes(search);
+    },
 });
