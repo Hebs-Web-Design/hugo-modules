@@ -32,6 +32,12 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     get filteredList() {
         let search = this.search.toLowerCase();
 
+        // immediately return full list if search is empty
+        if (search == '') {
+            return this.list;
+        }
+
+        // otherwise return filtered list
         return this.list.filter(function (item) {
             let displayName = item.displayName === undefined || item.displayName === null ? '' : `${item.displayName.toLowerCase()}`;
 
