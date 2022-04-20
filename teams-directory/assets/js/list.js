@@ -406,7 +406,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                 }
                 
                 // Some other error
-                console.log(`${dayjs().format()} - ${error}`);
+                this.notice('warning', 'Error updating presence', error);
 
                 // finish up with partial results
                 break;
@@ -419,8 +419,9 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         // set lastupdate time
         this.presencelastupdate = dayjs().unix();
 
-        // clear any outstanding message
+        // clear any outstanding message(s)
         this.clearnotice('info');
+        this.clearnotice('warning');
 
         // set up next update as long as we visible
         if (!document.hidden) {
