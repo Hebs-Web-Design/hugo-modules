@@ -33,9 +33,9 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         let search = this.search.toLowerCase();
 
         return this.list.filter(function (item) {
-            let displayName = item.displayName === undefined || item.displayName === null ? '' : `${item.displayName}`;
+            let displayName = item.displayName === undefined || item.displayName === null ? '' : `${item.displayName.toLowerCase()}`;
 
-            return displayName.toLowerCase().includes(search);
+            return displayName.includes(search);
         });
     },
     lastupdate: Alpine.$persist(0),
@@ -56,7 +56,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     get presenceLastUpdateText() {
         let lastupdate = dayjs.unix(this.presencelastupdate);
 
-        return lastupdate.fromNow();
+        return lastupdate.format('LLL');
     },
     showlocation: showlocation,
     msalClient: initMsalClient(clientid),
