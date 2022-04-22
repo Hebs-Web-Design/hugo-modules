@@ -15,7 +15,54 @@ const updateInterval = 30000;
 const presenceBatchMax = 650;
 
 export default ({ tenantid = '', clientid = '', group = '', skipusers = [], showlocation = false, useworker = false, locations = {}, defaultlocation, mapservice = 'openstreetmap', mapsapikey = '' }) => ({
+    // init steps
+    async init() {
+        try {
+            let response = await this.msalClient.handleRedirectPromise();
+    
+            if (response === null) {
+                // do sign in via redirect
+                this.msalClient.loginRedirect(this.loginRequest);
+
+                return;
+            }
+
+            // got a valid response
+            this.accountId = response.account.homeAccountId;
+    
+            
+        } catch (error) {
+            this.notice('error', 'Error logging in', error);
+            this.initerror = true;
+
+            return;
+        }
+
+        try {
+            // do update
+            await this.updateList();
+
+            // signal data is loaded and init is complete
+            this.initdone = true;
+
+            // dont show message if this is not the first update
+            if (this.lastupdate > 0) {
+                this.notice('info', 'Updating presence...');
+            }
+
+            // start presence udpates
+            this.startPresenceUpdates(true);
+        } catch (error) {
+            // signal an error
+            this.initerror = true;
+
+            this.notice('error', 'Error during init', error);
+        }
+    },
     initdone: false,
+    initerror: false,
+
+    // list stuff
     list: Alpine.$persist([]),
     filterList(item) {
         // do nothing if setting is not defined or empty
@@ -28,27 +75,6 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     
         // skip items that are in the lisst
         return !skipusers.includes(userPrincipalName);
-    },
-    get filteredList() {
-        let search = this.search.toLowerCase();
-
-        // immediately return full list if search is empty
-        if (search == '') {
-            return this.list;
-        }
-
-        // otherwise return filtered list
-        let filtered = [];
-        for (let i = 0; i < this.list.length; i++) {
-            const item = this.list[i];
-            const displayName = item.displayName === undefined || item.displayName === null ? '' : `${item.displayName.toLowerCase()}`;
-
-            if (displayName.includes(search)) {
-                filtered.push(item);
-            }
-        }
-
-        return filtered;
     },
     lastupdate: Alpine.$persist(0),
     get lastUpdateText() {
@@ -233,52 +259,9 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     get info() {
         return this.notices.info;
     },
-    initerror: false,
     search: '',
     timeout: 0,
     updateInterval: updateInterval,
-    async init() {
-        try {
-            let response = await this.msalClient.handleRedirectPromise();
-    
-            if (response === null) {
-                // do sign in via redirect
-                this.msalClient.loginRedirect(this.loginRequest);
-
-                return;
-            }
-
-            // got a valid response
-            this.accountId = response.account.homeAccountId;
-    
-            
-        } catch (error) {
-            this.notice('error', 'Error logging in', error);
-            this.initerror = true;
-
-            return;
-        }
-
-        try {
-            // do update
-            await this.updateList();
-
-            // signal data is loaded and init is complete
-            this.initdone = true;
-
-            // dont show message if this is not the first update
-            if (this.lastupdate > 0) {
-                this.notice('info', 'Updating presence...');
-            }
-
-            // start presence udpates
-            this.startPresenceUpdates(true);
-        } catch (error) {
-            // signal an error
-            this.initerror = true;
-            console.log(error);
-        }
-    },
     async updateList() {
         let url = '/users';
         var self = this;
