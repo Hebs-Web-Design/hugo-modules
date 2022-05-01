@@ -177,21 +177,36 @@ export default ({
                 });
                 let location = this.getLocation();
 
-                if (this.mapservice == "mapbox" && this.mapsapikey !== '') {
-                    L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${this.mapsapikey}`, {
-                        attribution: '&copy <a href="https://www.mapbox.com/feedback/">Mapbox</a> &copy <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                        tileSize: 512,
-                        zoomOffset: -1
-                    }).addTo(map);
-                } else {
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    }).addTo(map);
+                // set up tile layer based on maps engine selected
+                switch (this.mapservice) {
+                    case 'mapbox':
+                        if (this.mapsapikey !== '') {
+                            L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${this.mapsapikey}`, {
+                                attribution: '&copy <a href="https://www.mapbox.com/feedback/">Mapbox</a> &copy <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                                tileSize: 512,
+                                zoomOffset: -1
+                            }).addTo(map);
+                        }
+
+                        break;
+                    case 'google':
+                        L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                            maxZoom: 19,
+                            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                            attribution: '&copy <a href="https://maps.google.com/">Google</a>',
+                        }).addTo(map);
+                        break;
+                    default:
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        }).addTo(map);
                 }
 
+                // add marker
                 L.marker(location).addTo(map);
 
+                // set view to location
                 map.setView(location, 15);
             } catch (error) {
                 console.log(`Map init error: ${error}`);

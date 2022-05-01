@@ -60,9 +60,9 @@ defaultLocation = "Perth Office"
 
 # Maps confguration (optional)
 [params.directory.maps]
-# Service to use for maps. Either "mapbox" or "openstreetmap" (default)
+# Service to use for maps. Either "mapbox", "google" or "openstreetmap" (default)
 service = "mapbox"
-# API key for Mapbox (not required for OpenStreetMap maps)
+# API key for Mapbox
 apiKey = "MAPBOX-API-KEY"
 
 [params.directory.locations]
