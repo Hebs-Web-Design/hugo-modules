@@ -1,0 +1,16 @@
+[module]
+  [[module.imports]]
+    path = "github.com/twbs/icons"
+
+  [[module.imports.mounts]]
+    source = "icons"
+    target = "assets/bootstrap-icons"
+
+  [[module.mounts]]
+    source = "partial.html"
+    target = "layouts/partials/bootstrap-icon.html"
+
+  [[module.mounts]]
+    source = "shortcode.html"
+    target = "layouts/shortcodes/bootstrap-icon.html"
+    

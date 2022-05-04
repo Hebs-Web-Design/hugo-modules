@@ -1,0 +1,15 @@
+{{ if .IsNamedParams }}
+{{- $options := dict "icon" (.Get "icon") }}
+{{- with (.Get "width") }}
+{{- $options = merge $options (dict "width" .) }}
+{{- end }}
+{{- with (.Get "height") }}
+{{- $options = merge $options (dict "height" .) }}
+{{- end }}
+{{- with (.Get "class") }}
+{{- $options = merge $options (dict "class" .) }}
+{{- end }}
+{{- partial "bootstrap-icon.html" $options }}
+{{- else }}
+{{- partial "bootstrap-icon.html" (dict "icon" (.Get 0)) }}
+{{- end }}

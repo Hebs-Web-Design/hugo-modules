@@ -1,0 +1,39 @@
+# bootstrap-icons
+
+Hugo module to show Bootstrap Icons.
+
+```toml
+[[module.imports]]
+path = "github.com/hebs-web-design/hugo-modules/bootstrap-icons"
+```
+
+## Usage
+
+Use the partial in a template:
+
+```html
+{{ partial "bootstrap-icon.html" (dict "icon" "icon-name" "class" "warning") }}
+```
+
+Or as a shortcode (named parameters):
+
+```html
+{{< bootstrap-icon icon="icon-name" width="32" height="32" >}}
+```
+
+Or as a shortcode (positional parameters):
+
+```html
+{{< bootstrap-icon "icon-name" >}}
+```
+
+### Options
+
+The following options can be passed to the partial (via a "dict") or the shortcode (named parameters only):
+
+* icon : The name of the Bootstrap Icon to show (requred).
+* width : SVG width (optional: defaults to 16)
+* height : SVG height (optional: defaults to 16)
+* class : CSS class to apply to SVG (optional: defaults to "bi bi-<icon-name>")
+
+When calling the shortcode using positional parameters only "icon" can be set.
