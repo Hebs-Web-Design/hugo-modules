@@ -223,7 +223,7 @@ export default ({
             return this.locations[location];
         }
 
-        if (this.defaultlocation !== undefined) {
+        if (this.defaultlocation !== undefined && this.defaultlocation !== null) {
             location = this.defaultlocation.toLowerCase();
 
             if (this.locations[location] !== undefined) {
