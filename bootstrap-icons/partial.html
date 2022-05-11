@@ -8,6 +8,9 @@
 {{- with .height }}
 {{-   $scratch.Set "height" . }}
 {{- end }}
+{{- with .title }}
+{{-   $scratch.Set "title" . }}
+{{- end }}
 {{- with .icon }}
 {{-   $icon := resources.Get (printf "bootstrap-icons/%s.svg" .) }}
 {{-   with $icon }}
@@ -24,6 +27,9 @@
 {{-   end }}
 {{-   with ($scratch.Get "height") }}
 {{-     $svg = replaceRE "height=\"[0-9]*\" " (printf "height=\"%s\"" .) $svg }}
+{{-   end }}
+{{-   with ($scratch.Get "title") }}
+{{-     $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg }}
 {{-   end }}
 {{-   $svg | safeHTML }}
 {{- end }}
