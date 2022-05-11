@@ -12,7 +12,7 @@
 {{- with (.Get "title") }}
 {{- $options = merge $options (dict "title" .) }}
 {{- end }}
-{{- partial "bootstrap-icon.html" $options }}
+{{- partial "b-icon.html" $options }}
 {{- else }}
-{{- partial "bootstrap-icon.html" (dict "icon" (.Get 0)) }}
+{{- partial "b-icon.html" (dict "icon" (.Get 0)) }}
 {{- end }}

@@ -8,9 +8,9 @@
 
   [[module.mounts]]
     source = "partial.html"
-    target = "layouts/partials/bootstrap-icon.html"
+    target = "layouts/partials/b-icon.html"
 
   [[module.mounts]]
     source = "shortcode.html"
-    target = "layouts/shortcodes/bootstrap-icon.html"
+    target = "layouts/shortcodes/b-icon.html"
     
