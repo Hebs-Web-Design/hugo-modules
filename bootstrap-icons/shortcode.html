@@ -1,18 +1,12 @@
-{{ if .IsNamedParams }}
-{{- $options := dict "icon" (.Get "icon") }}
-{{- with (.Get "width") }}
-{{- $options = merge $options (dict "width" .) }}
-{{- end }}
-{{- with (.Get "height") }}
-{{- $options = merge $options (dict "height" .) }}
-{{- end }}
-{{- with (.Get "class") }}
-{{- $options = merge $options (dict "class" .) }}
-{{- end }}
-{{- with (.Get "title") }}
-{{- $options = merge $options (dict "title" .) }}
-{{- end }}
-{{- partial "b-icon.html" $options }}
+{{- $attrList := slice "width" "height" "class" ":class" "title" ":title" "alt" }}
+{{- if .IsNamedParams }}
+{{-   $options := dict "icon" (.Get "icon") }}
+{{-   range $attr := $attrList }}
+{{-     with (.Get $attr) }}
+{{-       $options = merge $options (dict $attr .) }}
+{{-     end }}
+{{-   end }}
+{{-   partial "b-icon.html" $options }}
 {{- else }}
-{{- partial "b-icon.html" (dict "icon" (.Get 0)) }}
+{{-   partial "b-icon.html" (dict "icon" (.Get 0)) }}
 {{- end }}

@@ -1,35 +1,29 @@
+{{- $attrList := slice "width" "height" "class" ":class" "title" ":title" "alt" }}
 {{- $scratch := newScratch }}
-{{- with .class }}
-{{-   $scratch.Set "class" . }}
-{{- end }}
-{{- with .width }}
-{{-   $scratch.Set "width" . }}
-{{- end }}
-{{- with .height }}
-{{-   $scratch.Set "height" . }}
-{{- end }}
-{{- with .title }}
-{{-   $scratch.Set "title" . }}
+{{- range $attr, $value := . }}
+{{-   $scratch.Set $attr $value }}
 {{- end }}
 {{- with .icon }}
 {{-   $icon := resources.Get (printf "bootstrap-icons/%s.svg" .) }}
 {{-   with $icon }}
 {{-     $scratch.Set "content" $icon.Content }}
 {{-   else }}
-{{-     $scratch.Set "content" (resources.Get "bootstrap-icons/exclamation-circle.svg").Content}}
+{{-     $scratch.Set "content" (resources.Get "bootstrap-icons/exclamation-diamond.svg").Content}}
 {{-   end }}
 {{-   $svg := $scratch.Get "content" }}
-{{-   with ($scratch.Get "class") }}
-{{-     $svg = replaceRE "class=\"[a-zA-Z\\-\\. 0-9]*\"" (printf "class=\"%s\"" .) $svg }}
-{{-   end }}
-{{-   with ($scratch.Get "width") }}
-{{-     $svg = replaceRE "width=\"[0-9]*\"" (printf "width=\"%s\"" .) $svg }}
-{{-   end }}
-{{-   with ($scratch.Get "height") }}
-{{-     $svg = replaceRE "height=\"[0-9]*\" " (printf "height=\"%s\"" .) $svg }}
-{{-   end }}
-{{-   with ($scratch.Get "title") }}
-{{-     $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg }}
+{{-   range $attr := $attrList }}
+{{-     with ($scratch.Get $attr) }}
+{{-       if (eq $attr "title") }}
+{{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg }}
+{{-       else if (eq $attr ":title") }}
+{{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title x-text=\"%s\"></title>\n</svg>" .) $svg }}
+{{-       else if (or (or (eq $attr "width") (eq $attr "height")) (eq $attr "class")) }}
+{{-         $svg = replaceRE (printf "(%s)=\"[a-zA-Z\\-\\. 0-9]*\"" $attr) (printf "$1=\"%s\"" .) $svg }}
+{{-       else }}
+{{-         $value := delimit (slice $attr (printf "\"%s\"" .)) "=" }}
+{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $value) $svg }}
+{{-       end }}
+{{-     end }}
 {{-   end }}
 {{-   $svg | safeHTML }}
 {{- end }}
