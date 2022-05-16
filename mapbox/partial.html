@@ -1,0 +1,12 @@
+https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/[109.6969,-36.2112,129.4428,-12.4673]/600x800?access_token=pk.eyJ1IjoiaGVic3dlYmRlc2lnbiIsImEiOiJjbDF0YXZ6Z3IwZGh6M2lxdnQ4bzZ2cG9lIn0.v3-WkqP10R2Z5OMTXq6wLg
+{{- with .Params.mapbox }}
+{{- $mapUrl := slice "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/" .location "/" .size "?access_token=" .token }}
+{{- $map := resources.GetRemote (delimit $mapUrl "") }}
+<img src="{{ $map.RelPermalink }}"
+{{- if .map2x }}
+{{- $map2xUrl := slice "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/" .location "/" .size "@2x?access_token=" .token }}
+{{- $map2x := resources.GetRemote (delimit $mapUrl "") }}
+ srcset="{{ $map2x.RelPermalink }} 2x, {{ $map.RelPermalink }} 1x"
+{{- end }}
+ alt="{{ .alt }}" class="{{ .class }}">
+{{- end }}
