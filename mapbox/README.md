@@ -11,7 +11,7 @@ path = "github.com/hebs-web-design/hugo-modules/mapbox"
 
 ```
 
-Configure:
+Configure globally:
 
 ```toml
 [params]
@@ -24,8 +24,8 @@ map2x = true
 class = "<css classes for image>"
 ```
 
-Use partial:
+Use shortcode:
 
 ```html
-{{ partial "mapbox.html" . }}
+{{< mapbox (dict "location" "[lat,long,zoom]" "size" "WxH" "token" "API-TOKEN" "map2x" true "class" "inline" >}}
 ```
