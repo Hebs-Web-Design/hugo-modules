@@ -3,7 +3,7 @@
 <img src="{{ $map.RelPermalink }}"
 {{- if .map2x }}
 {{- $map2xUrl := slice "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/" .location "/" .size "@2x?access_token=" .token }}
-{{- $map2x := resources.GetRemote (delimit $mapUrl "") }}
+{{- $map2x := resources.GetRemote (delimit $map2xUrl "") }}
  srcset="{{ $map2x.RelPermalink }} 2x, {{ $map.RelPermalink }} 1x"
 {{- end }}
  alt="{{ .alt }}"{{ with .class }} class="{{ . }}"{{ end }}>
