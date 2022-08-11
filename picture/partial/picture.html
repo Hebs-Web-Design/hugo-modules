@@ -1,14 +1,24 @@
-{{- $img := resources.Get .img -}}
+{{- $img := resources.Get .img }}
+{{- $scratch := newScratch }}
+{{- if (and .width .heigh) }}
+    {{- $scratch.Set "resize" (printf "%dx%d") .width .height }}
+{{- else if .width }}
+    {{- $scratch.Set "resize" (printf "%dx") .width }}
+{{- else if .height }}
+    {{- $scratch.Set "resize" (printf "x%d") .height }}
+{{- else }}
+    {{- $scratch.Set "resize" (printf "%dx%d") $img.width $img.height }}
+{{- end }}
 <picture>
-{{- if (and (not .disablewebp) hugo.IsExtended) -}}
-    <source srcset="{{ ($img.Resize (printf "%dx%d webp q80" $img.Width $img.Height)).RelPermalink }}" type="image/webp">
-{{- end -}}
-{{- with .svg -}}
-    {{- $svg := resources.Get . -}}
-    {{- if hugo.IsProduction -}}
-        {{- $svg = $svg | minify | fingerprint -}}
-    {{- end -}}
+{{- if (and (not .disablewebp) hugo.IsExtended) }}
+    <source srcset="{{ ($img.Resize (printf "%s webp q80" ($scratch.Get "resize"))).RelPermalink }}" type="image/webp">
+{{- end }}
+{{- with .svg }}
+    {{- $svg := resources.Get . }}
+    {{- if hugo.IsProduction }}
+        {{- $svg = $svg | minify | fingerprint }}
+    {{- end }}
     <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
-{{- end -}}
-    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} width="{{ with .width }}{{ . }}{{ else }}{{ $img.Width }}{{ end }}" height="{{ with .height }}{{ . }}{{ else }}{{ $img.Height }}{{ end }}" src="{{ $img.RelPermalink }}">
+{{- end }}
+    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} width="{{ with .width }}{{ . }}{{ else }}{{ $img.Width }}{{ end }}" height="{{ with .height }}{{ . }}{{ else }}{{ $img.Height }}{{ end }}" src="{{ ($img.Resize (printf "%s q80" ($scratch.Get "resize"))).RelPermalink }}">
 </picture>
