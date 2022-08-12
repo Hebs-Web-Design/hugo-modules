@@ -1,17 +1,39 @@
 {{- $img := resources.Get .img }}
+{{- if (not $img) }}
+    {{- errorf "Could not load: %s" .img }}
+{{- end }}
 {{- $scratch := newScratch }}
 {{- if (and .width .heigh) }}
-    {{- $scratch.Set "resize" (printf "%dx%d" .width .height) }}
+    {{- $width := .width }}
+    {{- $height := .height }}
+    {{- $scratch.Set "resize" (printf "%dx%d" $width $height) }}
+    {{- if .versions }}
+        {{- range $version := (split .versions ",") }}
+            {{- $scratch.Set (printf "resize%sx" $version) (printf "%0.0fx%0.0f" (mul $width (float $version)) (mul $height (float $version))) }}
+        {{- end }}
+    {{- end }}
 {{- else if .width }}
-    {{- $scratch.Set "resize" (printf "%dx" .width) }}
+    {{- $width := .width }}
+    {{- $scratch.Set "resize" (printf "%dx" $width) }}
+    {{- if .versions }}
+        {{- range $version := (split .versions ",") }}
+            {{- $scratch.Set (printf "resize%sx" $version) (printf "%0.0fx" (mul $width (float $version))) }}
+        {{- end }}
+    {{- end }}
 {{- else if .height }}
-    {{- $scratch.Set "resize" (printf "x%d" .height) }}
+    {{- $height := .height }}
+    {{- $scratch.Set "resize" (printf "x%d" $height) }}
+    {{- if .versions }}
+        {{- range $version := (split .versions ",") }}
+            {{- $scratch.Set (printf "resize%sx" $version) (printf "x%0.0f" (mul $height (float $version))) }}
+        {{- end }}
+    {{- end }}
 {{- else }}
     {{- $scratch.Set "resize" (printf "%dx%d" $img.Width $img.Height) }}
 {{- end }}
 <picture>
 {{- if (and (not .disablewebp) hugo.IsExtended) }}
-    <source srcset="{{ ($img.Resize (printf "%s webp q80" ($scratch.Get "resize"))).RelPermalink }}" type="image/webp">
+    <source srcset="{{ ($img.Resize (printf "%s webp q80" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s webp q80" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
 {{- end }}
 {{- with .svg }}
     {{- $svg := resources.Get . }}
@@ -20,5 +42,5 @@
     {{- end }}
     <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
 {{- end }}
-    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} width="{{ with .width }}{{ . }}{{ else }}{{ $img.Width }}{{ end }}" height="{{ with .height }}{{ . }}{{ else }}{{ $img.Height }}{{ end }}" src="{{ ($img.Resize (printf "%s q80" ($scratch.Get "resize"))).RelPermalink }}">
+    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }}{{ with .width }} width="{{ . }}"{{ end }}{{ with .height }} height="{{ . }}"{{ end }} src="{{ ($img.Resize (printf "%s q80" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s q80" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
 </picture>
