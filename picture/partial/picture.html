@@ -42,5 +42,5 @@
     {{- end }}
     <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
 {{- end }}
-    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }}{{ with .width }} width="{{ . }}"{{ end }}{{ with .height }} height="{{ . }}"{{ end }} src="{{ ($img.Resize (printf "%s q80" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s q80" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
+    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} src="{{ ($img.Resize (printf "%s q80" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s q80" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
 </picture>
