@@ -3,7 +3,7 @@
     {{- errorf "Could not load: %s" .img }}
 {{- end }}
 {{- $scratch := newScratch }}
-{{- if (and .width .heigh) }}
+{{- if (and .width .height) }}
     {{- $width := .width }}
     {{- $height := .height }}
     {{- $scratch.Set "resize" (printf "%dx%d" $width $height) }}
@@ -33,7 +33,15 @@
 {{- end }}
 <picture>
 {{- if (and (not .disablewebp) hugo.IsExtended) }}
-    <source srcset="{{ ($img.Resize (printf "%s webp q80" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s webp q80" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+    {{- if .fit }}
+    <source srcset="{{ ($img.Fit (printf "%s webp" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Fit (printf "%s webp" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+    {{- else if .fill }}
+    <source srcset="{{ ($img.Fill (printf "%s webp" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Fill (printf "%s webp" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+    {{- else if .crop }}
+    <source srcset="{{ ($img.Crop (printf "%s webp" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Crop (printf "%s webp" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+    {{- else }}
+    <source srcset="{{ ($img.Resize (printf "%s webp" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s webp" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+    {{- end }}
 {{- end }}
 {{- with .svg }}
     {{- $svg := resources.Get . }}
@@ -42,5 +50,14 @@
     {{- end }}
     <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
 {{- end }}
-    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} src="{{ ($img.Resize (printf "%s q80" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s q80" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
+{{- if .fit }}
+    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} src="{{ ($img.Fit (printf "%s" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Fit (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
+{{- else if .fill }}
+    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} src="{{ ($img.Fill (printf "%s" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Fill (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
+{{- else if .crop }}
+    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} src="{{ ($img.Crop (printf "%s" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Crop (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
+{{- else }}
+    <img {{ with .class }}class="{{ . }}" {{ end }} {{ with .alt }}alt="{{ . }}" {{ end }} src="{{ ($img.Resize (printf "%s" ($scratch.Get "resize"))).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}">
+{{- end }}
+    
 </picture>
