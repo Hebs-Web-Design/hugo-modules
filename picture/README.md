@@ -18,7 +18,7 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 
 ## Options
 
-* img : Path to image (png or jpg)
+* img : Path to image asset
 * svg : SVG version of image (optional)
 * class : CSS classes to apply to image (optional)
 * alt : Contents of "alt" attribute (optional)
@@ -29,6 +29,7 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 * crop (bool) : Perform crop operation
 * anchor : Anchor point for crop and fill
 * versions : Comma seperated list of DPI/versions to generate. eg "2,4" would generate 2x and 4x along with 1x sizes
+* disablewebp (bool) : Do not generate WebP versions of images in picture element (requires Hugo extended version) 
 
 ### Notes
 

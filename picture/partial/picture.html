@@ -2,6 +2,10 @@
 {{- if (not $img) }}
     {{- errorf "Could not load: %s" .img }}
 {{- end }}
+{{- $imgdark := false }}
+{{- if .imgdark }}
+    {{- $imgdark = resources.Get .imgdark }}
+{{- end }}
 {{- $scratch := newScratch }}
 {{- if (and .width .height) }}
     {{- $width := .width }}
@@ -32,19 +36,47 @@
     {{- $scratch.Set "resize" (printf "%dx%d" $img.Width $img.Height) }}
 {{- end }}
 <picture>
+{{- if (and $imgdark (ne $imgdark.MediaType "image/webp")) }}
+    {{- $opts := "" }}
+    {{- if .anchor }}
+        {{- $opts = printf "%s %s" $opts .anchor }}
+    {{- end }}
+    {{- if .fit }}
+    <source srcset="{{ ($imgdark.Fit ($scratch.Get "resize")).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Fit (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="{{ $imgdark.MediaType }}">
+    {{- else if .fill }}
+    <source srcset="{{ ($imgdark.Fill (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Fill (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="{{ $imgdark.MediaType }}">
+    <source srcset="{{ ($imgdark.Fill ($scratch.Get "resize")).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Fill (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="{{ $imgdark.MediaType }}">
+    {{- else if .crop }}
+    <source srcset="{{ ($imgdark.Crop (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Crop (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="{{ $imgdark.MediaType }}">
+    {{- else }}
+    <source srcset="{{ ($imgdark.Resize ($scratch.Get "resize")).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Resize (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="{{ $imgdark.MediaType }}">
+    {{- end }}
+{{- end }}
 {{- if (and (not .disablewebp) hugo.IsExtended) }}
     {{- $opts := "webp" }}
     {{- if .anchor }}
         {{- $opts = printf "%s %s" $opts .anchor }}
     {{- end }}
     {{- if .fit }}
-    <source srcset="{{ ($img.Fit (printf "%s %s" ($scratch.Get "resize") "webp")).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Fit (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) "webp")).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+    <source srcset="{{ ($img.Fit (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Fit (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+        {{- if $imgdark }}
+    <source srcset="{{ ($imgdark.Fit (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Fit (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="image/webp">
+        {{- end }}
     {{- else if .fill }}
     <source srcset="{{ ($img.Fill (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Fill (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+        {{- if $imgdark }}
+    <source srcset="{{ ($imgdark.Fill (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Fill (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="image/webp">
+        {{- end }}
     {{- else if .crop }}
     <source srcset="{{ ($img.Crop (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Crop (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+        {{- if $imgdark }}
+    <source srcset="{{ ($imgdark.Crop (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Crop (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="image/webp">
+        {{- end }}
     {{- else }}
-    <source srcset="{{ ($img.Resize (printf "%s %s" ($scratch.Get "resize") "webp")).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) "webp")).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+    <source srcset="{{ ($img.Resize (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($img.Resize (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" type="image/webp">
+        {{- if $imgdark }}
+    <source srcset="{{ ($imgdark.Resize (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if .versions }}{{ range $version := (split .versions ",") }}, {{ ($imgdark.Resize (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}" media="(prefers-color-scheme:dark)" type="image/webp">
+        {{- end }}
     {{- end }}
 {{- end }}
 {{- with .svg }}
@@ -53,6 +85,13 @@
         {{- $svg = $svg | minify | fingerprint }}
     {{- end }}
     <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
+{{- end }}
+{{- with .svgdark }}
+    {{- $svg := resources.Get . }}
+    {{- if hugo.IsProduction }}
+        {{- $svg = $svg | minify | fingerprint }}
+    {{- end }}
+    <source srcset="{{ $svg.RelPermalink }}" media="(prefers-color-scheme:dark)" type="image/svg+xml">
 {{- end }}
 {{- $opts := "" }}
 {{- if .anchor }}
