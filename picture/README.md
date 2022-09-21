@@ -29,7 +29,8 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 * crop (bool) : Perform crop operation
 * anchor : Anchor point for crop and fill
 * versions : Comma seperated list of DPI/versions to generate. eg "2,4" would generate 2x and 4x along with 1x sizes
-* disablewebp (bool) : Do not generate WebP versions of images in picture element (requires Hugo extended version) 
+* disablewebp (bool) : Do not generate WebP versions of images in picture element (requires Hugo extended version)
+* lazy (bool) : Enable lazy loading by adding `loading="lazy"` to the `img` tag
 
 ### Notes
 
