@@ -1,6 +1,6 @@
 # bootstrap-icons
 
-Hugo module to show Bootstrap Icons.
+Hugo module to embed SVG Bootstrap Icons in your Hugo project.
 
 ```toml
 [[module.imports]]
