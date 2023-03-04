@@ -19,7 +19,9 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 ## Options
 
 * img : Path to image asset
+* imgdark : Dark mode version of image asset (optional)
 * svg : SVG version of image (optional)
+* svgdark : Dark mode SVG version of image (optional)
 * class : CSS classes to apply to image (optional)
 * alt : Contents of "alt" attribute (optional)
 * width (int) : Width for resize (default), crop, fill or fit operation (optional)
@@ -28,9 +30,10 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 * fill (bool) : Perform fill operation
 * crop (bool) : Perform crop operation
 * anchor : Anchor point for crop and fill
-* versions : Comma seperated list of DPI/versions to generate. eg "2,4" would generate 2x and 4x along with 1x sizes
-* disablewebp (bool) : Do not generate WebP versions of images in picture element (requires Hugo extended version)
-* lazy (bool) : Enable lazy loading by adding `loading="lazy"` to the `img` tag
+* versions : Comma seperated list of DPI/versions to generate. eg "2,4" would generate 2x and 4x along with 1x sizes (optional)
+* disablewebp (bool) : Do not generate WebP versions of images in picture element (requires Hugo extended version - for non-extended versions this is always true) (optional)
+* lazy (bool) : Enable lazy loading by adding `loading="lazy"` to the `img` tag (optional)
+* trysvg (bool) : If a file of the same name, but with a `.svg` extension exists, this will be added as a `source`. This works for both `img` and `imgdark` versions. The `svg` and `svgdark` options take precedence over the detected versions. (optional)
 
 ### Notes
 

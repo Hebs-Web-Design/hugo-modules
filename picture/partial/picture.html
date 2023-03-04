@@ -1,4 +1,5 @@
 {{- $img := resources.Get .img }}
+{{- $trysvg := .trysvg }}
 {{- with $img }}
     {{- $imgdark := false }}
     {{- if $.imgdark }}
@@ -83,6 +84,21 @@
             {{- $svg = $svg | minify | fingerprint }}
         {{- end }}
         <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
+    {{- else }}
+        {{- if $trysvg }}
+            {{- $path := path.Dir $img }}
+            {{- $name := path.BaseName $img }}
+            {{- $svgpath := printf "%s.svg" (path.Join $path $name) }}
+            {{- if fileExists (path.Join "/assets" $svgpath) }}
+                {{- $svg := resources.Get $svgpath }}
+                {{- if hugo.IsProduction }}
+                    {{- $svg = $svg | minify | fingerprint }}
+                {{- end }}
+                <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
+            {{- else }}
+                {{- warnf "Try SVG was set but no SVG found for %s" $svgpath }}
+            {{- end }}
+        {{- end }}
     {{- end }}
     {{- with $.svgdark }}
         {{- $svg := resources.Get . }}
@@ -90,6 +106,21 @@
             {{- $svg = $svg | minify | fingerprint }}
         {{- end }}
         <source srcset="{{ $svg.RelPermalink }}" media="(prefers-color-scheme:dark)" type="image/svg+xml">
+    {{- else }}
+        {{- if and $trysvg $imgdark }}
+            {{- $path := path.Dir $imgdark }}
+            {{- $name := path.BaseName $imgdark }}
+            {{- $svgpath := printf "%s.svg" (path.Join $path $name) }}
+            {{- if fileExists (path.Join "/assets" $svgpath) }}
+                {{- $svg := resources.Get $svgpath }}
+                {{- if hugo.IsProduction }}
+                    {{- $svg = $svg | minify | fingerprint }}
+                {{- end }}
+                <source srcset="{{ $svg.RelPermalink }}" media="(prefers-color-scheme:dark)" type="image/svg+xml">
+            {{- else }}
+                {{- warnf "Try SVG was set and a dark mode image provided but no dark mode SVG found for %s" $svgpath }}
+            {{- end }}
+        {{- end }}
     {{- end }}
     {{- $opts := "" }}
     {{- if $.anchor }}
