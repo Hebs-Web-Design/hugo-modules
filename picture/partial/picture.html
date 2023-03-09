@@ -1,5 +1,6 @@
 {{- $img := resources.Get .img }}
 {{- $trysvg := .trysvg }}
+{{- $autowh := .autowh }}
 {{- with $img }}
     {{- $imgdark := false }}
     {{- if $.imgdark }}
@@ -126,13 +127,17 @@
         {{- $opts = printf "%s %s" $opts $.anchor }}
     {{- end }}
     {{- if $.fit }}
-        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ ($img.Fit (printf "%s" ($scratch.Get "resize"))).RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Fit (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}>
+        {{- $src := $img.Fit (printf "%s" ($scratch.Get "resize")) }}
+        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ $src.RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Fit (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}{{ if $autowh }} width="{{ $src.Width }}" height="{{ $src.Height }}"{{ end }}>
     {{- else if $.fill }}
-        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ ($img.Fill (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Fill (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}>
+        {{- $src := $img.Fill (printf "%s %s" ($scratch.Get "resize") $opts) }}
+        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ $src.RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Fill (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}{{ if $autowh }} width="{{ $src.Width }}" height="{{ $src.Height }}"{{ end }}>
     {{- else if $.crop }}
-        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ ($img.Crop (printf "%s %s" ($scratch.Get "resize") $opts)).RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Crop (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}>
+        {{- $src := $img.Crop (printf "%s %s" ($scratch.Get "resize") $opts) }}
+        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ $src.RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Crop (printf "%s %s" ($scratch.Get (printf "resize%sx" $version)) $opts)).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}{{ if $autowh }} width="{{ $src.Width }}" height="{{ $src.Height }}"{{ end }}>
     {{- else }}
-        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ ($img.Resize (printf "%s" ($scratch.Get "resize"))).RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Resize (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}>
+        {{- $src := $img.Resize (printf "%s" ($scratch.Get "resize")) }}
+        <img {{ with $.class }}class="{{ . }}" {{ end }}{{ with $.alt }}alt="{{ . }}" {{ end }}{{ with $.title }}title="{{ . }}" {{ end }} src="{{ $src.RelPermalink }}{{ if $.versions }}{{ range $version := (split $.versions ",") }}, {{ ($img.Resize (printf "%s" ($scratch.Get (printf "resize%sx" $version)))).RelPermalink }} {{ printf "%sx" $version }}{{ end }}{{ end }}"{{ if $.lazy }} loading="lazy"{{ end }}{{ if $autowh }} width="{{ $src.Width }}" height="{{ $src.Height }}"{{ end }}>
     {{- end }}
     </picture>
 {{- else }}
