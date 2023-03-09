@@ -23,7 +23,7 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 * svg : SVG version of image (optional)
 * svgdark : Dark mode SVG version of image (optional)
 * class : CSS classes to apply to image (optional)
-* alt : Contents of "alt" attribute (optional)
+* alt : Contents of `alt` attribute (optional)
 * width (int) : Width for resize (default), crop, fill or fit operation (optional)
 * height (int) : Height for resize (default), crop, fill or fit operation (optional)
 * fit (bool) : Perform fit operation
@@ -38,7 +38,7 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 
 ### Notes
 
-Some options require or only support certain options:
+Some options require or only support certain values:
 
 * For fit, crop and fill operations both "width" and "height" must be provided.
 * It is possible to provide "fit", "fill" and "crop" at the same time, however the first option wins:
