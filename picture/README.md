@@ -47,4 +47,4 @@ Some options require or only support certain options:
   * Crop
   * Resize (no option set)
 * The "anchor" option is only supported for "fill" and "crop" operations.
-* The "versions" option must be provided as a comma seperated list of numbers. Currently only whole numbers are supported so generating a 3.5x image version is not supported. In addition one or both of "width" and "height" must be provided. This defines the "1x" version with alternate resolutions being calculated from this size.
+* The "versions" option must be provided as a comma seperated list of numbers. Currently only whole numbers are supported so generating a 3.5x image version is not supported. In addition one or both of "width" and "height" must be provided. This defines the "1x" version with alternate resolutions being calculated upwards from this size.
