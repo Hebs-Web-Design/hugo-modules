@@ -35,6 +35,7 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 * lazy (bool) : Enable lazy loading by adding `loading="lazy"` to the `img` tag (optional)
 * trysvg (bool) : If a file of the same name, but with a `.svg` extension exists, this will be added as a `source` with a type of `image/svg+xml`. This works for both `img` and `imgdark` versions. The `svg` and `svgdark` options take precedence over the detected versions (optional)
 * autowh (bool) : Add `width` and `height` attributes to the resulting `img` tag based on the final size of the image after any operations are completed (optional)
+* norotate (bool) : Disable EXIF rotation (optional)
 
 ### Notes
 
