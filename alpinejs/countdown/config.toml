@@ -1,0 +1,5 @@
+[module]
+
+[[module.mounts]]
+source = "countdown.js"
+target = "assets/js/alpinejs/countdown.js"
