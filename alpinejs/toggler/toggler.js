@@ -4,6 +4,9 @@ export default () => ({
     show() {
         this.open = true;
     },
+    hide() {
+        this.close();
+    },
     close() {
         this.open = false;
     },
