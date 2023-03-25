@@ -1,0 +1,5 @@
+[module]
+
+[[module.mounts]]
+source = "toggler.js"
+target = "assets/js/alpinejs/toggler.js"
