@@ -1,6 +1,9 @@
 export default () => ({
     open: false,
- 
+
+    get visible() {
+        return this.open;
+    },
     show() {
         this.open = true;
     },
