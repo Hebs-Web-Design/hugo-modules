@@ -1,5 +1,0 @@
-[module]
-
-[[module.mounts]]
-source = "partial.html"
-target = "layouts/partials/mapbox.html"

@@ -1,0 +1,82 @@
+{{- $currentPage := . }}
+{{- $navclass := default "drop-shadow-lg bg-white" .Site.Params.navbar.classes.navbar }}
+{{- $textclass := default "hover:text-black text-slate-500" .Site.Params.navbar.classes.text }}
+{{- $buttonclass := default "bg-blue-900 text-white font-semibold" .Site.Params.navbar.classes.button }}
+{{- $burgerclass := default "bg-blue-900" .Site.Params.navbar.classes.burger }}
+{{- $dividerclass := default "border-blue-900" .Site.Params.navbar.classes.divider }}
+<nav role="navigation" aria-label="main navigation">
+    <div class="flex justify-between fixed top-0 left-0 right-0 lg:px-12 z-[1000] {{ $navclass }}" x-data="toggler">
+      {{- with .Site.Params.navbar.brand }}
+      <div class="pl-4 lg:pl-0 py-4">
+        <a href="{{ $.Site.Home.RelPermalink }}">
+        {{- with .logo }}
+          {{- $logo := resources.Get .image }}
+          {{- if and (eq ".svg" (path.Ext .image)) hugo.IsProduction }}
+            {{- $logo = $logo | minify | fingerprint }}
+          {{- end }}
+          {{- $brandopts := (dict "img" .image "alt" $.Site.Title) }}
+          {{- with .class }}
+            {{- $brandopts = merge $brandopts (dict "class" .) }}
+          {{- end }}
+          {{- with .width }}
+            {{- $brandopts = merge $brandopts (dict "width" .) }}
+          {{- end }}
+          {{- with .height }}
+            {{- $brandopts = merge $brandopts (dict "height" .) }}
+          {{- end }}
+          {{- partial "picture" $brandopts }}
+        {{- end }}
+        {{- with .text }}
+          <span{{ with .class }} class="{{ . }}"{{ end }}>{{ .content }}</span>
+        {{- end }}
+        </a>
+      </div>
+      {{- end}}
+
+      <ul class="top-20 lg:top-0 w-64 lg:w-auto absolute lg:static right-0 lg:right-auto self-center justify-evenly bg-white rounded-b-lg lg:rounded-none" :class="open ? 'flex lg:flex flex-col lg:flex-row' : 'hidden lg:flex'" x-cloak>
+        {{- range .Site.Menus.main }}
+        <li class="px-4 py-2{{ if .Params.button }} pt-4 lg:pt-0 pb-6 lg:pb-0  place-self-center{{ end }}">
+          {{- if .HasChildren }}
+          <ul class="flex flex-col" x-data="toggler" @click.outside="close">
+            <li class="{{ $textclass }} cursor-pointer transition" @click="toggle">
+              {{- if .Page }}
+              <a class="{{ $textclass }}" href="{{ .URL }}">
+                {{ .Title }}
+              </a>
+              {{- else }}
+                {{- .Title }}
+              {{- end }}
+              {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "hidden lg:inline ml-2" "width" "16") }}
+            </li>
+            <div class="{{ $dividerclass }} flex flex-col lg:absolute top-20 border-t-2 lg:w-52 lg:rounded-b-lg lg:drop-shadow-lg bg-white" :class="open ? '' : 'lg:hidden'" x-cloak>
+              <ul>
+                {{- range .Children }}
+                <li class="lg:px-4 py-2 text-sm">
+                  <a class="{{ $textclass }} transition" href="{{ .URL }}">
+                    {{ .Title }}
+                  </a>
+                </li>
+                {{- end }}
+              </ul>
+            </div>
+          </ul>
+          {{- else if .Params.button }}
+          <a class="{{ $buttonclass }} lg:min-w-0 min-w-max rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
+            {{ .Title }}
+          </a>
+          {{- else }}
+          <a class="{{ $textclass }} transition" href="{{ .URL }}">
+            {{ .Title }}
+          </a>
+          {{- end}}
+        </li>
+        {{- end }}
+      </ul>
+
+      <div role="button" class="flex flex-col w-16 h-16 p-4 cursor-pointer lg:hidden place-self-center gap-[0.6rem]" aria-label="menu" aria-expanded="false" @click="toggle">
+        <span class="{{ $burgerclass }} inline-block w-8 h-0.5 rounded-lg origin-bottom-left transition" :class="open ? 'rotate-45' : ''"></span>
+        <span class="{{ $burgerclass }} inline-block w-8 h-0.5 rounded-lg transition" :class="open ? 'opacity-0' : ''"></span>
+        <span class="{{ $burgerclass }} inline-block w-8 h-0.5 rounded-lg origin-top-left transition" :class="open ? '-rotate-45' : ''"></span>
+      </div>
+    </div>
+</nav>
