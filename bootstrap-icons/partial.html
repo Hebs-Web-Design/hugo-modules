@@ -1,4 +1,4 @@
-{{- $attrList := slice "width" "height" "class" ":class" "title" ":title" "alt" }}
+{{- $attrList := slice "width" "height" "class" ":class" "title" ":title" "alt" "text" "textx" "texty" "textclass" }}
 {{- $scratch := newScratch }}
 {{- range $attr, $value := . }}
 {{-   $scratch.Set $attr $value }}
@@ -17,6 +17,14 @@
 {{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg }}
 {{-       else if (eq $attr ":title") }}
 {{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title x-text=\"%s\"></title>\n</svg>" .) $svg }}
+{{-       else if (eq $attr "text") }}
+{{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<text x=\"50%%\" y=\"50%%\" dominant-baseline=\"middle\" text-anchor=\"middle\">%s</text>\n</svg>" .) $svg }}
+{{-       else if (eq $attr "texty") }}
+{{-         $svg = replaceRE "(<text .* y)=\"50%\" (.*</text>)" (printf "$1=\"%s\" $2" .) $svg }}
+{{-       else if (eq $attr "textx") }}
+{{-         $svg = replaceRE "(<text .* x)=\"50%\" (.*</text>)" (printf "$1=\"%s\" $2" .) $svg }}
+{{-       else if (eq $attr "textclass") }}
+{{-         $svg = replaceRE "(<text .*)>(.*)</text>" (printf "$1 class=\"%s\">$2</text>" .) $svg }}
 {{-       else if (or (or (eq $attr "width") (eq $attr "height")) (eq $attr "class")) }}
 {{-         $svg = replaceRE (printf "(%s)=\"[a-zA-Z\\-\\. 0-9]*\"" $attr) (printf "$1=\"%s\"" .) $svg }}
 {{-       else }}
