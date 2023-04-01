@@ -1,5 +1,5 @@
-export default () => ({
-    open: false,
+export default (open = false) => ({
+    open: open,
 
     get visible() {
         return this.open;
