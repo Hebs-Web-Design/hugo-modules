@@ -1,0 +1,5 @@
+[module]
+
+[[module.mounts]]
+source = "search.js"
+target = "assets/js/alpinejs/search.js"

@@ -23,3 +23,29 @@ Then in a shortcode:
     <div x-show="open">Hello There</div>
 </div>
 ```
+
+## Parameters
+
+The data can be initialised with the starting "open" set to "false" as follows:
+
+```html
+<div x-data="toggler(false)">
+```
+
+## Properties
+
+The following properties are exposed:
+
+* open (boolean) - Are we "open" or not
+
+## Methods
+
+
+The following methods are provided:
+
+* show - Used to show the "whatever" (sets "open" to true)
+* visible - Alias of "open" property
+* hide - Alias of close
+* close - Sets "open" to "false"
+* delayclose - Sets "open" to "false" only after the specified number of attempts (defaults to 1) have occurred
+* toggle - Toggles the state of "open"
