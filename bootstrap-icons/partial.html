@@ -1,4 +1,4 @@
-{{- $attrList := slice "width" "height" "class" ":class" "title" ":title" "alt" "text" "textx" "texty" "textclass" }}
+{{- $attrList := slice "width" "height" "class" ":class" "title" ":title" "alt" "text" "textx" "texty" "textclass" "x-show" "@click" "x-cloak"}}
 {{- $dataurl := default false .dataurl }}
 {{- $scratch := newScratch }}
 {{- range $attr, $value := . }}
@@ -28,6 +28,8 @@
 {{-         $svg = replaceRE "(<text .*)>(.*)</text>" (printf "$1 class=\"%s\">$2</text>" .) $svg }}
 {{-       else if (or (or (eq $attr "width") (eq $attr "height")) (eq $attr "class")) }}
 {{-         $svg = replaceRE (printf "(%s)=\"[a-zA-Z\\-\\. 0-9]*\"" $attr) (printf "$1=\"%s\"" .) $svg }}
+{{-       else if (eq $attr "x-cloak") }}
+{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $attr) $svg }}
 {{-       else }}
 {{-         $value := delimit (slice $attr (printf "\"%s\"" .)) "=" }}
 {{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $value) $svg }}
