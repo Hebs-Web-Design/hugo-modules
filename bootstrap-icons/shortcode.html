@@ -10,6 +10,7 @@
 {{-   with .Get "textclass" }}{{ $options = merge $options (dict "textx" .) }}{{ end }}
 {{-   with .Get "textclass" }}{{ $options = merge $options (dict "texty" .) }}{{ end }}
 {{-   with .Get "textclass" }}{{ $options = merge $options (dict "textclass" .) }}{{ end }}
+{{-   with .Get "dataurl" }}{{ $options = merge $options (dict "dataurl" .) }}{{ end }}
 {{-   partial "b-icon.html" $options }}
 {{- else }}
 {{-   partial "b-icon.html" (dict "icon" (.Get 0)) }}

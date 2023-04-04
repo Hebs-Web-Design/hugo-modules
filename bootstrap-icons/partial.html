@@ -1,4 +1,5 @@
 {{- $attrList := slice "width" "height" "class" ":class" "title" ":title" "alt" "text" "textx" "texty" "textclass" }}
+{{- $dataurl := default false .dataurl }}
 {{- $scratch := newScratch }}
 {{- range $attr, $value := . }}
 {{-   $scratch.Set $attr $value }}
@@ -33,5 +34,9 @@
 {{-       end }}
 {{-     end }}
 {{-   end }}
-{{-   $svg | safeHTML }}
+{{-   if $dataurl }}
+{{-     printf "data:image/svg+xml;base64,%s" ($svg | base64Encode) -}}
+{{-   else }}
+{{-     $svg | safeHTML }}
+{{-   end }}
 {{- end }}
