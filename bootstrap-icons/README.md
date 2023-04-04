@@ -38,3 +38,7 @@ The following options can be passed to the partial (via a "dict") or the shortco
 * title : Adds a `<title>` element to the SVG output (optional)
 
 When calling the shortcode using positional parameters only "icon" can be set.
+
+## Versioning
+
+Versioning is based on the "semverpair" algorithm that is described here: <https://github.com/bep/semverpair>
