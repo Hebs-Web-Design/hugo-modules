@@ -5,6 +5,9 @@ export default (dev = false) => ({
     searching: false,
     searcherror: false,
     async dosearch() {
+        // clear any existing results
+        this.results = [];
+
         // skip an empty search
         if (this.text === '') {
             return;
