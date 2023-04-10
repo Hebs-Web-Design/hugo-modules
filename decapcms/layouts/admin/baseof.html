@@ -7,7 +7,7 @@
   <title>{{ .Title }}</title>
 </head>
 <body>
-  {{- block "main" }}
+  {{- block "main" . }}
   {{- end }}
   {{- $js := resources.Get "js/decapcms.js" | js.Build }}
   {{- if hugo.IsProduction }}
