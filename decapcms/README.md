@@ -11,7 +11,7 @@ This module can be used to deploy Decap CMS to a Hugo site.
 
 ## Configuring the CMS
 
-Create a `config.yml` in `static/admin` as per the (documentation)[https://decapcms.org/docs/intro/].
+Create a `config.yml` in `static/admin` as per the [documentation](https://decapcms.org/docs/intro/).
 
 ## Notes
 
