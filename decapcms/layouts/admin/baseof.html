@@ -9,9 +9,9 @@
 <body>
   {{- block "main" . }}
   {{- end }}
-  {{- $js := resources.Get "js/decapcms.js" | js.Build }}
+  {{- $js := resources.Get "js/decapcms.js" | js.Build (dict "minify" hugo.IsProduction) }}
   {{- if hugo.IsProduction }}
-    {{- $js = $js | minify | fingerprint }}
+    {{- $js = $js | fingerprint }}
   {{- end }}
   <script src="{{ $js.RelPermalink }}"></script>
 </body>
