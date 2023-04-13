@@ -11,7 +11,26 @@ This module can be used to deploy Decap CMS to a Hugo site.
 
 ## Configuring the CMS
 
-Create a `config.yml` in `static/admin` as per the [documentation](https://decapcms.org/docs/intro/).
+The CMS may be configured in two ways (or both):
+
+1. Create a `config.yml` in `static/admin` as per the [documentation](https://decapcms.org/docs/intro/).
+2. Add config to your site configuration as follows:
+  
+  ```yaml
+  params:
+    decapcms:
+      config:
+        backend:
+          name: git-gateway
+  ```
+
+  Please see <https://decapcms.org/docs/beta-features/#manual-initialization> for more information.
+
+Both options may be used unless the config in your site configuration includes `load_config_file: false` which will prevent the loading of `config.yml` from `/admin/`.
+
+## Versioning
+
+Versioning is based on the "semverpair" algorithm that is described here: <https://github.com/bep/semverpair>
 
 ## Notes
 
