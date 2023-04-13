@@ -28,10 +28,6 @@ The CMS may be configured in two ways (or both):
 
 Both options may be used unless the config in your site configuration includes `load_config_file: false` which will prevent the loading of `config.yml` from `/admin/`.
 
-## Versioning
-
-Versioning is based on the "semverpair" algorithm that is described here: <https://github.com/bep/semverpair>
-
 ## Notes
 
 * The CMS is available at /admin (this cannot be changed)
