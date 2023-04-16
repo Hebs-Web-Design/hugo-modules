@@ -49,3 +49,15 @@ Some options require or only support certain values:
   * Resize (no option set)
 * The "anchor" option is only supported for "fill" and "crop" operations.
 * The "versions" option must be provided as a comma seperated list of numbers. Currently only whole numbers are supported so generating a 3.5x image version is not supported. In addition one or both of "width" and "height" must be provided. This defines the "1x" version with alternate resolutions being calculated upwards from this size.
+
+## Example
+
+For example, passing `2,3,4` for `versions` with `100` for width, based on an image with a resolution of 1000x500 (it's always best to be scaling down for all versions rather than scaling up), this will result in the following resize operations:
+
+* 100x50 = base/default image
+* 200x100 = 2x version
+* 300x150 = 3x version
+* 400x200 = 4x version
+ 
+In addition, assuming the extended version of Hugo is used, WebP versions of all of the above will be generated at the same resolutions and added as `source` elements to the `picture`. 
+ 
