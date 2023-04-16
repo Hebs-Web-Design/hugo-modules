@@ -1,6 +1,6 @@
 # picture
 
-Hugo module to implement a basic partial and shortcode for picture emelents.
+Hugo module to implement a basic partial and shortcode for picture emlements.
 
 ## Usage
 
@@ -18,7 +18,7 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 
 ## Options
 
-* img : Path to image asset
+* img : Path to image asset (in global "assets" location)
 * imgdark : Dark mode version of image asset (optional)
 * svg : SVG version of image (optional)
 * svgdark : Dark mode SVG version of image (optional)
@@ -34,7 +34,7 @@ Hugo module to implement a basic partial and shortcode for picture emelents.
 * disablewebp (bool) : Do not generate WebP versions of images in picture element (requires Hugo extended version - for non-extended versions this is always true) (optional)
 * lazy (bool) : Enable lazy loading by adding `loading="lazy"` to the `img` tag (optional)
 * trysvg (bool) : If a file of the same name, but with a `.svg` extension exists, this will be added as a `source` with a type of `image/svg+xml`. This works for both `img` and `imgdark` versions. The `svg` and `svgdark` options take precedence over the detected versions (optional)
-* autowh (bool) : Add `width` and `height` attributes to the resulting `img` tag based on the final size of the image after any operations are completed (optional)
+* autowh (bool) : Add `width` and `height` attributes to the resulting `img` tag based on the final size of the 1x image after any operations are completed (optional)
 * norotate (bool) : Disable EXIF rotation (optional)
 
 ### Notes
