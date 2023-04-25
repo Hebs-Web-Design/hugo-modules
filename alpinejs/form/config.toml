@@ -1,0 +1,5 @@
+[module]
+
+[[module.mounts]]
+source = "form.js"
+target = "assets/js/alpinejs/form.js"

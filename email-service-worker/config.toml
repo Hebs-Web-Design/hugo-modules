@@ -1,9 +1,0 @@
-[module]
-
-[[module.mounts]]
-source = "partial"
-target = "layouts/partials"
-
-[[module.mounts]]
-source = "js"
-target = "assets/js"

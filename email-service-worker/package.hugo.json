@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@glenstack/cf-workers-hcaptcha": "^1.0.0"
-  }
-}
