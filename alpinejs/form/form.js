@@ -8,7 +8,7 @@ export default () => ({
         const form = event.target;
 
         // grab messages and classes from data attributes
-        const sendingText = form.dataset.sendingText === undefined ? 'Sending...' : form.data.sendingText;
+        const sendingText = form.dataset.sendingText === undefined ? 'Sending...' : form.dataset.sendingText;
         const sendingClass =  form.dataset.sendingClass === undefined ? 'email-service-sending' : form.dataset.sendingClass;
         const sentText =  form.dataset.sentText === undefined ? 'Message sent. We will be in contact as soon as possible.' : form.dataset.sentText;
         const sentClass = form.dataset.sentClass === undefined ? 'email-service-sent' : form.dataset.sentClass;
