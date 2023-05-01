@@ -26,9 +26,6 @@ export default () => ({
         try {
             const response = await fetch(url, {
                 method: action,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
                 body: data
             });
 
