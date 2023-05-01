@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export default () => ({
     disabled: false,
     status: '',
@@ -9,8 +7,8 @@ export default () => ({
 
         // grab messages and classes from data attributes
         const sendingText = form.dataset.sendingText === undefined ? 'Sending...' : form.dataset.sendingText;
-        const sendingClass =  form.dataset.sendingClass === undefined ? 'email-service-sending' : form.dataset.sendingClass;
-        const sentText =  form.dataset.sentText === undefined ? 'Message sent. We will be in contact as soon as possible.' : form.dataset.sentText;
+        const sendingClass = form.dataset.sendingClass === undefined ? 'email-service-sending' : form.dataset.sendingClass;
+        const sentText = form.dataset.sentText === undefined ? 'Message sent. We will be in contact as soon as possible.' : form.dataset.sentText;
         const sentClass = form.dataset.sentClass === undefined ? 'email-service-sent' : form.dataset.sentClass;
         const errorText = form.dataset.errorText === undefined ? 'There was a problem sending your message.' : form.dataset.errorText;
         const errorClass = form.dataset.errorClass === undefined ? 'email-service-error' : form.dataset.errorClass;
@@ -26,7 +24,18 @@ export default () => ({
 
         // do POST of form
         try {
-            await axios.post(action, data);
+            const response = await fetch(url, {
+                method: action,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                body: data
+            });
+
+            // check response was ok
+            if (!response.ok) {
+                throw new Error('Network response was not OK');
+            }
 
             this.status = sentText;
             this.statusclass = sentClass;
