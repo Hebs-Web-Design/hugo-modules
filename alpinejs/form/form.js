@@ -20,12 +20,12 @@ export default () => ({
 
         // grab formdata
         const data = new FormData(form);
-        const action = form.action;
+        const url = form.action;
 
         // do POST of form
         try {
             const response = await fetch(url, {
-                method: action,
+                method: 'POST',
                 body: data
             });
 
