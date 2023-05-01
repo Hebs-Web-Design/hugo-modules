@@ -1,5 +1,6 @@
 export default () => ({
-    disabled: false,
+    submitted: false,
+    sending: false,
     status: '',
     statusclass: '',
     async submit(event) {
@@ -13,8 +14,9 @@ export default () => ({
         const errorText = form.dataset.errorText === undefined ? '' : form.dataset.errorText;
         const errorClass = form.dataset.errorClass === undefined ? '' : form.dataset.errorClass;
 
-        console.log(form);
-        this.disabled = true;
+        // status updates
+        this.submitted = true;
+        this.sending = true;
         this.status = sendingText;
         this.statusclass = sendingClass;
 
@@ -42,5 +44,7 @@ export default () => ({
 
             console.log(error);
         }
+
+        this.sending = false;
     }
 });
