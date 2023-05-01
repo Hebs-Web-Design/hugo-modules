@@ -6,12 +6,12 @@ export default () => ({
         const form = event.target;
 
         // grab messages and classes from data attributes
-        const sendingText = form.dataset.sendingText === undefined ? 'Sending...' : form.dataset.sendingText;
-        const sendingClass = form.dataset.sendingClass === undefined ? 'email-service-sending' : form.dataset.sendingClass;
-        const sentText = form.dataset.sentText === undefined ? 'Message sent. We will be in contact as soon as possible.' : form.dataset.sentText;
-        const sentClass = form.dataset.sentClass === undefined ? 'email-service-sent' : form.dataset.sentClass;
-        const errorText = form.dataset.errorText === undefined ? 'There was a problem sending your message.' : form.dataset.errorText;
-        const errorClass = form.dataset.errorClass === undefined ? 'email-service-error' : form.dataset.errorClass;
+        const sendingText = form.dataset.sendingText === undefined ? '' : form.dataset.sendingText;
+        const sendingClass = form.dataset.sendingClass === undefined ? '' : form.dataset.sendingClass;
+        const sentText = form.dataset.sentText === undefined ? '' : form.dataset.sentText;
+        const sentClass = form.dataset.sentClass === undefined ? '' : form.dataset.sentClass;
+        const errorText = form.dataset.errorText === undefined ? '' : form.dataset.errorText;
+        const errorClass = form.dataset.errorClass === undefined ? '' : form.dataset.errorClass;
 
         console.log(form);
         this.disabled = true;
