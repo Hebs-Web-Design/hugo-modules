@@ -1,12 +1,5 @@
 {
-  "comments": {
-    "devDependencies": {
-      "netlify-cms": "project"
-    },
-    "dependencies": {}
-  },
   "devDependencies": {
     "netlify-cms": "^2.10.192"
-  },
-  "dependencies": {}
+  }
 }
