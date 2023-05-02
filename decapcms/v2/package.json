@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "netlify-cms": "^2.10.192"
+  }
+}
