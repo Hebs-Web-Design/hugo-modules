@@ -1,0 +1,5 @@
+[module]
+
+[[module.mounts]]
+source = "cart.js"
+target = "assets/js/alpinejs/cart.js"
