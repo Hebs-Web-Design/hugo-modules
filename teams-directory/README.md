@@ -84,17 +84,3 @@ The following Azure AD attributes are shown in the directory:
 
 The users "Office Location" is used to display a map based on a match being
 found under "locations" or based on the "defaultLocation" set.
-
-## Cloudflare Pages specific features
-
-### Functions
-
-Enabling the "useWorker" option will deploy a "_worker.js" file to enable
-proxying of MS Graph API via a Cloudflare Worker.
-
-The goal of this is to eventually enable caching of API responses, however
-this is **not working** currently.
-
-### Headers
-
-This deploys a file named "_headers" to implement HTTP headers via Cloudflare Pages.

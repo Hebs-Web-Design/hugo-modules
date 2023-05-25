@@ -1,11 +1,6 @@
 {{- $options := (dict "includePaths" (slice "node_modules")) }}
-{{- $css := resources.Get "css/directory/main.scss" | resources.ToCSS $options | resources.PostCSS }}
+{{- $css := resources.Get "css/directory/main.scss" | toCSS $options | postCSS }}
 {{- if hugo.IsProduction }}
-{{- $css = $css | minify | fingerprint | resources.PostProcess }}
-{{- else if (and .Site.IsServer (fileExists "hugo_stats.json")) }}
-{{- $hash := getJSON "hugo_stats.json" | printf "%v" | sha256 }}
-{{- $css = $css | resources.ExecuteAsTemplate (printf "css/directory/main.%v.css" $hash) . }}
-{{- else }}
-{{- $css = $css | resources.ExecuteAsTemplate (printf "css/directory/main.%v.css" now.UnixMilli) .  }}
+    {{- $css = $css | minify | fingerprint | resources.PostProcess }}
 {{- end }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
