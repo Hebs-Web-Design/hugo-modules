@@ -1,4 +1,4 @@
-{{- $js := resources.Get "js/directory/main.js" | resources.ExecuteAsTemplate "js/directory/main.js" . | js.Build }}
+{{- $js := resources.Get "js/directory/main.js" | js.Build (dict "params" .Site.Params.directory) }}
 {{- if hugo.IsProduction }}
 {{- $js = $js | minify | fingerprint }}
 {{- end }}
