@@ -57,3 +57,7 @@ target = "assets/css/directory"
 [[module.mounts]]
 source = "assets/static"
 target = "assets/static/directory"
+
+[[module.mounts]]
+source = "node_modules/leaflet/dist"
+target = "assets/css/directory/leaflet"

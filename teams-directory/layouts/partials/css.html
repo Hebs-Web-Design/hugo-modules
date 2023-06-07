@@ -1,5 +1,5 @@
-{{- $options := (dict "includePaths" (slice "node_modules")) }}
-{{- $css := resources.Get "css/directory/main.scss" | toCSS $options | postCSS }}
+{{- $options := dict "inlineImports" true }}
+{{- $css := resources.Get "css/directory/main.css" | postCSS $options }}
 {{- if hugo.IsProduction }}
     {{- $css = $css | minify | fingerprint | resources.PostProcess }}
 {{- end }}
