@@ -64,7 +64,7 @@
                     <td class="pl-2 md:p-0 cursor-pointer" @click="toggle">
                         <template x-teleport="body">
                             <div
-                                class="fixed w-screen h-screen top-0 left-0 z-40 motion-reduce:backdrop-filter-none backdrop-blur-sm motion-reduce:transition-none"
+                                class="grid place-items-center w-screen h-screen fixed top-0 left-0 z-40 motion-reduce:backdrop-filter-none backdrop-blur-sm motion-reduce:transition-none"
                                 x-show="open"
                                 x-trap.noscroll="open"
                                 x-transition:enter="transition ease-out duration-300"
@@ -73,7 +73,7 @@
                                 x-transition:leave="transition ease-in duration-300"
                                 x-transition:leave-start="opacity-100 scale-100"
                                 x-transition:leave-end="opacity-0 scale-90">
-                                <div class="flex flex-col sm:flex-row place-content-center bg-white dark:bg-black w-screen h-screen lg:w-1/2 md:h-1/2 lg:mx-auto md:mt-[12.5%] justify-items-start lg:rounded-lg lg:border-2" @click.outside="close">
+                                <div class="flex flex-col sm:flex-row place-content-center bg-white dark:bg-black h-full w-full lg:w-auto lg:h-5/6 lg:aspect-[4/3] justify-items-start lg:rounded-lg lg:border-2" @click.outside="close">
                                     <div class="flex-none w-56 h-56 mt-2 md:mt-4 sm:ml-2 md:ml-4 mx-auto">
                                         <div class="relative">
                                             <picture>
@@ -91,7 +91,7 @@
                                             <span x-text="getPresenceDescription"></span>
                                         </div>
                                         <div class="tuncate"><span class="font-bold">Title: </span><span x-text="title"></span></div>
-                                        <div class="tuncate"><span class="font-bold">Email: </span><a title="Email" :href="mailto" x-text="mail"></a></div>
+                                        <div class="tuncate"><span class="font-bold">Email: </span><a title="Email" class="focus:outline-none" :href="mailto" x-text="mail"></a></div>
                                         <div x-show="hasphone"><span class="font-bold">Phone: </span><a title="Phone Call" :href="tel" x-text="phone"></a></div>
                                         <div>
                                             <span class="font-bold">Other: </span>
