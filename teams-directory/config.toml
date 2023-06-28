@@ -22,18 +22,6 @@ target = "$1"
   min = "v0.112.0"
 
   [[module.mounts]]
-    source = "assets"
-    target = "assets"
-
-  [[module.mounts]]
-    source = "static"
-    target = "static"
-
-  [[module.mounts]]
-    source = "layouts"
-    target = "layouts"
-
-  [[module.mounts]]
     source = "layouts/directory"
     target = "layouts/directory"
 

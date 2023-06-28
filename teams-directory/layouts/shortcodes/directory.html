@@ -1,5 +1,5 @@
 <div class="motion-reduce:animate-none animate-bounce text-center text-xl font-semibold pt-16 flex flex-col" x-show="! initdone">
-    <div>{{ partialCached "directory/logo.html" . }}</div>
+    <div>{{ partial "directory/logo.html" . }}</div>
     <div class="font-normal text-2xl">{{ .Site.Title }}</div>
     <div>Loading...</div>
 </div>
@@ -50,7 +50,7 @@
     x-cloak>
     <div class="flex flex-row sticky top-0 bg-white dark:bg-black z-10">
         <div class="md:flex-auto">
-            {{ partialCached "directory/logo.html" . }}
+            {{ partial "directory/logo.html" . }}
             <span class="hidden md:inline grow pl-4 text-2xl align-middle">{{ .Site.Title }}</span>
         </div>
         <div class="md:grow text-right">
