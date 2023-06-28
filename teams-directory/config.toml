@@ -18,46 +18,53 @@ source = "assets/.*\\.(.*)$"
 target = "$1"
 
 [module]
+  [module.hugoVersion]
+  min = "v0.112.0"
 
-[module.hugoVersion]
-min = "v0.112.0"
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
 
-[[module.mounts]]
-source = "layouts/directory"
-target = "layouts/directory"
+  [[module.mounts]]
+    source = "static"
+    target = "static"
 
-[[module.mounts]]
-source = "layouts/partials"
-target = "layouts/partials/directory"
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
 
-[[module.mounts]]
-source = "layouts/shortcodes/directory.html"
-target = "layouts/shortcodes/directory.html"
+  [[module.mounts]]
+    source = "layouts/directory"
+    target = "layouts/directory"
 
-[[module.mounts]]
-source = "static/img"
-target = "static/directory/img"
+  [[module.mounts]]
+    source = "layouts/partials"
+    target = "layouts/partials/directory"
 
-[[module.mounts]]
-source = "static/icons"
-target = "static/directory/icons"
+  [[module.mounts]]
+    source = "layouts/shortcodes/directory.html"
+    target = "layouts/shortcodes/directory.html"
 
-[[module.mounts]]
-source = "static/leaflet"
-target = "static/directory/leaflet"
+  [[module.mounts]]
+    source = "static/img"
+    target = "static/directory/img"
 
-[[module.mounts]]
-source = "assets/js"
-target = "assets/js/directory"
+  [[module.mounts]]
+    source = "static/icons"
+    target = "static/directory/icons"
 
-[[module.mounts]]
-source = "assets/css"
-target = "assets/css/directory"
+  [[module.mounts]]
+    source = "static/leaflet"
+    target = "static/directory/leaflet"
 
-[[module.mounts]]
-source = "assets/static"
-target = "assets/static/directory"
+  [[module.mounts]]
+    source = "assets/js"
+    target = "assets/js/directory"
 
-[[module.mounts]]
-source = "node_modules/leaflet/dist"
-target = "assets/css/directory/leaflet"
+  [[module.mounts]]
+    source = "assets/css"
+    target = "assets/css/directory"
+
+  [[module.mounts]]
+    source = "assets/static"
+    target = "assets/static/directory"
