@@ -17,7 +17,6 @@ Then in a template/partial:
 
 ```html
 <div id="products-list" class="max-w-lg mx-auto" x-data='products'>
-
     <ul class="p-4">
         <template x-for="(item, index) in items" x-key="index">
             <li class="p-4">

@@ -70,6 +70,9 @@
           {{- end}}
         </li>
         {{- end }}
+        {{- if .Site.Params.navbar.search }}
+        <li class="px-4 py-2">{{ partial "search" . }}</li>
+        {{- end }}
       </ul>
 
       <div role="button" class="flex flex-col w-16 h-16 p-4 cursor-pointer lg:hidden place-self-center gap-[0.6rem]" aria-label="menu" aria-expanded="false" @click="toggle">
@@ -78,4 +81,7 @@
         <span class="{{ $burgerclass }} inline-block w-8 h-0.5 rounded-lg origin-top-left transition" :class="open ? '-rotate-45' : ''"></span>
       </div>
     </div>
+    {{- if .Site.Params.navbar.search }}
+    <div id="searchresults" class="transition self-center px-4 md:px-0 w-full md:w-10/12 xl:w-5/6"></div>
+    {{- end }}
 </nav>
