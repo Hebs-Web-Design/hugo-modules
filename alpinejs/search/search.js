@@ -4,6 +4,11 @@ export default (dev = false) => ({
     results: [],
     searching: false,
     searcherror: false,
+    pagefind: undefined,
+    async init() {
+        this.pagefind = await import("/pagefind/pagefind.js");
+        // this.pagefind.init();
+    },
     async dosearch() {
         // clear any existing results
         this.results = [];
@@ -35,39 +40,35 @@ export default (dev = false) => ({
             return;
         }
 
-        if (this.pagefind === undefined) {
-            // attempt to load pagefind library
-            try {
-                const pagefind = await import("/_pagefind/pagefind.js");
+        // do search
+        try {
+            // retrieve results
+            const search = await this.pagefind.search(this.text);
 
-                // retrieve results
-                const search = await pagefind.search(this.text);
+            let results = [];
+            for (const result of search.results) {
+                const data = await result.data();
 
-                let results = [];
-                for (const result of search.results) {
-                    const data = await result.data();
-
-                    results.push({
-                        id: result.id,
-                        title: data.meta.title,
-                        url: data.url,
-                        excerpt: data.excerpt,
-                    });
-                }
-
-                this.results = results;
-                
-            } catch(err) {
-                console.log(`Problem with search...are you running locally? Error: ${err}`);
-                this.searcherror = true;
-                this.searching = false;
-
-                return;
+                results.push({
+                    id: result.id,
+                    title: data.meta.title,
+                    url: data.url,
+                    excerpt: data.excerpt,
+                });
             }
 
+            this.results = results;
+            
+        } catch(err) {
+            console.log(`Problem with search...are you running locally? Error: ${err}`);
+            this.searcherror = true;
             this.searching = false;
-            this.searcherror = false;
+
+            return;
         }
+
+        this.searching = false;
+        this.searcherror = false;
     },
     get noresults() {
         return this.results.length === 0;
