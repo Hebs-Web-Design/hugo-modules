@@ -6,7 +6,9 @@ export default (dev = false) => ({
     searcherror: false,
     pagefind: undefined,
     async init() {
-        this.pagefind = await import("/pagefind/pagefind.js");
+        if (!this.dev) {
+            this.pagefind = await import("/pagefind/pagefind.js");
+        }
         // this.pagefind.init();
     },
     async dosearch() {
