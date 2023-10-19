@@ -1,13 +1,13 @@
 [module]
 
-[[module.mounts]]
-source = "layouts/admin"
-target = "layouts/admin"
+  [[module.mounts]]
+    source = "layouts/admin"
+    target = "layouts/admin"
 
-[[module.mounts]]
-source = "content/admin"
-target = "content/admin"
+  [[module.mounts]]
+    source = "content/admin"
+    target = "content/admin"
 
-[[module.mounts]]
-source = "assets/js"
-target = "assets/js"
+  [[module.mounts]]
+    source = "assets/js"
+    target = "assets/js"

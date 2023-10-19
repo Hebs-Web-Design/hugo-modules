@@ -1,5 +1,5 @@
 {
   "devDependencies": {
-    "netlify-cms": "^2.10.192"
+    "decap-cms-app": "^3.0.10"
   }
 }
