@@ -18,7 +18,7 @@ Then in a template/partial:
 ```html
 <div x-data="search{{ if .Site.IsServer }}(true){{ end }}">
     <form>
-        <input type="text" @input.debounce.500ms="await dosearch()" @keyup.escape.window="clear" x-model.debounce.500ms="text">
+        <input type="text" @focus.once="await initsearch()" @input.debounce.500ms="await dosearch()" @keyup.escape.window="clear" x-model.debounce.500ms="text">
     </form>
     <template x-for="result in results" :key="result.id">
         <div>

@@ -1,0 +1,36 @@
+<div class="mb-2 lg:mb-0" x-data="search{{ if .Site.IsServer }}(true){{ end }}" x-trap.noscroll="text !== ''">
+    <form>
+        <label class="relative block">
+            {{- partial "b-icon" (dict "icon" "search" "width" "30" "height" "30" "class" "absolute inset-y-0 right-4 lg:right-0 flex items-center pr-3" "x-show" "! hastext") }}
+            {{- partial "b-icon" (dict "icon" "x" "width" "30" "height" "30" "title" "Clear Search" "class" "absolute inset-y-0 right-4 lg:right-0 flex items-center pr-3 cursor-pointer" "@click" "clear" "x-show" "hastext" "x-cloak" true) }}
+            <input type="text"
+                   aria-label="Search"
+                   class="pl-4 pr-1 py-0.5 rounded-lg border border-slate-300 focus:outline-none"
+                   placeholder="Search"
+                   @focus.once="await initsearch()"
+                   @input.debounce.500ms="await dosearch()"
+                   @keyup.escape.window="clear"
+                   x-model="text">
+        </label>
+    </form>
+    <template x-teleport="#searchresults">
+        <div class="flex-none max-h-[calc(100vh-5.5rem)] overflow-y-auto">
+            <div class="flex flex-col pb-4 pt-28" x-show="text !== ''" x-transition x-cloak>
+                <div class="flex justify-between fixed bg-white w-5/6 md:w-9/12 xl:w-4/6 pb-2">
+                    <div class="text-xl font-semibold grow">Search Results</div>
+                    <div class="self-center italic cursor-pointer text-sm text-left" @click="clear">Clear Search</div>
+                </div>
+                <div class="mt-14 italic" x-show="searching">Searching...</div>
+                <div class="mt-14 italic" x-show="noresults && !searching && !searcherror">No results were found for "<span x-text="text"></span>"</div>
+                <div class="mt-14 italic" x-show="!noresults">There were <span x-text="results.length"></span> result(s) found for "<span x-text="text"></span>"</div>
+                <div class="mt-14 italic" x-show="searcherror">There was an error performing your search.</div>
+                <template x-for="result in results" :key="result.id">
+                    <div class="flex flex-col pt-2 gap-2">
+                        <div class="text font-semibold"><a :href="result.url" x-html="result.title"></a></div>
+                        <div class="prose italic">...<span x-html="result.excerpt"></span>...</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </template>
+</div>

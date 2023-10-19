@@ -1,5 +1,9 @@
 [module]
 
-[[module.mounts]]
-source = "search.js"
-target = "assets/js/alpinejs/search.js"
+  [[module.mounts]]
+    source = "search.js"
+    target = "assets/js/alpinejs/search.js"
+
+  [[module.mounts]]
+    source = "partial.html"
+    target = "layouts/partials/search.html" 

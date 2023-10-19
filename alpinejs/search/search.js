@@ -5,11 +5,19 @@ export default (dev = false) => ({
     searching: false,
     searcherror: false,
     pagefind: undefined,
-    async init() {
-        if (!this.dev) {
-            this.pagefind = await import("/pagefind/pagefind.js");
+    async initsearch() {
+        // dont intialise in dev mode or if its already done
+        if (this.dev || this.pagefind !== undefined) {
+            return
         }
-        // this.pagefind.init();
+
+        // load and init pagefind
+        try {
+            this.pagefind = await import('/pagefind/pagefind.js');
+            this.pagefind.init();
+        } catch(err) {
+            console.log(`Problem initialising search...are you running locally? Error: ${err}`);
+        }
     },
     async dosearch() {
         // clear any existing results
