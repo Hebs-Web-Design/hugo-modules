@@ -7,6 +7,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "decap-cms-app": "^3.0.10"
+    "decap-cms-app": "^3.0.12"
   }
 }
