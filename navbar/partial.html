@@ -6,6 +6,7 @@
 {{- $burgerclass := default "bg-blue-900" .Site.Params.navbar.classes.burger }}
 {{- $dividerclass := default "border-blue-900" .Site.Params.navbar.classes.divider }}
 {{- $dropdownclass := default "bg-white lg:bg-transparent" .Site.Params.navbar.classes.dropdown }}
+{{- $activeclass := default "font-bold" .Site.Params.navbar.classes.active }}
 <nav role="navigation" aria-label="main navigation">
     <div class="hidden flex lg:flex flex-col lg:flex-row lg:flex lg:hidden rotate-45 -rotate-45 opacity-0"><!-- extra classes --></div>
     <div class="flex justify-between fixed top-0 left-0 right-0 lg:px-12 z-[1000] {{ $navclass }}" x-data="toggler">
@@ -40,11 +41,11 @@
           <ul class="flex flex-col" x-data="toggler" @click.outside="close">
             <li class="{{ $textclass }} cursor-pointer transition" @click="toggle">
               {{- if .Page }}
-              <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} font-bold{{ end }}" href="{{ .URL }}">
+              <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
                 {{ .Title }}
               </a>
               {{- else }}
-              <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="font-bold"{{ end }}>
+              <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="{{ $activeclass }}"{{ end }}>
                 {{- .Title }}
               </span>
               {{- end }}
@@ -54,7 +55,7 @@
               <ul>
                 {{- range .Children }}
                 <li class="lg:px-4 py-2 text-sm">
-                  <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
+                  <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
                     {{ .Title }}
                   </a>
                 </li>
