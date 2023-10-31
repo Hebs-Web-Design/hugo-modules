@@ -5,6 +5,7 @@
 {{- $buttonclass := default "bg-blue-900 text-white font-semibold" .Site.Params.navbar.classes.button }}
 {{- $burgerclass := default "bg-blue-900" .Site.Params.navbar.classes.burger }}
 {{- $dividerclass := default "border-blue-900" .Site.Params.navbar.classes.divider }}
+{{- $dropdownclass := default "bg-white lg:bg-transparent" .Site.Params.navbar.classes.dropdown }}
 <nav role="navigation" aria-label="main navigation">
     <div class="hidden flex lg:flex flex-col lg:flex-row lg:flex lg:hidden rotate-45 -rotate-45 opacity-0"><!-- extra classes --></div>
     <div class="flex justify-between fixed top-0 left-0 right-0 lg:px-12 z-[1000] {{ $navclass }}" x-data="toggler">
@@ -32,18 +33,20 @@
       </div>
       {{- end}}
 
-      <ul class="top-20 lg:top-0 w-64 lg:w-auto absolute lg:static right-0 lg:right-auto self-center justify-evenly bg-white rounded-b-lg lg:rounded-none" :class="open ? 'flex lg:flex flex-col lg:flex-row' : 'hidden lg:flex'" x-cloak>
+      <ul class="top-20 lg:top-0 w-64 lg:w-auto absolute lg:static right-0 lg:right-auto self-center justify-evenly rounded-b-lg lg:rounded-none {{ $dropdownclass }}" :class="open ? 'flex lg:flex flex-col lg:flex-row' : 'hidden lg:flex'" x-cloak>
         {{- range .Site.Menus.main }}
-        <li class="px-4 py-2{{ if .Params.button }} pt-4 lg:pt-0 pb-6 lg:pb-0  place-self-center{{ end }}">
+        <li class="px-4 py-2{{ if .Params.button }} pt-4 lg:pt-0 pb-6 lg:pb-0 place-self-center{{ end }}">
           {{- if .HasChildren }}
           <ul class="flex flex-col" x-data="toggler" @click.outside="close">
             <li class="{{ $textclass }} cursor-pointer transition" @click="toggle">
               {{- if .Page }}
-              <a class="{{ $textclass }}" href="{{ .URL }}">
+              <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} font-bold{{ end }}" href="{{ .URL }}">
                 {{ .Title }}
               </a>
               {{- else }}
+              <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="font-bold"{{ end }}>
                 {{- .Title }}
+              </span>
               {{- end }}
               {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "hidden lg:inline ml-2" "width" "16") }}
             </li>
@@ -51,7 +54,7 @@
               <ul>
                 {{- range .Children }}
                 <li class="lg:px-4 py-2 text-sm">
-                  <a class="{{ $textclass }} transition" href="{{ .URL }}">
+                  <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
                     {{ .Title }}
                   </a>
                 </li>
@@ -64,7 +67,7 @@
             {{ .Title }}
           </a>
           {{- else }}
-          <a class="{{ $textclass }} transition" href="{{ .URL }}">
+          <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
             {{ .Title }}
           </a>
           {{- end}}
