@@ -18,6 +18,14 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     // init steps
     async init() {
         try {
+            await this.msalClient.initialize();
+        } catch (error) {
+            this.notice('error', 'Error during init', error);
+            this.initerror = true;
+
+            return;
+        }
+        try {
             let response = await this.msalClient.handleRedirectPromise();
     
             if (response === null) {
