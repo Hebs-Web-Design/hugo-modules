@@ -1,5 +1,5 @@
 {{- $options := dict "inlineImports" true }}
-{{- $css := resources.Get "css/directory/main.css" | postCSS $options }}
+{{- $css := slice (resources.Get "css/directory/directory.css" | postCSS $options) (resources.Get "css/tailwind.css" | postCSS $options) | resources.Concat "js/bundle.css" }}
 {{- if hugo.IsProduction }}
     {{- $css = $css | minify | fingerprint | resources.PostProcess }}
 {{- end }}
