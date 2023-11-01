@@ -1,0 +1,5 @@
+{{- $asset := .context.Page.Resources.GetMatch .name }}
+{{- if eq $asset nil }}
+    {{- $asset = resources.Get .name }}
+{{- end }}
+{{- return $asset }}

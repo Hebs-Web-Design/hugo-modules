@@ -1,0 +1,8 @@
+{{- $maxdays := 30 }}
+{{- $longmonths := slice "01" "03" "05" "07" "08" "10" "12" }}
+{{- if eq .month "02" }}
+    {{- $maxdays = 28 }}
+{{- else if in $longmonths .month }}
+    {{- $maxdays = 31 }}
+{{- end }}
+{{- return $maxdays }}

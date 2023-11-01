@@ -1,0 +1,14 @@
+{{- $month := now.Format "01" }}
+{{- with .month }}
+    {{ $month = . }}
+{{- end }}
+{{- if or (eq (slicestr $month 0 1) "+") (eq (slicestr $month 0 1) "-") }}
+    {{- $new := add now.Month (int $month) }}
+    {{- if gt $new 12 }}
+        {{- $new = sub $new 12 }}
+    {{- else if lt $new 1 }}
+        {{- $new = add $new 12 }}
+    {{- end }}
+    {{- $month = printf "%02d" $new }}
+{{- end }}
+{{- return $month }}

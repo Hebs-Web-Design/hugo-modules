@@ -1,0 +1,11 @@
+[module]
+  [module.hugoVersion]
+  min = "v0.112.0"
+
+  [[module.mounts]]
+    source = "partials"
+    target = "layouts/partials"
+
+  [[module.mounts]]
+    source = "shortcodes"
+    target = "layouts/shortcodes"
