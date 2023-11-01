@@ -1,0 +1,39 @@
+[build]
+writeStats = true
+
+  [[build.cachebusters]]
+    source = "assets/watching/hugo_stats\\.json"
+    target = "tailwind\\.css"
+
+  [[build.cachebusters]]
+    source = "(postcss|tailwind)\\.config\\.js"
+    target = "css"
+
+  [[build.cachebusters]]
+    source = "assets/.*\\.(js|ts|jsx|tsx)"
+    target = "js"
+
+  [[build.cachebusters]]
+    source = "assets/.*\\.(.*)$"
+    target = "$1"
+
+[module]
+  [module.hugoVersion]
+  min = "v0.112.0"
+
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+
+  [[module.mounts]]
+    source = "tailwind.css"
+    target = "assets/css/tailwind.css"
+
+  [[module.mounts]]
+    source = "tailwind.html"
+    target = "layouts/partials/tailwind.html"
+
