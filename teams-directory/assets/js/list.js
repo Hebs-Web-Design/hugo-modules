@@ -78,20 +78,6 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
     },
     showlocation: showlocation,
     client: initGraphClient(tenantid, clientid),
-    loginRequest: {
-        scopes: ['user.read'],
-        authority: `https://login.microsoftonline.com/${tenantid}`,
-        redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
-    },
-    tokenRequest: {
-        scopes: [
-            'groupmember.read.all',
-            'presence.read.all',
-            'user.read.all'
-        ],
-        authority: `https://login.microsoftonline.com/${tenantid}`,
-        redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
-    },
     accountId: '',
 
     // messages and errors
@@ -164,9 +150,9 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                 try {
                     let response = await self.client
                         .api(url)
-                        .headers({'ConsistencyLevel':'eventual'})
                         .select(['id', 'displayName', 'userPrincipalName', 'businessPhones', 'jobTitle', 'mail', 'officeLocation'])
                         .filter('mail ne null')
+                        .headers({'ConsistencyLevel':'eventual'})
                         .count(true)
                         .get();
                     
@@ -174,12 +160,16 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
 
                     // check if data is paged
                     while (true) {
+                        console.log(response);
                         if (response['@odata.nextLink'] === undefined) {
                             break;
                         }
     
                         // do another call
-                        response = await self.client.api(url).skipToken(response['@odata.nextLink']).get();
+                        response = await self.client
+                            .api(response['@odata.nextLink'])
+                            .headers({'ConsistencyLevel':'eventual'})
+                            .get();
     
                         // add to data
                         responsedata.push(...response.value)
@@ -206,9 +196,9 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
             try {
                 let response = await self.client
                     .api(url)
-                    .headers({'ConsistencyLevel':'eventual'})
                     .select('id', 'displayName', 'userPrincipalName', 'businessPhones', 'jobTitle', 'mail', 'officeLocation')
                     .filter('mail ne null')
+                    .headers({'ConsistencyLevel':'eventual'})
                     .count(true)
                     .get();
 
@@ -221,7 +211,10 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
                     }
 
                     // do another call
-                    response = await self.client.api(url).skipToken(response['@odata.nextLink']).get();
+                    response = await self.client
+                        .api(response['@odata.nextLink'])
+                        .headers({'ConsistencyLevel':'eventual'})
+                        .get();
 
                     // add to data
                     responsedata.push(...response.value)
