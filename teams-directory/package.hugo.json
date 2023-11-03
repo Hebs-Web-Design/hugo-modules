@@ -7,15 +7,15 @@
       "@alpinejs/persist": "project",
       "@azure/msal-browser": "project",
       "@microsoft/microsoft-graph-client": "project",
-      "@tailwindcss/forms": "project",
+      "@tailwindcss/forms": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
+      "@tailwindcss/typography": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
       "alpinejs": "project",
-      "autoprefixer": "project",
-      "axios": "project",
+      "autoprefixer": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
       "dayjs": "project",
       "leaflet": "project",
-      "postcss": "project",
-      "postcss-cli": "project",
-      "tailwindcss": "project"
+      "postcss": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
+      "postcss-cli": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
+      "tailwindcss": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3"
     }
   },
   "dependencies": {},
@@ -25,9 +25,7 @@
     "@alpinejs/persist": "^3.13.2",
     "@azure/msal-browser": "^3.4.0",
     "@microsoft/microsoft-graph-client": "^3.0.5",
-    "@tailwindcss/forms": "^0.5.6",
     "alpinejs": "^3.13.2",
-    "axios": "^1.4.0",
     "dayjs": "^1.11.9",
     "leaflet": "^1.9.4"
   }

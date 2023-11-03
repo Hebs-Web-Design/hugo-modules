@@ -1,4 +1,6 @@
-import * as msal from '@azure/msal-browser';
+import { PublicClientApplication, InteractionType } from "@azure/msal-browser";
+import { AuthCodeMSALBrowserAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/authCodeMsalBrowser";
+import { Client } from "@microsoft/microsoft-graph-client";
 
 function isPaged(response) {
     return response.data['@odata.nextLink'] !== undefined;
@@ -47,10 +49,29 @@ function setPresence(item, availability, activity) {
     return item;
 }
 
-function initMsalClient(clientId) {
+function initGraphClient(tenantid, clientId) {
+    const msalClient = initMsalClient(tenantid, clientId);
+    const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(msalClient, {
+        account: msalClient.getAccount({
+            homeAccountId: null,
+        }),
+        interactionType: InteractionType.Redirect,
+        scopes: [
+            'user.read',
+            'groupmember.read.all',
+            'presence.read.all',
+            'user.read.all'
+        ],
+    });
+
+    return Client.initWithMiddleware({authProvider});
+}
+
+function initMsalClient(tenantid, clientId) {
     const msalConfig = {
         auth: {
           clientId: clientId,
+          authority: `https://login.microsoftonline.com/${tenantid}`,
           redirectUri: `${window.location.protocol}//${window.location.host}${window.location.pathname}`
         },
         cache: {
@@ -58,7 +79,9 @@ function initMsalClient(clientId) {
         },
     };
     
-    return new msal.PublicClientApplication(msalConfig);
+    const msalClient = new PublicClientApplication(msalConfig);
+    msalClient.initialize();
+    return msalClient;
 }
 
 function sortList(a, b) {
@@ -84,4 +107,4 @@ function sortList(a, b) {
     return 0;
 }
 
-export { nextData, isPaged, initPresence, initProfilePicture, initMsalClient, setPresence, sortList };
+export { nextData, isPaged, initPresence, initProfilePicture, initGraphClient, setPresence, sortList };
