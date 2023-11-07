@@ -2,26 +2,32 @@
   "comments": {
     "dependencies": {},
     "devDependencies": {
+      "@alpinejs/anchor": "project",
+      "@alpinejs/collapse": "project",
       "@alpinejs/focus": "project",
       "@alpinejs/intersect": "project",
+      "@alpinejs/mask": "project",
       "@alpinejs/persist": "project",
       "@azure/msal-browser": "project",
       "@microsoft/microsoft-graph-client": "project",
-      "@tailwindcss/forms": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
-      "@tailwindcss/typography": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
+      "@tailwindcss/forms": "project",
+      "@tailwindcss/typography": "project",
       "alpinejs": "project",
-      "autoprefixer": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
+      "autoprefixer": "project",
       "dayjs": "project",
       "leaflet": "project",
-      "postcss": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
-      "postcss-cli": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3",
-      "tailwindcss": "github.com/hebs-web-design/hugo-modules/tailwindcss/v3"
+      "postcss": "project",
+      "postcss-cli": "project",
+      "tailwindcss": "project"
     }
   },
   "dependencies": {},
   "devDependencies": {
+    "@alpinejs/anchor": "^3.13.2",
+    "@alpinejs/collapse": "^3.13.2",
     "@alpinejs/focus": "^3.13.2",
     "@alpinejs/intersect": "^3.13.2",
+    "@alpinejs/mask": "^3.13.2",
     "@alpinejs/persist": "^3.13.2",
     "@azure/msal-browser": "^3.4.0",
     "@microsoft/microsoft-graph-client": "^3.0.5",

@@ -1,5 +1,8 @@
 [module]
 
-[[module.mounts]]
-source = "cart.js"
-target = "assets/js/alpinejs/cart.js"
+  [[module.imports]]
+    path = "github.com/hebs-web-design/hugo-modules/alpinejs/v3"
+
+  [[module.mounts]]
+    source = "cart.js"
+    target = "assets/js/alpinejs/cart.js"

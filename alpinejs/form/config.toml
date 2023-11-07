@@ -1,5 +1,8 @@
 [module]
 
-[[module.mounts]]
-source = "form.js"
-target = "assets/js/alpinejs/form.js"
+  [[module.imports]]
+    path = "github.com/hebs-web-design/hugo-modules/alpinejs/v3"
+
+  [[module.mounts]]
+    source = "form.js"
+    target = "assets/js/alpinejs/form.js"
