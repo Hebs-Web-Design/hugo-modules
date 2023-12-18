@@ -25,6 +25,9 @@
           {{- with .height }}
             {{- $brandopts = merge $brandopts (dict "height" .) }}
           {{- end }}
+          {{- with .versions }}
+            {{- $brandopts = merge $brandopts (dict "versions" .) }}
+          {{- end }}
           {{- partial "picture" $brandopts }}
         {{- end }}
         {{- with .text }}
