@@ -1,5 +1,5 @@
 {
   "devDependencies": {
-    "decap-cms-app": "^3.0.12"
+    "decap-cms": "^3.0.12"
   }
 }
