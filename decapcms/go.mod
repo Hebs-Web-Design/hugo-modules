@@ -1,3 +1,3 @@
-module github.com/hebs-web-design/hugo-modules/decapcms
+module github.com/hebs-web-design/hugo-modules/decapcms/v3
 
-go 1.19
+go 1.20
