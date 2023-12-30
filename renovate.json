@@ -14,11 +14,17 @@
       "enabled": true
     },
     {
-      "matchPackagePatterns": ["alpinejs"],
+      "matchPackagePatterns": [
+        "^alpinejs$",
+        "^@alpinejs/.*$"
+      ],
       "groupName": "alpinejs"
     },
     {
-      "matchPackagePatterns": ["tailwindcss"],
+      "matchPackagePatterns": [
+        "^tailwindcss$",
+        "^@tailwindcss/.*$"
+      ],
       "groupName": "tailwindcss"
     }
   ],
