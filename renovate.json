@@ -5,7 +5,7 @@
   ],
   "timezone": "Australia/Perth",
   "npm": {
-    "fileMatch": ["(^|/)package\.hugo\.json$"]
+    "fileMatch": ["(^|/)package\\.hugo\\.json$"]
   },
   "packageRules": [
     {
