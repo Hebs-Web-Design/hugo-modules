@@ -1,5 +1,4 @@
 {
-  "dependencies": {},
   "devDependencies": {
     "@azure/msal-browser": "^3.4.0",
     "@microsoft/microsoft-graph-client": "^3.0.5",
