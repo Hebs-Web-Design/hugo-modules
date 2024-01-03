@@ -1,9 +1,11 @@
 [module]
+  [module.hugoVersion]
+    min = "v0.119.0"
 
-[[module.mounts]]
-source = "partial/picture.html"
-target = "layouts/partials/picture.html"
+  [[module.mounts]]
+    source = "partial/picture.html"
+    target = "layouts/partials/picture.html"
 
-[[module.mounts]]
-source = "shortcode/picture.html"
-target = "layouts/shortcodes/picture.html"
+  [[module.mounts]]
+    source = "shortcode/picture.html"
+    target = "layouts/shortcodes/picture.html"

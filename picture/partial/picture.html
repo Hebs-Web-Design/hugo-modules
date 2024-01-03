@@ -1,5 +1,15 @@
-{{- $imgname := .img }}
-{{- $img := resources.Get .img }}
+{{- $imagename := .img }}
+{{- $scratch := newScratch }}
+{{- with .Page }}
+    {{- with .Resources.Get $imagename }}
+        {{- $scratch.Set "img" . }}
+    {{- else }}
+        {{- $scratch.Set "img" (resources.Get $imagename) }}
+    {{- end }}
+{{- else }}
+    {{- $scratch.Set "img" (resources.Get $imagename) }}
+{{- end}}
+{{- $img := $scratch.Get "img"}}
 {{- $trysvg := .trysvg }}
 {{- $width := .width }}
 {{- $height := .height }}

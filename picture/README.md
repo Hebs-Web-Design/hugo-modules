@@ -18,7 +18,7 @@ Hugo module to implement a basic partial and shortcode for picture emlements.
 
 ## Options
 
-* img : Path to image asset (in global "assets" location)
+* img : Path to image asset (in the current page resource when called via the shortcode or the global "assets" location)
 * imgdark : Dark mode version of image asset (optional)
 * svg : SVG version of image (optional)
 * svgdark : Dark mode SVG version of image (optional)

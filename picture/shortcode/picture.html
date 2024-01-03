@@ -4,4 +4,5 @@
         {{- $scratch.SetInMap "picture" $key . -}}
     {{- end -}}
 {{- end -}}
-{{- partial "picture.html" ($scratch.Get "picture") -}}
+{{- $opts := merge ($scratch.Get "picture") (dict "Page" .Page) }}
+{{- partial "picture.html" $opts -}}
