@@ -109,8 +109,8 @@
         <ul class="flex flex-col">
           <li class="{{ $textclass }}">
             {{- if .Page }}
-            <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-              {{ .Title }}
+            <a class="{{ $textclass }} focus:outline-none{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
+              {{- .Title -}}
             </a>
             {{- else }}
             <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="{{ $activeclass }}"{{ end }}>
@@ -122,7 +122,7 @@
             <ul>
               {{- range .Children }}
               <li class="py-2 text-sm">
-                <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
+                <a class="{{ $textclass }} focus:outline-none transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
                   {{ .Title }}
                 </a>
               </li>
@@ -135,7 +135,7 @@
           {{ .Title }}
         </a>
         {{- else }}
-        <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
+        <a class="{{ $textclass }} focus:outline-none transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
           {{ .Title }}
         </a>
         {{- end}}
