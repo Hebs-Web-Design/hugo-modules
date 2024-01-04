@@ -102,7 +102,7 @@
       x-transition:leave-start="opacity-100 scale-100"
       x-transition:leave-end="opacity-0 scale-90"
       x-cloak>
-    <ul class="flex flex-col w-64 self-center justify-evenly border-l-2 border-b-2 rounded-bl-lg absolute right-0 {{ $dropdownclass }} z-[999]" @click.outside="close">
+    <ul class="flex flex-col w-64 self-center justify-evenly border-l-2 border-b-2 rounded-bl-lg absolute right-0 {{ $dropdownclass }} z-[999]" x-trap.noscroll="open" @click.outside="close">
       {{- range $menu }}
       <li class="px-4 py-2{{ if .Params.button }} pt-4 pb-6 place-self-center{{ end }}">
         {{- if .HasChildren }}
