@@ -7,9 +7,11 @@
 {{- $dividerclass := default "border-blue-900" .Site.Params.navbar.classes.divider }}
 {{- $dropdownclass := default "bg-white lg:bg-transparent" .Site.Params.navbar.classes.dropdown }}
 {{- $activeclass := default "font-bold" .Site.Params.navbar.classes.active }}
-<nav role="navigation" aria-label="main navigation">
+{{- $collapseBreakpoint := default "lg" .Site.Params.navbar.collapse }}
+{{- $menu := index .Site.Menus (default "main" .Site.Params.navbar.menu) }}
+<nav role="navigation" aria-label="main navigation" x-data="toggler">
     <div class="hidden flex lg:flex flex-col lg:flex-row lg:flex lg:hidden rotate-45 -rotate-45 opacity-0"><!-- extra classes --></div>
-    <div class="flex justify-between fixed top-0 left-0 right-0 lg:px-12 z-[1000] {{ $navclass }}" x-data="toggler">
+    <div class="flex justify-between fixed top-0 left-0 right-0 lg:px-12 z-[1000] {{ $navclass }}">
       {{- with .Site.Params.navbar.brand }}
       <div class="pl-4 lg:pl-0 py-4">
         <a href="{{ $.Site.Home.RelPermalink }}">
@@ -36,13 +38,13 @@
         </a>
       </div>
       {{- end}}
-
-      <ul class="top-20 lg:top-0 w-64 lg:w-auto absolute lg:static right-0 lg:right-auto self-center justify-evenly rounded-b-lg lg:rounded-none {{ $dropdownclass }}" :class="open ? 'flex lg:flex flex-col lg:flex-row' : 'hidden lg:flex'" x-cloak>
-        {{- range .Site.Menus.main }}
-        <li class="px-4 py-2{{ if .Params.button }} pt-4 lg:pt-0 pb-6 lg:pb-0 place-self-center{{ end }}">
+      <!-- start desktop menu -->
+      <ul class="hidden {{ $collapseBreakpoint }}:flex static right-auto self-center justify-evenly">
+        {{- range $n, $m := $menu }}
+        <li class="px-4 py-2{{ if .Params.button }} pt-0 pb-0 place-self-center{{ end }}">
           {{- if .HasChildren }}
-          <ul class="flex flex-col" x-data="toggler" @click.outside="close">
-            <li class="{{ $textclass }} cursor-pointer transition" @click="toggle">
+          <div class="flex flex-col" x-data="toggler" @click.outside="close">
+            <div class="{{ $textclass }} cursor-pointer transition" x-ref="menu{{ $n }}" @click="toggle">
               {{- if .Page }}
               <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
                 {{ .Title }}
@@ -52,9 +54,12 @@
                 {{- .Title }}
               </span>
               {{- end }}
-              {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "hidden lg:inline ml-2" "width" "16") }}
-            </li>
-            <div class="{{ $dividerclass }} flex flex-col lg:absolute top-20 border-t-2 lg:w-52 lg:rounded-b-lg lg:drop-shadow-lg bg-white" :class="open ? '' : 'lg:hidden'" x-cloak>
+              {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "inline ml-2" "width" "16") }}
+            </div>
+            <div class="{{ $dividerclass }} border-t-2 w-52 rounded-b-lg drop-shadow-lg bg-white"
+              x-show="open"
+              x-anchor="$refs.menu{{ $n }}"
+              x-cloak>
               <ul>
                 {{- range .Children }}
                 <li class="lg:px-4 py-2 text-sm">
@@ -65,29 +70,83 @@
                 {{- end }}
               </ul>
             </div>
-          </ul>
+          </div>
           {{- else if .Params.button }}
-          <a class="{{ $buttonclass }} lg:min-w-0 min-w-max rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
+          <a class="{{ $buttonclass }} min-w-0 rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
             {{ .Title }}
           </a>
           {{- else }}
           <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
             {{ .Title }}
           </a>
-          {{- end}}
+          {{- end }}
         </li>
         {{- end }}
-        {{- if .Site.Params.navbar.search }}
-        <li class="px-4 py-2">{{ partial "search" . }}</li>
-        {{- end }}
       </ul>
-
-      <div role="button" class="flex flex-col w-16 h-16 p-4 cursor-pointer lg:hidden place-self-center gap-[0.6rem]" aria-label="menu" aria-expanded="false" @click="toggle">
+      <!-- end desktop menu -->
+      <!-- start mobile menu button -->
+      <div role="button" class="flex flex-col w-16 h-16 p-4 cursor-pointer lg:hidden place-self-center gap-[0.6rem]" aria-label="menu" aria-expanded="false" x-ref="button" @click="toggle">
         <span class="{{ $burgerclass }} inline-block w-8 h-0.5 rounded-lg origin-bottom-left transition" :class="open ? 'rotate-45' : ''"></span>
         <span class="{{ $burgerclass }} inline-block w-8 h-0.5 rounded-lg transition" :class="open ? 'opacity-0' : ''"></span>
         <span class="{{ $burgerclass }} inline-block w-8 h-0.5 rounded-lg origin-top-left transition" :class="open ? '-rotate-45' : ''"></span>
       </div>
+      <!-- end mobile menu button -->
     </div>
+    <!-- start mobile menu -->
+    <div class="{{ $collapseBreakpoint }}:hidden w-full h-full overflow-y-auto fixed top-0 left-0 z-[998] bg-transparent"
+      x-show="open"
+      x-transition:enter="transition ease-out duration-300"
+      x-transition:enter-start="opacity-0 scale-90"
+      x-transition:enter-end="opacity-100 scale-100"
+      x-transition:leave="transition ease-in duration-300"
+      x-transition:leave-start="opacity-100 scale-100"
+      x-transition:leave-end="opacity-0 scale-90"
+      x-cloak>
+    <ul class="flex flex-col w-64 self-center justify-evenly border-l-2 border-b-2 rounded-bl-lg absolute right-0 {{ $dropdownclass }} z-[999]" @click.outside="close">
+      {{- range $menu }}
+      <li class="px-4 py-2{{ if .Params.button }} pt-4 pb-6 place-self-center{{ end }}">
+        {{- if .HasChildren }}
+        <ul class="flex flex-col">
+          <li class="{{ $textclass }}">
+            {{- if .Page }}
+            <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
+              {{ .Title }}
+            </a>
+            {{- else }}
+            <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="{{ $activeclass }}"{{ end }}>
+              {{- .Title }}
+            </span>
+            {{- end }}
+          </li>
+          <div class="{{ $dividerclass }} flex flex-col top-20 border-t-2 bg-white">
+            <ul>
+              {{- range .Children }}
+              <li class="py-2 text-sm">
+                <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
+                  {{ .Title }}
+                </a>
+              </li>
+              {{- end }}
+            </ul>
+          </div>
+        </ul>
+        {{- else if .Params.button }}
+        <a class="{{ $buttonclass }} min-w-max rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
+          {{ .Title }}
+        </a>
+        {{- else }}
+        <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
+          {{ .Title }}
+        </a>
+        {{- end}}
+      </li>
+      {{- end }}
+      {{- if .Site.Params.navbar.search }}
+      <li class="px-4 py-2">{{ partial "search" . }}</li>
+      {{- end }}
+    </ul>
+    </div>
+    <!-- end mobile menu -->
     {{- if .Site.Params.navbar.search }}
     <div id="searchresults" class="transition self-center px-4 md:px-0 w-full md:w-10/12 xl:w-5/6"></div>
     {{- end }}
