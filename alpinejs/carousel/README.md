@@ -4,6 +4,15 @@ A simple carousel using AlpineJS and Tailwind CSS classes.
 
 ## Usage
 
+```js
+import Alpine from 'alpinejs';
+import carousel from './alpinejs/carousel';
+
+Alpine.data('carousel', carousel);
+
+Alpine.start();
+```
+
 ```html
 {{- with .Site.Data.list }}
     <div class="hidden -translate-x-full"><!-- extra classes --></div>
