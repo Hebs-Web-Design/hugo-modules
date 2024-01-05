@@ -4,5 +4,5 @@
     path = "github.com/hebs-web-design/hugo-modules/alpinejs/v3"
 
   [[module.mounts]]
-    source = "carousel.js"
-    target = "assets/js/alpinejs/carousel.js"
+    source = "carousel.ts"
+    target = "assets/js/alpinejs/carousel.ts"
