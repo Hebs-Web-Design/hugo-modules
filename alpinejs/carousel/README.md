@@ -4,6 +4,8 @@ A simple carousel using AlpineJS and Tailwind CSS classes.
 
 ## Usage
 
+Load the Alpine data:
+
 ```js
 import Alpine from 'alpinejs';
 import carousel from './alpinejs/carousel';
@@ -12,6 +14,8 @@ Alpine.data('carousel', carousel);
 
 Alpine.start();
 ```
+
+Build your carousel:
 
 ```html
 {{- with .Site.Data.list }}
