@@ -1,5 +1,5 @@
-export default (el: HTMLElement, interval = 5000) => ({
-    init() {
+export default (el: HTMLElement, interval: number = 5000) => ({
+    init(): void {
         if (this.el.hasChildNodes()) {
             this.items = this.el.children.length;
             this.cycle();
@@ -11,7 +11,7 @@ export default (el: HTMLElement, interval = 5000) => ({
     position: 0,
     timer: 0,
     forward: true,
-    next() {
+    next(): void {
         // get current element
         let current = this.el.children[this.position];
         if (current === null) {
@@ -42,7 +42,7 @@ export default (el: HTMLElement, interval = 5000) => ({
         current.classList.replace("translate-x-0", "-translate-x-full");
         next.classList.replace("translate-x-full", "translate-x-0");
     },
-    prev() {
+    prev(): void {
         // get current element
         let current = this.el.children[this.position];
         if (current === null) {
@@ -73,7 +73,7 @@ export default (el: HTMLElement, interval = 5000) => ({
         current.classList.replace("translate-x-0", "translate-x-full");
         next.classList.replace("-translate-x-full", "translate-x-0");
     },
-    cycle() {
+    cycle(): void {
         let self = this;
 
         if (this.forward) {
@@ -86,7 +86,7 @@ export default (el: HTMLElement, interval = 5000) => ({
             }, self.interval);
         }
     },
-    pause() {
+    pause(): void {
         clearInterval(this.timer);
     },
 });
