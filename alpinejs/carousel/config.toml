@@ -1,0 +1,8 @@
+[module]
+
+  [[module.imports]]
+    path = "github.com/hebs-web-design/hugo-modules/alpinejs/v3"
+
+  [[module.mounts]]
+    source = "carousel.js"
+    target = "assets/js/alpinejs/carousel.js"
