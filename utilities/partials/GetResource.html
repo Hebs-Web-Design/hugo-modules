@@ -1,5 +1,13 @@
-{{- $asset := .context.Page.Resources.GetMatch .name }}
-{{- if eq $asset nil }}
-    {{- $asset = resources.Get .name }}
-{{- end }}
-{{- return $asset }}
+{{- $name := .name }}
+{{- $scratch := newScratch }}
+{{- with .Page }}
+    {{- with .Resources.Get $name }}
+        {{- $scratch.Set "resource" . }}
+    {{- else }}
+        {{- $scratch.Set "resource" (resources.Get $name) }}
+    {{- end }}
+{{- else }}
+    {{- $scratch.Set "resource" (resources.Get $name) }}
+{{- end}}
+{{- $resource := $scratch.Get "resource" }}
+{{- return $resource }}
