@@ -1,0 +1,15 @@
+{{- with .Site.Params.favicon }}
+    {{- with .svg }}
+        {{- $img := (resources.Get .img) }}
+        {{- if hugo.IsProduction }}
+            {{- $img = $img | minify | fingerprint }}
+        {{- end }}
+        <link rel="mask-icon" href="{{ $img.RelPermalink }}" color="{{ default "#ff0000" .fill }}">
+    {{- end }}
+    {{- with .png }}
+        {{- $img := resources.Get . }}
+        <link rel="apple-touch-icon-precomposed" href="{{ ($img.Process "resize 180x").RelPermalink }}">
+        <link rel="icon" href="{{ ($img.Process "resize 32x").RelPermalink }}" sizes="32x32">
+        <link rel="shortcut icon" href="{{ ($img.Process "resize 196x").RelPermalink }}" sizes="196x196">
+    {{- end }}
+{{- end }}
