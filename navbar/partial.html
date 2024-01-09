@@ -5,7 +5,7 @@
 {{- $buttonclass := default "bg-blue-900 text-white font-semibold" .Site.Params.navbar.classes.button }}
 {{- $burgerclass := default "bg-blue-900" .Site.Params.navbar.classes.burger }}
 {{- $dividerclass := default "border-blue-900" .Site.Params.navbar.classes.divider }}
-{{- $dropdownclass := default "bg-white lg:bg-transparent" .Site.Params.navbar.classes.dropdown }}
+{{- $dropdownclass := default "top-16 bg-white lg:bg-transparent" .Site.Params.navbar.classes.dropdown }}
 {{- $activeclass := default "font-bold" .Site.Params.navbar.classes.active }}
 {{- $collapseBreakpoint := default "lg" .Site.Params.navbar.collapse }}
 {{- $menu := index .Site.Menus (default "main" .Site.Params.navbar.menu) }}
@@ -64,7 +64,7 @@
             </div>
             <div class="{{ $dividerclass }} border-t-2 w-52 rounded-b-lg drop-shadow-lg bg-white"
               x-show="open"
-              x-anchor="$refs.menu{{ $n }}"
+              x-anchor{{ with $.Site.Params.navbar.dropdownOffset }}.offset.{{ . }}{{ end }}="$refs.menu{{ $n }}"
               x-cloak>
               <ul>
                 {{- range .Children }}
@@ -126,7 +126,7 @@
             </span>
             {{- end }}
           </li>
-          <div class="{{ $dividerclass }} flex flex-col top-20 border-t-2 bg-white">
+          <div class="{{ $dividerclass }} flex flex-col border-t-2 bg-white">
             <ul>
               {{- range .Children }}
               <li class="py-2 text-sm">
