@@ -13,18 +13,37 @@ Alpine.data('form', form);
 Alpine.start();
 ```
 
+Add to your Hugo config:
+
+```yaml
+params:
+  form:
+    class:
+      sending: classes to apply when sending
+      sent: classes to apply when sending
+      error: classes to apply when an error occurs
+    text:
+      sending: Status message while sending
+      sent: Status text once sent
+      error: Status text when an error occurs
+```
+
 Then in a template/partial:
 
 ```html
+{{- with .Params.form }}
+<div class="hidden {{ delimit .class " " }}">
+    <!-- extra classes so tailwind JIT generates them -->
+</div>
 <form
-    action="/api/contact"
-    method="POST"
-    data-sending-text="Sending your message. Please wait..."
-    data-sending-class="class-of-sending-text"
-    data-sent-text="Your message has been sent. We will be in contact as soon as possible."
-    data-sent-class="class-of-sent-text"
-    data-error-text="Unfortunately there was a problem sending your message."
-    data-error-class="class-of-error-text"
+    action="{{ .action }}"
+    method="{{ .method }}"
+    data-sending-text="{{ .text.sending }}"
+    data-sending-class="{{ .class.sending }}"
+    data-sent-text="{{ .text.sent }}"
+    data-sent-class="{{ .class.sent }}"
+    data-error-text="{{ .text.error }}"
+    data-error-class="{{ .class.error }}"
     @submit.prevent="submit"
     x-data="form">
     <label>
@@ -34,6 +53,7 @@ Then in a template/partial:
     <button type="submit" :disabled="submitted">Submit Form</button>
     <div x-text="status" :class="statusclass" x-cloak>This is where the status is shown</div>
 </form>
+{{- end }}
 ```
 
 ## Configuration

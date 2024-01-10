@@ -1,7 +1,19 @@
 export default (el: HTMLElement, interval: number = 5000) => ({
     init(): void {
         if (this.el.hasChildNodes()) {
+            let classes: string[] = [];
+
             this.items = this.el.children.length;
+            
+            for (let index = 0; index < this.items; index++) {
+                if (index === 0) {
+                    classes.push("translate-x-0");
+                } else {
+                    classes.push(`-translate-x-[${(index / this.items) * 100}%]`);
+                }
+            }
+            this.classes = classes;
+
             this.cycle();
         }
     },
@@ -11,10 +23,10 @@ export default (el: HTMLElement, interval: number = 5000) => ({
     position: 0,
     timer: 0,
     forward: true,
+    classes: ["translate-x-0", "translate-x-full"],
     next(): void {
         // get current element
-        let current = this.el.children[this.position];
-        if (current === null) {
+        if (this.el === null || this.el === undefined) {
             console.log(`Could not find element "${this.position}"`);
             return;
         }
@@ -31,26 +43,18 @@ export default (el: HTMLElement, interval: number = 5000) => ({
             this.position++;
         }
 
-        // get next element
-        let next = this.el.children[this.position];
-        if (next === null) {
-            console.log(`Could not find element "${this.position}"`);
-            return;
-        }
-
         // change classes
-        current.classList.replace("translate-x-0", "-translate-x-full");
-        next.classList.replace("translate-x-full", "translate-x-0");
+        console.log(`Changing "${this.classes[this.position - 1]}" to "${this.classes[this.position]}"`);
+        this.el.classList.replace(this.classes[this.position - 1], this.classes[this.position]);
     },
     prev(): void {
         // get current element
-        let current = this.el.children[this.position];
-        if (current === null) {
+        if (this.el === null || this.el === undefined) {
             console.log(`Could not find element "${this.position}"`);
             return;
         }
 
-        // decrement
+        // increment
         if (this.position == 0) {
             // at the end reverse the flow
             this.pause();
@@ -62,16 +66,9 @@ export default (el: HTMLElement, interval: number = 5000) => ({
             this.position--;
         }
 
-        // get next element
-        let next = this.el.children[this.position];
-        if (next === null) {
-            console.log(`Could not find element "${this.position}"`);
-            return;
-        }
-
         // change classes
-        current.classList.replace("translate-x-0", "translate-x-full");
-        next.classList.replace("-translate-x-full", "translate-x-0");
+        console.log(`Changing "${this.classes[this.position + 1]}" to "${this.classes[this.position]}"`);
+        this.el.classList.replace(this.classes[this.position + 1], this.classes[this.position]);
     },
     cycle(): void {
         let self = this;
