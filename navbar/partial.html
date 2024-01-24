@@ -22,10 +22,6 @@
       <div class="pl-4 lg:pl-0 py-4">
         <a href="{{ $.Site.Home.RelPermalink }}">
         {{- with .logo }}
-          {{- $logo := resources.Get .image }}
-          {{- if and (eq ".svg" (path.Ext .image)) hugo.IsProduction }}
-            {{- $logo = $logo | minify | fingerprint }}
-          {{- end }}
           {{- $brandopts := (dict "img" .image "alt" $.Site.Title "class" $logoclass) }}
           {{- with .width }}
             {{- $brandopts = merge $brandopts (dict "width" .) }}
@@ -35,6 +31,9 @@
           {{- end }}
           {{- with .versions }}
             {{- $brandopts = merge $brandopts (dict "versions" .) }}
+          {{- end }}
+          {{- with .svg }}
+            {{- $brandopts = merge $brandopts (dict "svg" .) }}
           {{- end }}
           {{- partial "picture" $brandopts }}
         {{- end }}

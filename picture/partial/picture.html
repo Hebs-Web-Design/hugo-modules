@@ -7,52 +7,89 @@
 {{/* Get image resources and save to scratch */}}
 {{- $scratch := newScratch }}
 {{- with .Page }}
+    {{/* Try to get resource from page bundle first then globally as a fallback */}}
     {{- with .Resources.Get $imagename }}
         {{- $scratch.Set "img" . }}
     {{- else }}
-        {{- $scratch.Set "img" (resources.Get $imagename) }}
+        {{- with resources.Get $imagename }}
+            {{- $scratch.Set "img" . }}
+        {{- else }}
+            {{- errorf "Could not load image %s" $imagename }}
+        {{- end }}
     {{- end }}
 
+    {{/* Repeat if a dark image variant was provided */}}
     {{- if $darkimagename }}
         {{- with .Resources.Get $darkimagename }}
             {{- $scratch.Set "imgdark" . }}
         {{- else }}
-            {{- $scratch.Set "imgdark" (resources.Get $darkimagename) }}
+            {{- with resources.Get $darkimagename }}
+                {{- $scratch.Set "imgdark" . }}
+            {{- else }}
+                {{- errorf "Could not load dark image %s" $darkimagename }}
+            {{- end }}
         {{- end }}
     {{- end }}
 
+    {{/* Repeat if a SVG image variant was provided */}}
     {{- if $svgname }}
         {{- with .Resources.Get $svgname }}
             {{- $scratch.Set "svg" . }}
         {{- else }}
-            {{- $scratch.Set "svg" (resources.Get $svgname) }}
+            {{- with resources.Get $svgname }}
+                {{- $scratch.Set "svg" . }}
+            {{- else }}
+                {{- errorf "Could not load SVG image %s" $svgname }}
+            {{- end }}
         {{- end }}
     {{- end }}
 
+    {{/* Repeat if a dark SVG image variant was provided */}}
     {{- if $darksvgname }}
         {{- with .Resources.Get $darksvgname }}
             {{- $scratch.Set "svgdark" . }}
         {{- else }}
-            {{- $scratch.Set "svgdark" (resources.Get $darksvgname) }}
+            {{- with resources.Get $darksvgname }}
+                {{- $scratch.Set "svgdark" . }}
+            {{- else }}
+                {{- errorf "Could not load dark SVG image %s" $darksvgname }}
+            {{- end }}
         {{- end }}
     {{- end }}
 {{- else }}
-    {{- $scratch.Set "img" (resources.Get $imagename) }}
+    {{/* Get image resources globally */}}
+    {{- with resources.Get $imagename }}
+        {{- $scratch.Set "img" . }}
+    {{- else }}
+        {{- errorf "Could not load image %s" $imagename }}
+    {{- end }}
 
     {{- if $darkimagename }}
-        {{- $scratch.Set "imgdark" (resources.Get $darkimagename) }}
+        {{- with resources.Get $darkimagename }}
+            {{- $scratch.Set "imgdark" . }}
+        {{- else }}
+            {{- errorf "Could not load dark image %s" $darkimagename }}
+        {{- end }}
     {{- end }}
 
     {{- if $svgname }}
-        {{- $scratch.Set "svg" (resources.Get $svgname) }}
+        {{- with resources.Get $svgname }}
+            {{- $scratch.Set "svg" . }}
+        {{- else }}
+            {{- errorf "Could not load SVG image %s" $svgname }}
+        {{- end }}
     {{- end }}
 
     {{- if $darksvgname }}
-        {{- $scratch.Set "svgdark" (resources.Get $darksvgname) }}
+        {{- with resources.Get $darksvgname }}
+            {{- $scratch.Set "svgdark" . }}
+        {{- else }}
+            {{- errorf "Could not load SVG image %s" $darksvgname }}
+        {{- end }}
     {{- end }}
 {{- end}}
 
-{{/* Get image resources */}}
+{{/* Get image resources from scratch */}}
 {{- $img := default false ($scratch.Get "img") }}
 {{- $imgdark := default false ($scratch.Get "imgdark") }}
 {{- $svg := default false ($scratch.Get "svg") }}
@@ -168,7 +205,6 @@
 {{- end }}
 
 {{/* Do picture element */}}
-{{- if $img }}
 <picture>
     {{/* Handle if dark image variant was provided */}}
     {{- if $imgdark }}
@@ -239,6 +275,3 @@
         <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr }} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }}{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
     {{- end }}
 </picture>
-{{- else }}
-    {{- errorf "Could not load image %s" .img }}
-{{- end }}
