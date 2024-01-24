@@ -137,7 +137,7 @@
 {{- with .versions }}
     {{- if reflect.IsSlice . }}
         {{/* Append directly if this is already a slice */}}
-        {{- $versions = $versions | append . }}
+        {{- $versions = $versions | append (apply . "string" ".") }}
     {{- else }}
         {{/* Otherwise split and then append */}}
         {{- $versions = $versions | append (split . ",") }}
@@ -147,7 +147,7 @@
     {{- with site.Params.picture.versions }}
         {{- if reflect.IsSlice . }}
             {{/* Append directly if this is already a slice */}}
-            {{- $versions = $versions | append . }}
+            {{- $versions = $versions | append (apply . "string" ".") }}
         {{- else }}
             {{/* Otherwise split and then append */}}
             {{- $versions = $versions | append (split . ",") }}
