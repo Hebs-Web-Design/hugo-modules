@@ -1,0 +1,6 @@
+{{- if eq .Site.Params.openGraph true }}
+    {{- template "_internal/opengraph.html" . }}
+{{- end }}
+{{- template "_internal/schema.html" . }}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
