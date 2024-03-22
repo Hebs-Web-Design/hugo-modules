@@ -1,0 +1,24 @@
+[module]
+  [module.hugoVersion]
+    min = "v0.112.0"
+
+  [[module.mounts]]
+    source = "assets"
+    target = "assets"
+  
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+
+  [[module.mounts]]
+    source = "tailwind.css"
+    target = "assets/css/tailwind.css"
+
+  [[module.mounts]]
+    source = "tailwind.html"
+    target = "layouts/partials/tailwind.html"
+  
+  [[module.mounts]]
+    source = "hugo_stats.json"
+    target = "assets/watching/hugo_stats.json"
+
