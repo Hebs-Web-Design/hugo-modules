@@ -3,6 +3,10 @@
   min = "v0.112.0"
 
   [[module.mounts]]
+    source = "assets"
+    target = "assets"
+
+  [[module.mounts]]
     source = "partials"
     target = "layouts/partials"
 

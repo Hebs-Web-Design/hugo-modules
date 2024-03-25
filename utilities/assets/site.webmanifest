@@ -1,0 +1,7 @@
+{{- with .Site.Params.favicon -}}
+    {{- with .png -}}
+        {{- $img := resources.Get . -}}
+        {{- $icons := slice (dict "src" ($img.Process "resize 192x").RelPermalink "type" "image/png" "sizes" "192x192") (dict "src" ($img.Process "resize 512x").RelPermalink "type" "image/png" "sizes" "512x512") -}}
+        {{- dict "icons" $icons | jsonify (dict "indent" "  ") -}}
+    {{- end -}}
+{{- end -}}
