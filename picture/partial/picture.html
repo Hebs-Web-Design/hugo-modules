@@ -262,6 +262,9 @@
         {{- if hugo.IsProduction }}
             {{- $img = $img | minify | fingerprint }}
         {{- end }}
+
+        {{/* generate class attr */}}
+        {{- $attrs = merge $attrs (dict "class" (delimit $class " ")) -}}
         <img src="{{ $img.RelPermalink }}"{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
     {{- else }}
         {{- if and (ne $img.MediaType "image/webp") $webp }}
