@@ -2,6 +2,9 @@
   [module.hugoVersion]
     min = "v0.121.2"
 
+  [[module.imports]]
+    path = "github.com/hebs-web-design/hugo-modules/utilities"
+
   [[module.mounts]]
     source = "partial/picture.html"
     target = "layouts/partials/picture.html"
