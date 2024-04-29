@@ -32,6 +32,7 @@ Hugo module to implement a basic partial and shortcode for picture emlements.
 * disablewebp (bool) : Do not generate WebP versions of images in picture element (requires Hugo extended version - for non-extended versions this is always true) (optional)
 * lazy (bool) : Enable lazy loading by adding `loading="lazy"` to the `img` tag (optional)
 * norotate (bool) : Disable EXIF rotation (optional)
+* twaspect (bool) : Add a Tailwind CSS "aspect-[w/h]" class to the image (optional)
 * Page (Page) : Pass the current Page object to attempt to load resources from the page bundle (optional)
 
 ### Notes

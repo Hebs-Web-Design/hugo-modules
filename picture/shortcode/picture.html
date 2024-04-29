@@ -1,5 +1,5 @@
 {{- $scratch := newScratch -}}
-{{- range $key := (slice "img" "imgdark" "svg" "svgdark" "class" "alt" "title" "width" "height" "action" "disablewebp" "versions" "anchor") -}}
+{{- range $key := (slice "img" "imgdark" "svg" "svgdark" "class" "alt" "title" "width" "height" "action" "disablewebp" "versions" "anchor" "twaspect") -}}
     {{- with ($.Get $key) -}}
         {{- $scratch.SetInMap "picture" $key . -}}
     {{- end -}}

@@ -4,6 +4,18 @@
 {{- $svgname := default false .svg }}
 {{- $darksvgname := default false .svgdark }}
 
+{{/* Default to "twaspect" being false */}}
+{{- $twaspect := false }}
+{{/* Use provided "twaspect" value first */}}
+{{- with .twaspect }}
+    {{- $twaspect = . }}
+{{- else }}
+    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- with site.Params.picture.twaspect }}
+        {{- $twaspect = . }}
+    {{ end }}
+{{- end }}
+
 {{/* Get image resources and save to scratch */}}
 {{- $scratch := newScratch }}
 {{- with .Page }}
@@ -192,7 +204,16 @@
 {{/* Build img tag attributes */}}
 {{- $attrs := dict }}
 {{- with .class }}
-    {{- $attrs = merge $attrs (dict "class" .) }}
+    {{- $class := . }}
+    {{- if (and $twaspect (ne $img.MediaType.SubType "svg")) }}
+        {{- $class = printf "%s aspect-[%d/%d]" $class $img.Width $img.Height }}
+    {{- end }}
+    {{- $attrs = merge $attrs (dict "class" $class) }}
+{{- else }}
+    {{- if (and $twaspect (ne $img.MediaType.SubType "svg")) }}
+        {{- $class := printf "aspect-[%d/%d]" $img.Width $img.Height }}
+        {{- $attrs = merge $attrs (dict "class" $class) }}
+    {{- end }}
 {{- end }}
 {{- with .title }}
     {{- $attrs = merge $attrs (dict "title" .) }}
