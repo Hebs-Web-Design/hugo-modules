@@ -1,0 +1,24 @@
+{{- $n := default false .n -}}
+{{- if not $n -}}
+    {{- errorf "n must be provided" -}}
+{{- end }}
+
+{{- if not (reflect.IsSlice $n) -}}
+    {{- errorf "n must be a slice" -}}
+{{- end -}}
+
+{{- if ne (len $n) 2 -}}
+    {{- errorf "n must be a slice with 2 items" -}}
+{{- end -}}
+
+{{- $x := index $n 0 -}}
+{{- $y := index $n 1 -}}
+
+{{- $s := newScratch -}}
+{{- if ne $y 0 -}}
+    {{- $s.Set "gcd" (partial "GreatestCommonDivisor" (dict "n" (slice $y (mod $x $y)))) }}
+{{- else -}}
+    {{- $s.Set "gcd" $x -}}
+{{- end -}}
+
+{{- return ($s.Get "gcd") -}}

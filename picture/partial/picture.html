@@ -203,18 +203,10 @@
 
 {{/* Build img tag attributes */}}
 {{- $attrs := dict }}
-{{- with .class }}
-    {{- $class := . }}
-    {{- if (and $twaspect (ne $img.MediaType.SubType "svg")) }}
-        {{- $class = printf "%s aspect-[%d/%d]" $class $img.Width $img.Height }}
-    {{- end }}
-    {{- $attrs = merge $attrs (dict "class" $class) }}
-{{- else }}
-    {{- if (and $twaspect (ne $img.MediaType.SubType "svg")) }}
-        {{- $class := printf "aspect-[%d/%d]" $img.Width $img.Height }}
-        {{- $attrs = merge $attrs (dict "class" $class) }}
-    {{- end }}
-{{- end }}
+{{- $class := slice -}}
+{{- with .class -}}
+    {{- $class = split . " " -}}
+{{- end -}}
 {{- with .title }}
     {{- $attrs = merge $attrs (dict "title" .) }}
 {{- end }}
@@ -286,11 +278,30 @@
         <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
         {{- end }}
         {{- $images := slice }}
+        {{- $firstImage := true -}}
         {{- range $version, $filter := $filters }}
+            {{- $i := images.Filter $filter $img -}}
+
+            {{/* Work out aspect ratio class if required for first image and update class */}}
+            {{- if and $firstImage $twaspect -}}
+                {{- $gcd := partial "GreatestCommonDivisor" (dict "n" (slice $i.Width $i.Height)) -}}
+                {{- $aspect := printf "aspect-[%d/%d]" (div $i.Width $gcd) (div $i.Height $gcd) }}
+                {{- if eq $aspect "aspect-[1/1]" -}}
+                    {{- $aspect = "aspect-square" -}}
+                {{- else if eq $aspect "aspect-[16/9]" -}}
+                    {{- $aspect = "aspect-video" -}}
+                {{- end -}}
+                {{- $class = $class | append $aspect -}}
+                {{- $firstImage = false -}}      
+            {{- end -}}
+
+            {{/* generate class attr */}}
+            {{- $attrs = merge $attrs (dict "class" (delimit $class " ")) -}}
+
             {{- if eq $version "1" }}
-                {{- $images = $images | append (images.Filter $filter $img).RelPermalink }}
+                {{- $images = $images | append $i.RelPermalink }}
             {{- else }}
-                {{- $images = $images | append (printf "%s %sx" (images.Filter $filter $img).RelPermalink $version) }}
+                {{- $images = $images | append (printf "%s %sx" $i.RelPermalink $version) }}
             {{- end }}
         {{- end }}
         <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr }} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }}{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
