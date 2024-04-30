@@ -33,6 +33,7 @@ Hugo module to implement a basic partial and shortcode for picture emlements.
 * lazy (bool) : Enable lazy loading by adding `loading="lazy"` to the `img` tag (optional)
 * norotate (bool) : Disable EXIF rotation (optional)
 * twaspect (bool) : Add a Tailwind CSS "aspect-[w/h]" class to the image (optional)
+* watermark (string) : Name of image to add as a watermark to images (optional)
 * Page (Page) : Pass the current Page object to attempt to load resources from the page bundle (optional)
 
 ### Notes

@@ -1,0 +1,22 @@
+{{- $watermark := default false .Site.Params.gallery.watermark -}}
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 not-prose mx-4 lg:mx-16">
+{{- range readDir (printf "assets/%s" .Site.Params.gallery.path) -}}
+    {{- if not .IsDir -}}
+        <div x-data="toggler">
+            <div class="hover:cursor-pointer" @click="show">
+                {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "action" "fill" "width" 384 "height" 256 "class" "rounded-lg hover:brightness-125" "watermark" $watermark) -}}
+            </div>
+            <template x-teleport="body">
+                <div class="grid place-items-center w-screen h-screen fixed top-0 left-0 z-[2000] motion-reduce:backdrop-filter-none backdrop-blur-sm cursor-zoom-out" x-show="open" x-trap.noscroll="open" @click="hide">
+                    {{- $width := 600 -}}
+                    {{- $image := resources.Get (printf "%s/%s" $.Site.Params.gallery.path .Name) -}}
+                    {{- if gt $image.Width $image.Height -}}
+                        {{- $width = 1200 -}}
+                    {{- end -}}
+                    {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "width" $width "class" "rounded-lg" "watermark" $watermark) -}}
+                </div>
+            </template>
+        </div>
+    {{- end -}}
+{{- end -}}
+</div>

@@ -5,16 +5,52 @@
 {{- $darksvgname := default false .svgdark }}
 
 {{/* Default to "twaspect" being false */}}
-{{- $twaspect := false }}
+{{- $twaspect := false -}}
 {{/* Use provided "twaspect" value first */}}
-{{- with .twaspect }}
-    {{- $twaspect = . }}
-{{- else }}
+{{- with .twaspect -}}
+    {{- $twaspect = . -}}
+{{- else -}}
     {{/* Otherwise fall back to site parameter value if set */}}
-    {{- with site.Params.picture.twaspect }}
-        {{- $twaspect = . }}
-    {{ end }}
-{{- end }}
+    {{- with site.Params.picture.twaspect -}}
+        {{- $twaspect = . -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* Default to "thumbnail" being false */}}
+{{- $thumbnail := false -}}
+{{/* Use provided "thumbnail" value first */}}
+{{- with .thumbnail -}}
+    {{- $thumbnail = . -}}
+{{- else -}}
+    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- with site.Params.picture.thumbnail -}}
+        {{- $thumbnail = . -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* Default to "thumbnailpct" being 10% */}}
+{{- $thumbnailpct := 0.1 -}}
+{{/* Use provided "thumbnailpct" value first */}}
+{{- with .thumbnailpct -}}
+    {{- $thumbnailpct = div . 100.0 -}}
+{{- else -}}
+    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- with site.Params.picture.thumbnailpct -}}
+        {{- $thumbnailpct = div . 100.0 -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* Default to "watermark" being false */}}
+{{- $watermark := false -}}
+{{/* Use provided "watermark" value first */}}
+{{- with .watermark -}}
+    {{- $watermark = . -}}
+{{- else -}}
+    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- with site.Params.picture.watermark -}}
+        {{- $watermark = . -}}
+    {{- end -}}
+{{- end -}}
 
 {{/* Get image resources and save to scratch */}}
 {{- $scratch := newScratch }}
@@ -166,37 +202,66 @@
         {{- end }}
     {{- end }}
 {{- end }}
+{{/* Add version "zero" if thumbnail is enabled */}}
+{{- if $thumbnail -}}
+    {{- $versions = $versions | append "0" -}}
+{{- end -}}
 {{/* Ensure versions is sortred and does not contain duplicates */}}
 {{- $versions = sort $versions | uniq }}
+
+{{/* load watermark resource */}}
+{{- $overlay := false -}}
+{{- if $watermark -}}
+    {{- with resources.Get $watermark -}}
+        {{- $overlay = . -}}
+    {{- else -}}
+        {{ errorf "Unable to get watermark resource %q" $watermark -}}
+    {{- end -}}
+{{- end -}}
 
 {{/* Build filters for various image versions */}}
 {{- $filters := dict }}
 {{- range $version := $versions }}
+    {{- $mul := $version -}}
     {{ $filter := slice }}
 
+    {{/* add exif rotation filter /*}}
     {{- if not $norotate }}
-       {{- $filter = $filter | append images.AutoOrient }} 
-    {{- end }}
+       {{- $filter = $filter | append images.AutoOrient -}} 
+    {{- end -}}
+
+    {{/* for version "zero" (ie thumbnail), override $mul to be $thumbnailpct */}}
+    {{- if eq $version "0" -}}
+        {{- $mul = $thumbnailpct -}}
+    {{- end -}}
 
     {{- if (and $width $height) }}
-        {{- $process := slice $action (printf "%0.0fx%0.0f" (mul $width (float $version)) (mul $height (float $version))) }}
+        {{- $process := slice $action (printf "%0.0fx%0.0f" (mul $width (float $mul)) (mul $height (float $mul))) }}
         {{- if or (eq $action "crop") (eq $action "fill") }}
             {{- $process = $process | append $anchor }}
         {{- end }}
         {{- $filter = $filter | append (images.Process (delimit $process " ")) }}
     {{- else if $width }}
-        {{- $process := slice $action (printf "%0.0fx" (mul $width (float $version))) }}
+        {{- $process := slice $action (printf "%0.0fx" (mul $width (float $mul))) }}
         {{- if or (eq $action "crop") (eq $action "fill") }}
             {{- errorf "Both width and height must be provided when performing %s" $action }}
         {{- end }}
         {{- $filter = $filter | append (images.Process (delimit $process " ")) }}
     {{- else if $height }}
-        {{- $process := slice $action (printf "x%0.0f" (mul $height (float $version))) }}
+        {{- $process := slice $action (printf "x%0.0f" (mul $height (float $mul))) }}
         {{- if or (eq $action "crop") (eq $action "fill") }}
             {{- errorf "Both width and height must be provided when performing %s" $action }}
         {{- end }}
         {{- $filter = $filter | append (images.Process (delimit $process " ")) }}
     {{- end }}
+
+    {{/* add watermark at end */}}
+    {{- if $watermark -}}
+        {{- $overlayResize := printf "%0.0fx" (mul 128 (float $mul)) -}}
+        {{- $overlayX := int (mul 32 (float $mul)) }}
+        {{- $overlayY := int (mul 32 (float $mul)) }}
+        {{- $filter = $filter | append (images.Overlay ($overlay.Resize $overlayResize) $overlayX $overlayY) -}}
+    {{- end -}}
 
     {{- $filters = merge $filters (dict $version $filter) }}
 {{- end }}
@@ -216,6 +281,15 @@
 {{- if .lazy }}
     {{- $attrs = merge $attrs (dict "loading" "lazy") }}
 {{- end }}
+{{- with (index . "x-data") -}}
+    {{- $attrs = merge $attrs (dict "x-data" .) }}
+{{- end -}}
+{{- with (index . "@click") -}}
+    {{- $attrs = merge $attrs (dict "@click" .) }}
+{{- end -}}
+{{- with (index . "x-on:click") -}}
+    {{- $attrs = merge $attrs (dict "x-on:click" .) }}
+{{- end -}}
 
 {{/* Do picture element */}}
 <picture>
@@ -229,7 +303,9 @@
         {{- else }}
             {{- $images := slice }}
             {{- range $version, $filter := $filters }}
-                {{- if eq $version "1" }}
+                {{- if eq $version "0" -}}
+                    {{- continue -}}
+                {{- else if eq $version "1" }}
                     {{- $images = $images | append (images.Filter $filter $imgdark).RelPermalink }}
                 {{- else }}
                     {{- $images = $images | append (printf "%s %sx" (images.Filter $filter $imgdark).RelPermalink $version) }}
@@ -239,7 +315,9 @@
             {{- if and (ne $imgdark.MediaType "image/webp") $webp }}
                 {{- $images = slice }}
                 {{- range $version, $filter := $filters }}
-                    {{- if eq $version "1" }}
+                    {{- if eq $version "0" -}}
+                        {{- continue -}}
+                    {{- else if eq $version "1" }}
                         {{- $images = $images | append (images.Filter ($filter | append (images.Process "webp")) $imgdark).RelPermalink }}
                     {{- else }}
                         {{- $images = $images | append (printf "%s %sx" (images.Filter ($filter | append (images.Process "webp")) $imgdark).RelPermalink $version) }}
@@ -281,12 +359,12 @@
         <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
         {{- end }}
         {{- $images := slice }}
-        {{- $firstImage := true -}}
+        
         {{- range $version, $filter := $filters }}
             {{- $i := images.Filter $filter $img -}}
 
-            {{/* Work out aspect ratio class if required for first image and update class */}}
-            {{- if and $firstImage $twaspect -}}
+            {{/* Work out aspect ratio class if required for first image (not thumbnail) and update class */}}
+            {{- if and (eq $version "1") $twaspect -}}
                 {{- $gcd := partial "GreatestCommonDivisor" (dict "n" (slice $i.Width $i.Height)) -}}
                 {{- $aspect := printf "aspect-[%d/%d]" (div $i.Width $gcd) (div $i.Height $gcd) }}
                 {{- if eq $aspect "aspect-[1/1]" -}}
@@ -294,19 +372,20 @@
                 {{- else if eq $aspect "aspect-[16/9]" -}}
                     {{- $aspect = "aspect-video" -}}
                 {{- end -}}
-                {{- $class = $class | append $aspect -}}
-                {{- $firstImage = false -}}      
+                {{- $class = $class | append $aspect -}}  
             {{- end -}}
 
             {{/* generate class attr */}}
             {{- $attrs = merge $attrs (dict "class" (delimit $class " ")) -}}
 
-            {{- if eq $version "1" }}
+            {{- if eq $version "0" -}}
+                {{- $images = $images | append (printf "%s" $i.RelPermalink) -}}
+            {{- else if eq $version "1" }}
                 {{- $images = $images | append $i.RelPermalink }}
             {{- else }}
                 {{- $images = $images | append (printf "%s %sx" $i.RelPermalink $version) }}
             {{- end }}
         {{- end }}
-        <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr }} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }}{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
+        <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr }}{{ if $thumbnail }} {{ printf "src-loaded=%q" (index $images 1) | safeHTMLAttr }}{{ $images = after 1 $images }}{{ end }} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }}{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
     {{- end }}
 </picture>
