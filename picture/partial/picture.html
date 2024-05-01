@@ -365,7 +365,7 @@
         <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }} type="image/webp">
             {{/* add webp versions to scratch for preloading */}}
             {{- if $preload -}}
-                {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "imagesrcset" (delimit $images ", ") "type" "image/webp")) -}}
+                {{- page.Scratch.Add "preload" (slice (dict "href" (strings.TrimSuffix " 1x" (index $images 0)) "as" "image" "imagesrcset" (delimit $images ", ") "type" "image/webp")) -}}
             {{- end -}}
         {{- end }}
         {{- if $svg }}
