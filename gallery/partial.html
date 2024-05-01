@@ -4,7 +4,7 @@
     {{- if not .IsDir -}}
         <div x-data="toggler">
             <div class="hover:cursor-pointer" @click="show">
-                {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "action" "fill" "width" 384 "height" 256 "class" "rounded-lg hover:brightness-125" "watermark" $watermark) -}}
+                {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "action" "fill" "width" 384 "height" 256 "class" "rounded-lg hover:brightness-125" "watermark" $watermark "lazy" true) -}}
             </div>
             <template x-teleport="body">
                 <div class="grid place-items-center w-screen h-screen fixed top-0 left-0 z-[2000] motion-reduce:backdrop-filter-none backdrop-blur-sm cursor-zoom-out" x-show="open" x-trap.noscroll="open" @click="hide">
