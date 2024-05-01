@@ -13,7 +13,7 @@
                     {{- if gt $image.Width $image.Height -}}
                         {{- $width = 1200 -}}
                     {{- end -}}
-                    {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "width" $width "class" "rounded-lg" "watermark" $watermark "preload" false) -}}
+                    {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "width" $width "class" "rounded-lg" "watermark" $watermark "preload" false "lazy" true) -}}
                 </div>
             </template>
         </div>
