@@ -365,7 +365,7 @@
         <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }} type="image/webp">
             {{/* add webp versions to scratch for preloading */}}
             {{- if $preload -}}
-                {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "srcset" (delimit $images ", ") "type" "image/webp")) -}}
+                {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "imagesrcset" (delimit $images ", ") "type" "image/webp")) -}}
             {{- end -}}
         {{- end }}
         {{- if $svg }}
@@ -405,7 +405,7 @@
         <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr }}{{ if $thumbnail }} {{ printf "src-loaded=%q" (index $images 1) | safeHTMLAttr }}{{ $images = after 1 $images }}{{ end }} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }}{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
         {{/* add to scratch for preloading */}}
         {{- if $preload -}}
-            {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "srcset" (delimit $images ", ") "type" $img.MediaType.Type)) -}}
+            {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "imagesrcset" (delimit $images ", ") "type" $img.MediaType.Type)) -}}
         {{- end -}}    
     {{- end }}
 </picture>
