@@ -3,5 +3,5 @@
 {{- if hugo.IsProduction }}
     {{- $css = $css | minify | fingerprint | resources.PostProcess }}
 {{- end }}
-<link rel="preload" href="{{ $css.RelPermalink }}" as="style">
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{- page.Scratch.Add "preload" (slice (dict "href" $css.RelPermalink "as" "style")) -}}

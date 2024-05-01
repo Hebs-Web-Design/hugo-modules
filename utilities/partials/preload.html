@@ -1,0 +1,3 @@
+{{- range page.Scratch.Get "preload" -}}
+<link rel="preload"{{ range $attr, $value := . }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
+{{- end -}}

@@ -52,6 +52,18 @@
     {{- end -}}
 {{- end -}}
 
+{{/* Default to "preload" being false */}}
+{{- $preload := false -}}
+{{/* Use provided "preload" value first */}}
+{{- with .preload -}}
+    {{- $preload = . -}}
+{{- else -}}
+    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- with site.Params.picture.preload -}}
+        {{- $preload = . -}}
+    {{- end -}}
+{{- end -}}
+
 {{/* Get image resources and save to scratch */}}
 {{- $scratch := newScratch }}
 {{- with .Page }}
@@ -351,6 +363,10 @@
                 {{- $images = $images | append (printf "%s %sx" (images.Filter ($filter | append (images.Process "webp")) $img).RelPermalink $version) }}
             {{- end }}
         <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }} type="image/webp">
+            {{/* add webp versions to scratch for preloading */}}
+            {{- if $preload -}}
+                {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "srcset" (delimit $images ", ") "type" "image/webp")) -}}
+            {{- end -}}
         {{- end }}
         {{- if $svg }}
             {{- if hugo.IsProduction }}
@@ -387,5 +403,9 @@
             {{- end }}
         {{- end }}
         <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr }}{{ if $thumbnail }} {{ printf "src-loaded=%q" (index $images 1) | safeHTMLAttr }}{{ $images = after 1 $images }}{{ end }} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }}{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
+        {{/* add to scratch for preloading */}}
+        {{- if $preload -}}
+            {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "srcset" (delimit $images ", ") "type" $img.MediaType.Type)) -}}
+        {{- end -}}    
     {{- end }}
 </picture>

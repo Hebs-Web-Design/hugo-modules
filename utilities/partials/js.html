@@ -3,3 +3,4 @@
     {{- $js = $js | minify | fingerprint }}
 {{- end }}
 <script src="{{ $js.RelPermalink }}"></script>
+{{- page.Scratch.Add "preload" (slice (dict "href" $js.RelPermalink "as" "script")) -}}
