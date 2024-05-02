@@ -1,21 +1,24 @@
 {{- $watermark := default false .Site.Params.gallery.watermark -}}
+{{- $backdrop := default "backdrop-blur-sm" .Site.Params.gallery.backdrop -}}
+{{- $path := default false .Site.Params.gallery.path -}}
+{{- if not $path -}}
+    {{- errorf "No gallery path provided. Set it site .Site.Params.gallery.path" -}}
+{{- end -}}
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 not-prose mx-4 lg:mx-16">
-{{- range readDir (printf "assets/%s" .Site.Params.gallery.path) -}}
+{{- $n := 0 -}}
+{{- range readDir (printf "assets/%s" $path) -}}
     {{- if not .IsDir -}}
+        {{- $n = add $n 1 -}}
         <div x-data="toggler">
-            <div class="hover:cursor-pointer" @click="show">
-                {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "action" "fill" "width" 384 "height" 256 "class" "rounded-lg hover:brightness-125" "watermark" $watermark "lazy" true) -}}
+            {{- partial "picture" (dict "img" (printf "%s/%s" $path .Name) "twaspect" true "action" "fill" "width" 384 "height" 256 "class" "rounded-lg hover:cursor-pointer hover:brightness-125" "watermark" $watermark "lazy" (le $n 8) "alt" "Gallery Thumbnail" "@click" "show") -}}
+            <div class="grid place-items-center w-screen h-screen fixed top-0 left-0 z-[2000] motion-reduce:backdrop-filter-none cursor-zoom-out {{ $backdrop }}" x-show="open" x-trap.noscroll="open" @click="hide" x-cloak>
+                {{- $width := 600 -}}
+                {{- $image := resources.Get (printf "%s/%s" $path .Name) -}}
+                {{- if gt $image.Width $image.Height -}}
+                    {{- $width = 1200 -}}
+                {{- end -}}
+                {{- partial "picture" (dict "img" (printf "%s/%s" $path .Name) "twaspect" true "width" $width "class" "rounded-lg" "watermark" $watermark "preload" false "lazy" true "alt" "Gallery Image") -}}
             </div>
-            <template x-teleport="body">
-                <div class="grid place-items-center w-screen h-screen fixed top-0 left-0 z-[2000] motion-reduce:backdrop-filter-none backdrop-blur-sm cursor-zoom-out" x-show="open" x-trap.noscroll="open" @click="hide">
-                    {{- $width := 600 -}}
-                    {{- $image := resources.Get (printf "%s/%s" $.Site.Params.gallery.path .Name) -}}
-                    {{- if gt $image.Width $image.Height -}}
-                        {{- $width = 1200 -}}
-                    {{- end -}}
-                    {{- partial "picture" (dict "img" (printf "%s/%s" $.Site.Params.gallery.path .Name) "twaspect" true "width" $width "class" "rounded-lg" "watermark" $watermark "preload" false "lazy" true) -}}
-                </div>
-            </template>
         </div>
     {{- end -}}
 {{- end -}}
