@@ -49,19 +49,30 @@ function setPresence(item, availability, activity) {
     return item;
 }
 
-function initGraphClient(tenantid, clientId) {
+async function initGraphClient(tenantid, clientId) {
+    const scopes = [
+        'user.read',
+        'groupmember.read.all',
+        'presence.read.all',
+        'user.read.all'
+    ];
     const msalClient = initMsalClient(tenantid, clientId);
+
+    // try to get account from cache
+    const authResult = await msalClient.acquireTokenSilent({
+        scopes: scopes,
+    });
+
+    // redirect to get account
+    if (!authResult.account) {
+        authProvider.acquireTokenRedirect({
+            scopes: scopes,
+        })
+    }
     const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(msalClient, {
-        account: msalClient.getAccount({
-            homeAccountId: null,
-        }),
+        account: authResult.account,
         interactionType: InteractionType.Redirect,
-        scopes: [
-            'user.read',
-            'groupmember.read.all',
-            'presence.read.all',
-            'user.read.all'
-        ],
+        scopes: scopes,
     });
 
     return Client.initWithMiddleware({authProvider});
