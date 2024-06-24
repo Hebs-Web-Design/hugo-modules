@@ -16,6 +16,16 @@ const presenceBatchMax = 650;
 export default ({ tenantid = '', clientid = '', group = '', skipusers = [], showlocation = false, useworker = false, locations = {}, defaultlocation, mapservice = 'openstreetmap', mapsapikey = '' }) => ({
     // init steps
     async init() {
+        // set up client
+        try {
+            const client = await initGraphClient(tenantid, clientid);
+            this.client = client;
+        } catch (error) {
+            // signal an error
+            this.initerror = true;
+
+            this.notice('error', 'Error during init', error);
+        }
         try {
             // do update
             await this.updateList();
@@ -77,7 +87,7 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         return lastupdate.format('LLL');
     },
     showlocation: showlocation,
-    client: initGraphClient(tenantid, clientid),
+    client: undefined,
     accountId: '',
 
     // messages and errors
