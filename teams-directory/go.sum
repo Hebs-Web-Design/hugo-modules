@@ -1,6 +1,4 @@
-github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21300.120 h1:h7PUXf/3F1oI3ahHibbZ5gxoFhG92aGyWkGrJFF+P4E=
-github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21300.120/go.mod h1:jF0HeoBuXOCoMGlT/TR4YZYoLG/qyWykTYa0FgjAPzU=
-github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21300.130/go.mod h1:jF0HeoBuXOCoMGlT/TR4YZYoLG/qyWykTYa0FgjAPzU=
-github.com/hebs-web-design/hugo-modules/tailwindcss/v3 v3.131.150 h1:EwtU6XI+nnSSi7+xzkKl+vrstH0SEtvMyS8inq3yJXA=
-github.com/hebs-web-design/hugo-modules/tailwindcss/v3 v3.131.150/go.mod h1:RcNFatDjMIiqF4uROMRk349NgXvde8jqSHOQgOHNgNs=
-github.com/hebs-web-design/hugo-modules/tailwindcss/v3 v3.131.151/go.mod h1:RcNFatDjMIiqF4uROMRk349NgXvde8jqSHOQgOHNgNs=
+github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21300.170 h1:4nU8loeRSdlM9stLmALWWVPyLLTjDqucRPWUIzludkM=
+github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21300.170/go.mod h1:jF0HeoBuXOCoMGlT/TR4YZYoLG/qyWykTYa0FgjAPzU=
+github.com/hebs-web-design/hugo-modules/tailwindcss/v3 v3.141.111 h1:8yut4vLxJk3RR5PelKrlCsNzos0lJm7hDLgV784HD34=
+github.com/hebs-web-design/hugo-modules/tailwindcss/v3 v3.141.111/go.mod h1:RcNFatDjMIiqF4uROMRk349NgXvde8jqSHOQgOHNgNs=
