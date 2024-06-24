@@ -57,18 +57,18 @@ async function initGraphClient(tenantid, clientId) {
         'user.read.all'
     ];
     const msalClient = await initMsalClient(tenantid, clientId);
-
-    // try to get account from cache
-    const authResult = await msalClient.acquireTokenSilent({
-        scopes: scopes,
-    });
+    
+    // get account from redirect
+    const authResult = await msalClient.handleRedirectPromise();
 
     // redirect to get account
-    if (!authResult.account) {
+    if (authResult === null) {
         authProvider.acquireTokenRedirect({
             scopes: scopes,
         })
     }
+
+    // set up auth provider
     const authProvider = new AuthCodeMSALBrowserAuthenticationProvider(msalClient, {
         account: authResult.account,
         interactionType: InteractionType.Redirect,
