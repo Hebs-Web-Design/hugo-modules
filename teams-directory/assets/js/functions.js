@@ -56,7 +56,7 @@ async function initGraphClient(tenantid, clientId) {
         'presence.read.all',
         'user.read.all'
     ];
-    const msalClient = initMsalClient(tenantid, clientId);
+    const msalClient = await initMsalClient(tenantid, clientId);
 
     // try to get account from cache
     const authResult = await msalClient.acquireTokenSilent({
@@ -78,7 +78,7 @@ async function initGraphClient(tenantid, clientId) {
     return Client.initWithMiddleware({authProvider});
 }
 
-function initMsalClient(tenantid, clientId) {
+async function initMsalClient(tenantid, clientId) {
     const msalConfig = {
         auth: {
           clientId: clientId,
@@ -91,8 +91,8 @@ function initMsalClient(tenantid, clientId) {
     };
     
     const msalClient = new PublicClientApplication(msalConfig);
-    msalClient.initialize();
-    return msalClient;
+      
+    return await msalClient.initialize();
 }
 
 function sortList(a, b) {
