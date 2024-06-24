@@ -91,8 +91,12 @@ async function initMsalClient(tenantid, clientId) {
     };
     
     const msalClient = new PublicClientApplication(msalConfig);
-      
-    return await msalClient.initialize();
+
+    // init client
+    await msalClient.initialize()
+    
+    // return initialised client
+    return msalClient;
 }
 
 function sortList(a, b) {
