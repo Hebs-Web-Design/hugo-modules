@@ -25,6 +25,8 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
             this.initerror = true;
 
             this.notice('error', 'Error during init', error);
+
+            return;
         }
         try {
             // do update
