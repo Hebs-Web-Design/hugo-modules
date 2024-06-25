@@ -65,7 +65,9 @@ async function initGraphClient(tenantid, clientId) {
     if (authResult === null) {
         msalClient.acquireTokenRedirect({
             scopes: scopes,
-        })
+        });
+
+        return null;
     }
 
     // set up auth provider

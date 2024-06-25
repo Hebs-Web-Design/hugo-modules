@@ -19,6 +19,13 @@ export default ({ tenantid = '', clientid = '', group = '', skipusers = [], show
         // set up client
         try {
             const client = await initGraphClient(tenantid, clientid);
+
+            // if return is null then we are redirecting for auth so just return
+            if (client === null) {
+                return;
+            }
+
+            // otherwise continue
             this.client = client;
         } catch (error) {
             // signal an error
