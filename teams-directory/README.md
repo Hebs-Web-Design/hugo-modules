@@ -4,19 +4,21 @@ Hugo module to implement a phone directory with presence from Microsoft Teams.
 
 ## Usage
 
-### Shortcode
+### Set the layout
 
-Place the shortcode and set the page type in the front matter on the page where the directory should appear:
+Set the page layout in the front matter on the page where the directory should appear:
 
 ```
-type: directory
 ---
-{{< directory >}}
+title: Internal Directory
+layout: directory
+---
+
 ```
 
-## Azure AD App Registration
+## Entra ID App Registration
 
-This requires an App Registration in your Azure AD tenant as follows:
+This requires an App Registration in your Entra ID tenant as follows:
 
 1. TODO
 
@@ -42,16 +44,16 @@ logoAlt = "img/logo-inverted.svg"
 showFooter = false
 
 [params.directory.config]
-# The Application ID of your App Registration is Azure AD
-clientid = "YOUR-APPLICATION-ID-FROM-AZURE-AD"
-# Your Azure AD Tenant ID
-tenantid = "YOUR-TENANT-ID-FROM-AZURE-AD"
+# The Application ID of your App Registration is Entra ID
+clientid = "YOUR-APPLICATION-ID-FROM-ENTRA-ID"
+# Your Entra ID Tenant ID
+tenantid = "YOUR-TENANT-ID-FROM-ENTRA-ID"
 # The Object ID of the group to get members of (optional)
-# Without this value all users frm Azure AD that have an "mail" value are retrieved
-group = "YOUR-GROUP-ID-FROM-AZURE-AD"
+# Without this value all users frm Entra ID that have an "mail" value are retrieved
+group = "YOUR-GROUP-ID-FROM-ENTRA-ID"
 # Skip matching users (based on UPN)
 skipusers = ["usera@example.net", "userb@example.net",]
-# Show the location of users ("Office Location" in Azure AD) in list
+# Show the location of users ("Office Location" in Entra ID) in list
 showLocation = false
 # Default location for OpenSteetMap maps
 defaultlocation = "Perth Office"

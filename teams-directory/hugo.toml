@@ -9,16 +9,12 @@
     path = "github.com/hebs-web-design/hugo-modules/tailwindcss/v3"
 
   [[module.mounts]]
-    source = "layouts/directory"
-    target = "layouts/directory"
+    source = "layouts/_default/directory.html"
+    target = "layouts/_default/directory.html"
 
   [[module.mounts]]
     source = "layouts/partials"
     target = "layouts/partials/directory"
-
-  [[module.mounts]]
-    source = "layouts/shortcodes/directory.html"
-    target = "layouts/shortcodes/directory.html"
 
   [[module.mounts]]
     source = "static/img"
