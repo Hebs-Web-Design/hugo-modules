@@ -8,19 +8,19 @@
      writeStats = true
    
    [[build.cachebusters]]
-     source = "assets\/watching\/hugo_stats\.json"
+     source = "assets/watching/hugo_stats\\.json"
      target = "tailwind.css"
    
    [[build.cachebusters]]
-     source = "(postcss|tailwind)\.config\.js"
+     source = "(postcss|tailwind)\\.config\\.js"
      target = "css"
 
    [[build.cachebusters]]
-     source = "assets/.*\.(js|ts|jsx|tsx)"
+     source = "assets/.*\\.(js|ts|jsx|tsx)"
      target = "js"
 
    [[build.cachebusters]]
-     source = "assets/.*\.(.*)$"
+     source = "assets/.*\\.(.*)$"
      target = "$1"
   
    [[module.mounts]]
