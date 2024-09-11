@@ -1,5 +1,5 @@
 {{- $currentPage := . }}
-{{- $navclass := default "drop-shadow-lg bg-white" .Site.Params.navbar.classes.navbar }}
+{{- $navclass := default "fixed top-0 left-0 right-0 z-[1000] drop-shadow-lg bg-white" .Site.Params.navbar.classes.navbar }}
 {{- $logoclass := default "w-52 lg:w-44 xl:w-52 aspect-[666/192]" .Site.Params.navbar.classes.logo }}
 {{- $textclass := default "hover:text-black text-slate-500" .Site.Params.navbar.classes.text }}
 {{- $buttonclass := default "bg-blue-900 text-white font-semibold" .Site.Params.navbar.classes.button }}
@@ -17,7 +17,7 @@
 {{- $transitionLeaveEnd := default $transitionEnterStart .Site.Params.navbar.transitions.leaveEnd }}
 <nav role="navigation" aria-label="main navigation" x-data="toggler">
     <div class="hidden flex lg:flex flex-col lg:flex-row lg:flex lg:hidden rotate-45 -rotate-45 opacity-0"><!-- extra classes --></div>
-    <div class="flex justify-between fixed top-0 left-0 right-0 lg:px-12 z-[1000] {{ $navclass }}">
+    <div class="flex justify-between lg:px-12 {{ $navclass }}">
       {{- with .Site.Params.navbar.brand }}
       <div class="pl-4 lg:pl-0 py-4">
         <a href="{{ $.Site.Home.RelPermalink }}">
