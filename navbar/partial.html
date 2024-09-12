@@ -46,7 +46,7 @@
       <!-- start desktop menu -->
       <ul class="hidden {{ $collapseBreakpoint }}:flex static right-auto self-center justify-evenly">
         {{- range $n, $m := $menu }}
-        <li class="px-4 py-2{{ if .Params.button }} pt-0 pb-0 place-self-center{{ end }}">
+        <li class="px-4 py-2{{ if .Params.button }} pt-0 pb-0 place-self-center{{ end }}{{ with .Params.class }} {{ . }}{{ end }}">
           {{- if .HasChildren }}
           <div class="flex flex-col" x-data="toggler" @click.outside="close">
             <div class="{{ $textclass }} cursor-pointer transition" x-ref="menu{{ $n }}" @click="toggle">
