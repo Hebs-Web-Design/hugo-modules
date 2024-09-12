@@ -52,37 +52,42 @@
             <div class="{{ $textclass }} cursor-pointer transition" x-ref="menu{{ $n }}" @click="toggle">
               {{- if .Page }}
               <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-                {{ .Title }}
+                {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                {{- .Title -}}
               </a>
               {{- else }}
               <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="{{ $activeclass }}"{{ end }}>
-                {{- .Title }}
+                {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                {{- .Title -}}
               </span>
-              {{- end }}
-              {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "inline ml-2" "width" "16") }}
+              {{- end -}}
+              {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "inline ml-2" "width" "16") -}}
             </div>
             <div class="{{ $dividerclass }} border-t-2 w-52 rounded-b-lg drop-shadow-lg bg-white"
               x-show="open"
               x-anchor{{ with $.Site.Params.navbar.dropdownOffset }}.offset.{{ . }}{{ end }}="$refs.menu{{ $n }}"
               x-cloak>
               <ul>
-                {{- range .Children }}
+                {{- range .Children -}}
                 <li class="lg:px-4 py-2 text-sm">
                   <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-                    {{ .Title }}
+                    {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                    {{- .Title -}}
                   </a>
                 </li>
-                {{- end }}
+                {{- end -}}
               </ul>
             </div>
           </div>
-          {{- else if .Params.button }}
+          {{- else if .Params.button -}}
           <a class="{{ $buttonclass }} min-w-0 rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
-            {{ .Title }}
+            {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+            {{ .Title -}}
           </a>
-          {{- else }}
+          {{- else -}}
           <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
-            {{ .Title }}
+            {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+            {{ .Title -}}
           </a>
           {{- end }}
         </li>
