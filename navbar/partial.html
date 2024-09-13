@@ -5,8 +5,9 @@
 {{- $buttonclass := default "bg-blue-900 text-white font-semibold" .Site.Params.navbar.classes.button }}
 {{- $burgerclass := default "bg-blue-900" .Site.Params.navbar.classes.burger }}
 {{- $dividerclass := default "border-blue-900" .Site.Params.navbar.classes.divider }}
-{{- $dropdownclass := default "top-16 bg-white lg:bg-transparent" .Site.Params.navbar.classes.dropdown }}
+{{- $dropdownclass := default "w-64 top-16 right-0 bg-white lg:bg-transparent border-l-2 border-b-2 rounded-bl-lg absolute z-[999]" .Site.Params.navbar.classes.dropdown }}
 {{- $activeclass := default "font-bold" .Site.Params.navbar.classes.active }}
+{{- $mobileclass := default "w-full h-full fixed top-0 left-0 z-[998] bg-transparent" .Site.Params.navbar.classes.mobile }}
 {{- $collapseBreakpoint := default "lg" .Site.Params.navbar.collapse }}
 {{- $menu := index .Site.Menus (default "main" .Site.Params.navbar.menu) }}
 {{- $transitionEnter := default "transition ease-out duration-300" .Site.Params.navbar.transitions.enter }}
@@ -105,7 +106,7 @@
     <!-- start mobile menu -->
     {{- $transitionClasses := split (delimit (slice $transitionEnter $transitionEnterStart $transitionEnterEnd $transitionLeave $transitionLeaveStart $transitionLeaveEnd) " ") " " | uniq }}
     <div class="hidden {{ delimit $transitionClasses " " }}"><!-- extra classes --></div>
-    <div class="{{ $collapseBreakpoint }}:hidden w-full h-full overflow-y-auto fixed top-0 left-0 z-[998] bg-transparent"
+    <div class="{{ $collapseBreakpoint }}:hidden overflow-y-auto {{ $mobileclass }}"
       x-show="open"
       x-transition:enter="{{ $transitionEnter }}"
       x-transition:enter-start="{{ $transitionEnterStart }}"
@@ -114,7 +115,7 @@
       x-transition:leave-start="{{ $transitionLeaveStart }}"
       x-transition:leave-end="{{ $transitionLeaveEnd }}"
       x-cloak>
-    <ul class="flex flex-col w-64 self-center justify-evenly border-l-2 border-b-2 rounded-bl-lg absolute right-0 {{ $dropdownclass }} z-[999]" x-trap.noscroll="open" @click.outside="close">
+    <ul class="flex flex-col self-center justify-evenly {{ $dropdownclass }}" x-trap.noscroll="open" @click.outside="close">
       {{- range $menu }}
       <li class="px-4 py-2{{ if .Params.button }} pt-4 pb-6 place-self-center{{ end }}">
         {{- if .HasChildren }}
@@ -122,11 +123,13 @@
           <li class="{{ $textclass }}">
             {{- if .Page }}
             <a class="{{ $textclass }} focus:outline-none{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
+              {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
               {{- .Title -}}
             </a>
             {{- else }}
             <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="{{ $activeclass }}"{{ end }}>
-              {{- .Title }}
+              {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+              {{- .Title -}}
             </span>
             {{- end }}
           </li>
@@ -135,7 +138,8 @@
               {{- range .Children }}
               <li class="py-2 text-sm">
                 <a class="{{ $textclass }} focus:outline-none transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-                  {{ .Title }}
+                  {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                  {{- .Title -}}
                 </a>
               </li>
               {{- end }}
@@ -144,11 +148,13 @@
         </ul>
         {{- else if .Params.button }}
         <a class="{{ $buttonclass }} min-w-max rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
-          {{ .Title }}
+          {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+          {{- .Title -}}
         </a>
         {{- else }}
         <a class="{{ $textclass }} focus:outline-none transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
-          {{ .Title }}
+          {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+          {{- .Title -}}
         </a>
         {{- end}}
       </li>

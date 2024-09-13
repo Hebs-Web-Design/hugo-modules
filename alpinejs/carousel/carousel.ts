@@ -1,20 +1,23 @@
 export default (el: HTMLElement, interval: number = 5000) => ({
     init(): void {
+        console.log("Initialising carousel...")
         if (this.el.hasChildNodes()) {
-            let classes: string[] = [];
+            let classes: string[] = []
 
-            this.items = this.el.children.length;
+            this.items = this.el.children.length
+
+            console.log(`Found ${this.items} items in carousel`)
             
             for (let index = 0; index < this.items; index++) {
                 if (index === 0) {
-                    classes.push("translate-x-0");
+                    classes.push("translate-x-0")
                 } else {
-                    classes.push(`-translate-x-[${(index / this.items) * 100}%]`);
+                    classes.push(`-translate-x-[${(index / this.items) * 100}%]`)
                 }
             }
-            this.classes = classes;
+            this.classes = classes
 
-            this.cycle();
+            this.cycle()
         }
     },
     el: el,
@@ -27,63 +30,63 @@ export default (el: HTMLElement, interval: number = 5000) => ({
     next(): void {
         // get current element
         if (this.el === null || this.el === undefined) {
-            console.log(`Could not find element "${this.position}"`);
-            return;
+            console.log(`Could not find element "${this.position}"`)
+            return
         }
 
         // increment
         if (this.position == (this.items - 1)) {
             // at the end reverse the flow
-            this.pause();
-            this.forward = !this.forward;
-            this.cycle();
+            this.pause()
+            this.forward = !this.forward
+            this.cycle()
 
             return;
         } else {
-            this.position++;
+            this.position++
         }
 
         // change classes
-        console.log(`Changing "${this.classes[this.position - 1]}" to "${this.classes[this.position]}"`);
-        this.el.classList.replace(this.classes[this.position - 1], this.classes[this.position]);
+        console.log(`Changing "${this.classes[this.position - 1]}" to "${this.classes[this.position]}"`)
+        this.el.classList.replace(this.classes[this.position - 1], this.classes[this.position])
     },
     prev(): void {
         // get current element
         if (this.el === null || this.el === undefined) {
-            console.log(`Could not find element "${this.position}"`);
-            return;
+            console.log(`Could not find element "${this.position}"`)
+            return
         }
 
         // increment
         if (this.position == 0) {
             // at the end reverse the flow
-            this.pause();
-            this.forward = !this.forward;
-            this.cycle();
+            this.pause()
+            this.forward = !this.forward
+            this.cycle()
 
             return;
         } else {
-            this.position--;
+            this.position--
         }
 
         // change classes
-        console.log(`Changing "${this.classes[this.position + 1]}" to "${this.classes[this.position]}"`);
-        this.el.classList.replace(this.classes[this.position + 1], this.classes[this.position]);
+        console.log(`Changing "${this.classes[this.position + 1]}" to "${this.classes[this.position]}"`)
+        this.el.classList.replace(this.classes[this.position + 1], this.classes[this.position])
     },
     cycle(): void {
-        let self = this;
+        let self = this
 
         if (this.forward) {
             this.timer = setInterval(() => {
-                self.next();
-            }, self.interval);
+                self.next()
+            }, self.interval)
         } else {
             this.timer = setInterval(() => {
-                self.prev();
-            }, self.interval);
+                self.prev()
+            }, self.interval)
         }
     },
     pause(): void {
-        clearInterval(this.timer);
+        clearInterval(this.timer)
     },
 });
