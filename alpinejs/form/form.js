@@ -3,6 +3,9 @@ export default () => ({
     sending: false,
     status: '',
     statusclass: '',
+    get hasmessage() {
+        return this.status !== ''
+    },
     async submit(event) {
         const form = event.target;
 
