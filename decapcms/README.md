@@ -26,7 +26,28 @@ The CMS may be configured in two ways (or both):
 
   Please see <https://decapcms.org/docs/beta-features/#manual-initialization> for more information.
 
-Both options may be used unless the config in your site configuration includes `load_config_file: false` which will prevent the loading of `config.yml` from `/admin/`.
+  Both options may be used unless the config in your site configuration includes `load_config_file: false` which will prevent the loading of `config.yml`.
+
+  The minimum required configuration is:
+
+  ```yaml
+  params:
+    decapcms: {}
+  ```
+
+  This will only load a static `config.yml` file.
+3. Add the admin page as `content/admin.md` (for example):
+  
+  ```markdown
+  ---
+  title: Content Management 
+  layout: decapcms
+  ---
+
+  This content is never shown...
+  ```
+
+
 
 ## Notes
 

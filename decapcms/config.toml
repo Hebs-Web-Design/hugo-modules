@@ -1,13 +1,9 @@
 [module]
 
   [[module.mounts]]
-    source = "layouts/admin"
-    target = "layouts/admin"
+    source = "layouts"
+    target = "layouts/decapcms"
 
   [[module.mounts]]
-    source = "content/admin"
-    target = "content/admin"
-
-  [[module.mounts]]
-    source = "assets/js"
+    source = "js"
     target = "assets/js"
