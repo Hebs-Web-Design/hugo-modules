@@ -1,8 +1,8 @@
 [module]
 
   [[module.mounts]]
-    source = "layouts"
-    target = "layouts"
+    source = "layouts/decapcms.html"
+    target = "layouts/_default/decapcms-baseof.html.html"
 
   [[module.mounts]]
     source = "js"
