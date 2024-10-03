@@ -2,7 +2,7 @@
 
   [[module.mounts]]
     source = "layouts"
-    target = "layouts/decapcms"
+    target = "layouts"
 
   [[module.mounts]]
     source = "js"
