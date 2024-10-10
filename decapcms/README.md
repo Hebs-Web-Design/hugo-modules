@@ -28,14 +28,7 @@ The CMS may be configured in two ways (or both):
 
   Both options may be used unless the config in your site configuration includes `load_config_file: false` which will prevent the loading of `config.yml`.
 
-  The minimum required configuration is:
-
-  ```yaml
-  params:
-    decapcms: {}
-  ```
-
-  This will only load a static `config.yml` file.
+  It is also possible to not provide any configuration at all in your site configuration, however in this case a static `config.yml` file must exist.
 3. Add the admin page as `content/admin.md` (for example):
   
   ```markdown
@@ -46,10 +39,6 @@ The CMS may be configured in two ways (or both):
 
   This content is never shown...
   ```
-
-
-
 ## Notes
 
-* The CMS is available at /admin (this cannot be changed)
 * Securing the CMS must be done separately 

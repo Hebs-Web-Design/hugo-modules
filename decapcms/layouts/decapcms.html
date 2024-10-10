@@ -10,8 +10,6 @@
   {{- $jsopts := (dict "minify" hugo.IsProduction) }}
   {{- with .Site.Params.decapcms }}
     {{- $jsopts = merge $jsopts (dict "params" .) }}
-  {{- else }}
-    {{- $jsopts = merge $jsopts (dict "params" (dict "config" (dict))) }}
   {{- end }}
   {{- $js := resources.Get "js/decapcms.js" | js.Build $jsopts }}
   {{- if hugo.IsProduction }}
