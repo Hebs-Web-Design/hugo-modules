@@ -4,8 +4,9 @@ import CMS, { init } from 'decap-cms-app'
 import * as params from '@params'
 
 // register any additional components
-if (params.components !== undefined) {
-    for (const component of params.components) {
+if (window.editorComponents !== undefined) {
+    for (const component of window.editorComponents) {
+        console.log(`Loading "${component.id}" component into CMS...`)
         CMS.registerEditorComponent(component)
     }
 }

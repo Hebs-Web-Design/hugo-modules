@@ -7,14 +7,23 @@
   <title>{{ .Title }}</title>
 </head>
 <body>
-  {{- $jsopts := (dict "minify" hugo.IsProduction) }}
-  {{- with .Site.Params.decapcms }}
+  {{- $jsopts := (dict "minify" hugo.IsProduction) -}}
+  {{- with .Site.Params.decapcms -}}
+    {{- with .components -}}
+      {{- range . -}}
+        {{- $component := resources.Get . | js.Build $jsopts -}}
+        {{- if hugo.IsProduction -}}
+          {{- $component = $component | fingerprint -}}
+        {{- end -}}
+        <script src="{{ $component.RelPermalink }}"></script>
+      {{- end -}}
+    {{- end -}}
     {{- $jsopts = merge $jsopts (dict "params" .) }}
   {{- end }}
-  {{- $js := resources.Get "js/decapcms.js" | js.Build $jsopts }}
-  {{- if hugo.IsProduction }}
-    {{- $js = $js | fingerprint }}
-  {{- end }}
+  {{- $js := resources.Get "js/decapcms.js" | js.Build $jsopts -}}
+  {{- if hugo.IsProduction -}}
+    {{- $js = $js | fingerprint -}}
+  {{- end -}}
   <script src="{{ $js.RelPermalink }}"></script>
 </body>
 </html>
