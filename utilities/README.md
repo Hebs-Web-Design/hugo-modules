@@ -13,6 +13,15 @@ Add to `hugo.yml`:
 ```yaml
 params:
   favicon:
+    svg: logo.svg
+    png: logo.png
+```
+
+You may alternatively specify a fill colour for the SVG icon:
+
+```yaml
+params:
+  favicon:
     svg:
       img: logo.svg
       fill: '#ff0000'
@@ -22,7 +31,7 @@ params:
 Include partial:
 
 ```
-{{- partial "favicon" . }}
+{{- partial "favicon" . -}}
 ```
 
 This results in the following:
@@ -33,3 +42,7 @@ This results in the following:
 <link rel="icon" href="logo_32x.png" sizes="32x32">
 <link rel="shortcut icon" href="logo_196x.png" sizes="196x196">
 ```
+
+### preload
+
+This partial adds `rel="preload"` link tags for anything added to the page level "preload" scratch space byt another partial/template.
