@@ -2,5 +2,5 @@
 {{- if hugo.IsProduction }}
     {{- $js = $js | minify | fingerprint }}
 {{- end }}
-<script defer src="{{ $js.RelPermalink }}"></script>
+<script src="{{ $js.RelPermalink }}" defer></script>
 {{- page.Scratch.Add "preload" (slice (dict "href" $js.RelPermalink "as" "script")) -}}
