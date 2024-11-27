@@ -1,73 +1,73 @@
-{{/* Get image variant names */}}
+{{- /* Get image variant names */ -}}
 {{- $imagename := .img -}}
 {{- $darkimagename := default false .imgdark -}}
 {{- $svgname := default false .svg -}}
 {{- $darksvgname := default false .svgdark -}}
 
-{{/* Default to "twaspect" being false */}}
+{{- /* Default to "twaspect" being false */ -}}
 {{- $twaspect := false -}}
-{{/* Use provided "twaspect" value first */}}
+{{- /* Use provided "twaspect" value first */ -}}
 {{- with .twaspect -}}
     {{- $twaspect = . -}}
 {{- else -}}
-    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- /* Otherwise fall back to site parameter value if set */ -}}
     {{- with site.Params.picture.twaspect -}}
         {{- $twaspect = . -}}
     {{- end -}}
 {{- end -}}
 
-{{/* Default to "thumbnail" being false */}}
+{{- /* Default to "thumbnail" being false */ -}}
 {{- $thumbnail := false -}}
-{{/* Use provided "thumbnail" value first */}}
+{{- /* Use provided "thumbnail" value first */ -}}
 {{- with .thumbnail -}}
     {{- $thumbnail = . -}}
 {{- else -}}
-    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- /* Otherwise fall back to site parameter value if set */ -}}
     {{- with site.Params.picture.thumbnail -}}
         {{- $thumbnail = . -}}
     {{- end -}}
 {{- end -}}
 
-{{/* Default to "thumbnailpct" being 10% */}}
+{{- /* Default to "thumbnailpct" being 10% */ -}}
 {{- $thumbnailpct := 0.1 -}}
-{{/* Use provided "thumbnailpct" value first */}}
+{{- /* Use provided "thumbnailpct" value first */ -}}
 {{- with .thumbnailpct -}}
     {{- $thumbnailpct = div . 100.0 -}}
 {{- else -}}
-    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- /* Otherwise fall back to site parameter value if set */ -}}
     {{- with site.Params.picture.thumbnailpct -}}
         {{- $thumbnailpct = div . 100.0 -}}
     {{- end -}}
 {{- end -}}
 
-{{/* Default to "watermark" being false */}}
+{{- /* Default to "watermark" being false */ -}}
 {{- $watermark := false -}}
-{{/* Use provided "watermark" value first */}}
+{{- /* Use provided "watermark" value first */ -}}
 {{- with .watermark -}}
     {{- $watermark = . -}}
 {{- else -}}
-    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- /* Otherwise fall back to site parameter value if set */ -}}
     {{- with site.Params.picture.watermark -}}
         {{- $watermark = . -}}
     {{- end -}}
 {{- end -}}
 
-{{/* Default to "preload" being false */}}
+{{- /* Default to "preload" being false */ -}}
 {{- $preload := false -}}
-{{/* Use provided "preload" value first */}}
+{{- /* Use provided "preload" value first */ -}}
 {{- with .preload -}}
     {{- $preload = . -}}
 {{- else -}}
-    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- /* Otherwise fall back to site parameter value if set */ -}}
     {{- with site.Params.picture.preload -}}
         {{- $preload = . -}}
     {{- end -}}
 {{- end -}}
 
-{{/* Get image resources and save to scratch */}}
+{{- /* Get image resources and save to scratch */ -}}
 {{- $scratch := newScratch -}}
 {{- with .Page -}}
-    {{/* Try to get resource from page bundle first then globally as a fallback */}}
+    {{- /* Try to get resource from page bundle first then globally as a fallback */ -}}
     {{- with .Resources.Get $imagename -}}
         {{- $scratch.Set "img" . -}}
     {{- else -}}
@@ -78,7 +78,7 @@
         {{- end -}}
     {{- end -}}
 
-    {{/* Repeat if a dark image variant was provided */}}
+    {{- /* Repeat if a dark image variant was provided */ -}}
     {{- if $darkimagename -}}
         {{- with .Resources.Get $darkimagename -}}
             {{- $scratch.Set "imgdark" . -}}
@@ -91,7 +91,7 @@
         {{- end -}}
     {{- end -}}
 
-    {{/* Repeat if a SVG image variant was provided */}}
+    {{- /* Repeat if a SVG image variant was provided */ -}}
     {{- if $svgname -}}
         {{- with .Resources.Get $svgname -}}
             {{- $scratch.Set "svg" . -}}
@@ -104,7 +104,7 @@
         {{- end -}}
     {{- end -}}
 
-    {{/* Repeat if a dark SVG image variant was provided */}}
+    {{- /* Repeat if a dark SVG image variant was provided */ -}}
     {{- if $darksvgname -}}
         {{- with .Resources.Get $darksvgname -}}
             {{- $scratch.Set "svgdark" . -}}
@@ -117,7 +117,7 @@
         {{- end -}}
     {{- end -}}
 {{- else -}}
-    {{/* Get image resources globally */}}
+    {{- /* Get image resources globally */ -}}
     {{- with resources.Get $imagename -}}
         {{- $scratch.Set "img" . -}}
     {{- else -}}
@@ -149,79 +149,79 @@
     {{- end -}}
 {{- end}}
 
-{{/* Get image resources from scratch */}}
+{{- /* Get image resources from scratch */ -}}
 {{- $img := default false ($scratch.Get "img") -}}
 {{- $imgdark := default false ($scratch.Get "imgdark") -}}
 {{- $svg := default false ($scratch.Get "svg") -}}
 {{- $svgdark := default false ($scratch.Get "svgdark") -}}
 
-{{/* Get target image width and height */}}
+{{- /* Get target image width and height */ -}}
 {{- $width := .width -}}
 {{- $height := .height -}}
 
-{{/* Get action (defaults to "resize") and anchor (only relevant for crop and fill) */}}
+{{- /* Get action (defaults to "resize") and anchor (only relevant for crop and fill) */ -}}
 {{- $action := default "resize" .action -}}
 {{- $anchor := default "smart" .anchor -}}
 
-{{/* Default to always rotating images based on EXIF data */}}
+{{- /* Default to always rotating images based on EXIF data */ -}}
 {{- $norotate := false -}}
-{{/* Use provided "norotate" value first */}}
+{{- /* Use provided "norotate" value first */ -}}
 {{- with .norotate -}}
     {{- $norotate = . -}}
 {{- else -}}
-    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- /* Otherwise fall back to site parameter value if set */ -}}
     {{- with site.Params.picture.norotate -}}
         {{- $norotate = . -}}
     {{ end -}}
 {{- end -}}
 
-{{/* Default to enabling WebP conversion */}}
+{{- /* Default to enabling WebP conversion */ -}}
 {{- $webp := true -}}
-{{/* Use provided "disablewebp" value first */}}
+{{- /* Use provided "disablewebp" value first */ -}}
 {{- with .disablewebp -}}
     {{- $webp = not . -}}
 {{- else -}}
-    {{/* Otherwise fall back to site parameter value if set */}}
+    {{- /* Otherwise fall back to site parameter value if set */ -}}
     {{- with site.Params.picture.disablewebp -}}
         {{- $webp = not . -}}
     {{- end -}}
 {{- end -}}
-{{/* Disable unconditionally if the extended version of Hugo is not being used */}}
+{{- /* Disable unconditionally if the extended version of Hugo is not being used */ -}}
 {{- if not hugo.IsExtended -}}
     {{- $webp = false -}}
 {{- end -}}
 
-{{/* Get image DPI versions, which always defaults to having "1" */}}
+{{- /* Get image DPI versions, which always defaults to having "1" */ -}}
 {{- $versions := slice "1" -}}
-{{/* Append "versions" value */}}
+{{- /* Append "versions" value */ -}}
 {{- with .versions -}}
     {{- if reflect.IsSlice . -}}
-        {{/* Append directly if this is already a slice */}}
+        {{- /* Append directly if this is already a slice */ -}}
         {{- $versions = $versions | append (apply . "string" ".") -}}
     {{- else -}}
-        {{/* Otherwise split and then append */}}
+        {{- /* Otherwise split and then append */ -}}
         {{- $versions = $versions | append (split . ",") -}}
     {{- end -}}
 {{- else -}}
-    {{/* Otherwise append "site.Params.picture.versions" value */}}
+    {{- /* Otherwise append "site.Params.picture.versions" value */ -}}
     {{- with site.Params.picture.versions -}}
         {{- if reflect.IsSlice . -}}
-            {{/* Append directly if this is already a slice */}}
+            {{- /* Append directly if this is already a slice */ -}}
             {{- $versions = $versions | append (apply . "string" ".") -}}
         {{- else -}}
-            {{/* Otherwise split and then append */}}
+            {{- /* Otherwise split and then append */ -}}
             {{- $versions = $versions | append (split . ",") -}}
         {{- end -}}
     {{- end -}}
 {{- end -}}
-{{/* Add version "zero" if thumbnail is enabled */}}
+{{- /* Add version "zero" if thumbnail is enabled */ -}}
 {{- if $thumbnail -}}
     {{- $versions = $versions | append "0" -}}
 {{- end -}}
-{{/* Ensure versions is sortred and does not contain duplicates */}}
+{{- /* Ensure versions is sortred and does not contain duplicates */ -}}
 {{- $versions = sort $versions | uniq -}}
 
-{{/* load watermark resource */}}
+{{- /* load watermark resource */ -}}
 {{- $overlay := false -}}
 {{- if $watermark -}}
     {{- with resources.Get $watermark -}}
@@ -231,18 +231,18 @@
     {{- end -}}
 {{- end -}}
 
-{{/* Build filters for various image versions */}}
+{{- /* Build filters for various image versions */ -}}
 {{- $filters := dict -}}
 {{- range $version := $versions -}}
     {{- $mul := $version -}}
     {{ $filter := slice -}}
 
-    {{/* add exif rotation filter /*}}
+    {{- /* add exif rotation filter /*}}
     {{- if not $norotate -}}
        {{- $filter = $filter | append images.AutoOrient -}} 
     {{- end -}}
 
-    {{/* for version "zero" (ie thumbnail), override $mul to be $thumbnailpct */}}
+    {{- /* for version "zero" (ie thumbnail), override $mul to be $thumbnailpct */ -}}
     {{- if eq $version "0" -}}
         {{- $mul = $thumbnailpct -}}
     {{- end -}}
@@ -267,7 +267,7 @@
         {{- $filter = $filter | append (images.Process (delimit $process " ")) -}}
     {{- end -}}
 
-    {{/* add watermark at end */}}
+    {{- /* add watermark at end */ -}}
     {{- if $watermark -}}
         {{- $overlayResize := printf "%0.0fx" (mul 128 (float $mul)) -}}
         {{- $overlayX := int (mul 32 (float $mul)) -}}
@@ -278,7 +278,7 @@
     {{- $filters = merge $filters (dict $version $filter) -}}
 {{- end -}}
 
-{{/* Build img tag attributes */}}
+{{- /* Build img tag attributes */ -}}
 {{- $attrs := dict -}}
 {{- $class := slice -}}
 {{- with .class -}}
@@ -303,15 +303,15 @@
     {{- $attrs = merge $attrs (dict "x-on:click" .) -}}
 {{- end -}}
 
-{{/* Do picture element */}}
+{{- /* Do picture element */ -}}
 <picture>
-    {{/* Handle if dark image variant was provided */}}
+    {{- /* Handle if dark image variant was provided */ -}}
     {{- if $imgdark -}}
         {{- if eq $imgdark.MediaType.SubType "svg" -}}
             {{- if hugo.IsProduction -}}
                 {{- $imgdark = $imgdark | minify | fingerprint -}}
             {{- end -}}
-        <source srcset="{{ $imgdark.RelPermalink -}}" media="(prefers-color-scheme:dark)" type="{{ $imgdark.MediaType -}}">
+        <source srcset="{{ $imgdark.RelPermalink }}" media="(prefers-color-scheme: dark)" type="{{ $imgdark.MediaType }}">
         {{- else -}}
             {{- $images := slice -}}
             {{- range $version, $filter := $filters -}}
@@ -323,7 +323,7 @@
                     {{- $images = $images | append (printf "%s %sx" (images.Filter $filter $imgdark).RelPermalink $version) -}}
                 {{- end -}}
             {{- end -}}
-        <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr -}} media="(prefers-color-scheme:dark)" type="{{ $imgdark.MediaType -}}">
+        <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }} media="(prefers-color-scheme: dark)" type="{{ $imgdark.MediaType }}">
             {{- if and (ne $imgdark.MediaType "image/webp") $webp -}}
                 {{- $images = slice -}}
                 {{- range $version, $filter := $filters -}}
@@ -335,35 +335,35 @@
                         {{- $images = $images | append (printf "%s %sx" (images.Filter ($filter | append (images.Process "webp")) $imgdark).RelPermalink $version) -}}
                     {{- end -}}
                 {{- end -}}
-        <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr -}} media="(prefers-color-scheme:dark)" type="image/webp">
+        <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }} media="(prefers-color-scheme: dark)" type="image/webp">
             {{- end -}}
             {{- if and $svgdark (not $imgdark.MediaType.SubType "svg") -}}
                 {{- if hugo.IsProduction -}}
                     {{- $svgdark = $svgdark | minify | fingerprint -}}
                 {{- end -}}
-        <source srcset="{{ $svgdark.RelPermalink -}}" type="image/svg+xml">
+        <source srcset="{{ $svgdark.RelPermalink }}" type="image/svg+xml">
             {{- end -}}
         {{- end -}}
     {{- end -}}
 
-    {{/* Do "main" image variant */}}
+    {{- /* Do "main" image variant */ -}}
     {{- if eq $img.MediaType.SubType "svg" -}}
-        {{/* For a SVG image do not apply any image filters */}}
+        {{- /* For a SVG image do not apply any image filters */ -}}
         {{- if hugo.IsProduction -}}
             {{- $img = $img | minify | fingerprint -}}
         {{- end -}}
 
-        {{/* generate class attr */}}
+        {{- /* generate class attr */ -}}
         {{- $attrs = merge $attrs (dict "class" (delimit $class " ")) -}}
-        <img src="{{ $img.RelPermalink -}}"{{ range $attr, $value := $attrs -}} {{ printf "%s=%q" $attr $value | safeHTMLAttr -}}{{ end -}}>
+        <img src="{{ $img.RelPermalink }}"{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
     {{- else -}}
         {{- if and (ne $img.MediaType "image/webp") $webp -}}
             {{- $images := slice -}}
             {{- range $version, $filter := $filters -}}
                 {{- $images = $images | append (printf "%s %sx" (images.Filter ($filter | append (images.Process "webp")) $img).RelPermalink $version) -}}
             {{- end -}}
-        <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr -}} type="image/webp">
-            {{/* add webp versions to scratch for preloading */}}
+        <source {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }} type="image/webp">
+            {{- /* add webp versions to scratch for preloading */ -}}
             {{- if $preload -}}
                 {{- page.Scratch.Add "preload" (slice (dict "href" (strings.TrimSuffix " 1x" (index $images 0)) "as" "image" "imagesrcset" (delimit $images ", ") "type" "image/webp")) -}}
             {{- end -}}
@@ -372,14 +372,14 @@
             {{- if hugo.IsProduction -}}
                 {{- $svg = $svg | minify | fingerprint -}}
             {{- end -}}
-        <source srcset="{{ $svg.RelPermalink -}}" type="image/svg+xml">
+        <source srcset="{{ $svg.RelPermalink }}" type="image/svg+xml">
         {{- end -}}
         {{- $images := slice -}}
         
         {{- range $version, $filter := $filters -}}
             {{- $i := images.Filter $filter $img -}}
 
-            {{/* Work out aspect ratio class if required for first image (not thumbnail) and update class */}}
+            {{- /* Work out aspect ratio class if required for first image (not thumbnail) and update class */ -}}
             {{- if and (eq $version "1") $twaspect -}}
                 {{- $gcd := partial "GreatestCommonDivisor" (dict "n" (slice $i.Width $i.Height)) -}}
                 {{- $aspect := printf "aspect-[%d/%d]" (div $i.Width $gcd) (div $i.Height $gcd) -}}
@@ -391,7 +391,7 @@
                 {{- $class = $class | append $aspect -}}  
             {{- end -}}
 
-            {{/* generate class attr */}}
+            {{- /* generate class attr */ -}}
             {{- $attrs = merge $attrs (dict "class" (delimit $class " ")) -}}
 
             {{- if eq $version "0" -}}
@@ -402,8 +402,8 @@
                 {{- $images = $images | append (printf "%s %sx" $i.RelPermalink $version) -}}
             {{- end -}}
         {{- end -}}
-        <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr -}}{{ if $thumbnail -}} {{ printf "src-loaded=%q" (index $images 1) | safeHTMLAttr -}}{{ $images = after 1 $images -}}{{ end -}} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr -}}{{ range $attr, $value := $attrs -}} {{ printf "%s=%q" $attr $value | safeHTMLAttr -}}{{ end -}}>
-        {{/* add to scratch for preloading */}}
+        <img {{ printf "src=%q" (index $images 0) | safeHTMLAttr }}{{ if $thumbnail }} {{ printf "src-loaded=%q" (index $images 1) | safeHTMLAttr }}{{ $images = after 1 $images }}{{ end }} {{ printf "srcset=%q" (delimit $images ", ") | safeHTMLAttr }}{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}>
+        {{- /* add to scratch for preloading */ -}}
         {{- if $preload -}}
             {{- page.Scratch.Add "preload" (slice (dict "href" (index $images 0) "as" "image" "imagesrcset" (delimit $images ", ") "type" $img.MediaType.Type)) -}}
         {{- end -}}    
