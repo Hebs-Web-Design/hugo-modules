@@ -3,8 +3,7 @@
 {{- $preload := dict "as" "style" -}}
 {{- if hugo.IsProduction -}}
     {{- $css = $css | minify | fingerprint | resources.PostProcess -}}
-    {{- $preload = merge $preload (dict "integrity" $css.Data.Integrity) -}}
 {{- end -}}
 {{- $preload = merge $preload (dict "href" $css.RelPermalink) -}}
-<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $css.Data.Integrity }}"{{ end }}>
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
 {{- page.Scratch.Add "preload" (slice $preload) -}}

@@ -2,8 +2,7 @@
 {{- $preload := dict "as" "script" -}}
 {{- if hugo.IsProduction -}}
     {{- $js = $js | minify | fingerprint -}}
-    {{- $preload = merge $preload (dict "integrity" $js.Data.Integrity) -}}
 {{- end -}}
 {{- $preload = merge $preload (dict "href" $js.RelPermalink) -}}
-<script src="{{ $js.RelPermalink }}" type="text/javascript"{{ if hugo.IsProduction }} integrity="{{ $js.Data.Integrity }}"{{ end }} async></script>
+<script src="{{ $js.RelPermalink }}" async></script>
 {{- page.Scratch.Add "preload" (slice $preload) -}}
