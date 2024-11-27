@@ -1,7 +1,10 @@
 {{ $options := dict "inlineImports" true -}}
 {{- $css := resources.Get "css/main.css" | postCSS $options -}}
+{{- $preload := dict "as" "style" -}}
 {{- if hugo.IsProduction -}}
     {{- $css = $css | minify | fingerprint | resources.PostProcess -}}
+    {{- $preload = merge $preload (dict "integrity" $css.Data.Integrity) -}}
 {{- end -}}
-<link rel="stylesheet" href="{{ $css.RelPermalink }}">
-{{- page.Scratch.Add "preload" (slice (dict "href" $css.RelPermalink "as" "style")) -}}
+{{- $preload = merge $preload (dict "href" $css.RelPermalink) -}}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ if hugo.IsProduction }} integrity="{{ $css.Data.Integrity }}"{{ end }}>
+{{- page.Scratch.Add "preload" (slice $preload) -}}
