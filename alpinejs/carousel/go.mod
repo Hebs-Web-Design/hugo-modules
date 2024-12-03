@@ -1,5 +1,7 @@
 module github.com/hebs-web-design/hugo-modules/alpinejs/carousel
 
-go 1.21
+go 1.22
 
-require github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21300.170 // indirect
+toolchain go1.22.4
+
+require github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21400.160// indirect
