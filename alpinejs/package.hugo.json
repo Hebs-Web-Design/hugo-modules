@@ -1,12 +1,12 @@
 {
   "devDependencies": {
-    "@alpinejs/anchor": "3.14.6",
-    "@alpinejs/collapse": "3.14.6",
-    "@alpinejs/focus": "3.14.6",
-    "@alpinejs/intersect": "3.14.6",
-    "@alpinejs/mask": "3.14.6",
-    "@alpinejs/persist": "3.14.6",
+    "@alpinejs/anchor": "3.14.8",
+    "@alpinejs/collapse": "3.14.8",
+    "@alpinejs/focus": "3.14.8",
+    "@alpinejs/intersect": "3.14.8",
+    "@alpinejs/mask": "3.14.8",
+    "@alpinejs/persist": "3.14.8",
     "@types/alpinejs": "3.13.11",
-    "alpinejs": "3.14.6"
+    "alpinejs": "3.14.8"
   }
 }
