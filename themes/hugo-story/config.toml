@@ -1,0 +1,19 @@
+[module]
+  [[module.imports]]
+    path = "github.com/caressofsteel/hugo-story"
+
+  [[module.imports.mounts]]
+    source = "assets"
+    target = "assets"
+
+  [[module.mounts]]
+    source = "images"
+    target = "images"
+
+  [[module.mounts]]
+    source = "layouts"
+    target = "layouts"
+
+  [[module.mounts]]
+    source = "static"
+    target = "static"
