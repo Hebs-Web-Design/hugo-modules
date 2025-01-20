@@ -1,0 +1,20 @@
+{{- $img := resources.Get .img }}
+{{- if eq $img.MediaType.SubType "svg" }}
+    {{- if hugo.IsProduction }}
+        {{- $img = $img | minify | fingerprint }}
+    {{- end }}
+{{- else }}
+    {{- $opts := slice "resize" }}
+    {{- if (and .width .height) }}
+        {{- $opts = $opts | append (printf "%dx%d" .width .height) }}
+    {{- else if .width }}
+        {{- $opts = $opts | append (printf "%dx" .width) }}
+    {{- else if .height }}
+        {{- $opts = $opts | append (printf "x%d" .height) }}
+    {{- end }}
+    {{- if (and (not $.disablewebp) hugo.IsExtended) }}
+        {{- $opts = $opts | append "webp" }}
+    {{- end }}
+    {{- $img = $img.Process (delimit $opts " ") }}
+{{- end }}
+{{- return $img.RelPermalink }}
