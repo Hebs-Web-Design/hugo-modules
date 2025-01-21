@@ -6,18 +6,14 @@
     source = "assets"
     target = "assets"
 
-  [[module.mounts]]
-    source = "images"
-    target = "images"
-
-  [[module.mounts]]
+  [[module.imports.mounts]]
     source = "layouts"
     target = "layouts"
 
-  [[module.mounts]]
-    source = "static/css"
+  [[module.imports.mounts]]
+    source = "static"
     target = "static/css"
   
-  [[module.mounts]]
+  [[module.imports.mounts]]
     source = "static/js"
     target = "static/js"
