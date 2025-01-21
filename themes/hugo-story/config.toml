@@ -15,5 +15,9 @@
     target = "layouts"
 
   [[module.mounts]]
-    source = "static"
-    target = "static"
+    source = "static/css"
+    target = "static/css"
+  
+  [[module.mounts]]
+    source = "static/js"
+    target = "static/js"
