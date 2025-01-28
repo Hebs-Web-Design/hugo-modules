@@ -17,3 +17,7 @@
   [[module.imports.mounts]]
     source = "static/js"
     target = "static/js"
+
+  [[module.imports.mounts]]
+    source = "static/webfonts"
+    target = "static/webfonts"
