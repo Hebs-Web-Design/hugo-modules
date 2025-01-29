@@ -1,13 +1,33 @@
-{{- $token := .token }}
-{{- if (hasPrefix $token "env:") }}
-    {{- $token = getenv (strings.TrimPrefix "env:" .token) }}
-{{- end }}
-{{- $mapUrl := slice "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/" .location "/" .size "?access_token=" $token }}
-{{- $map := resources.GetRemote (delimit $mapUrl "") }}
-<img src="{{ $map.RelPermalink }}"
-{{- if .map2x }}
-{{- $map2xUrl := slice "https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/" .location "/" .size "@2x?access_token=" $token }}
-{{- $map2x := resources.GetRemote (delimit $map2xUrl "") }}
- srcset="{{ $map2x.RelPermalink }} 2x, {{ $map.RelPermalink }} 1x"
-{{- end }}
- alt="{{ .alt }}"{{ with .class }} class="{{ . }}"{{ end }}>
+{{- $token := .token -}}
+{{- warnf $token -}}
+{{- warnf .location -}}
+{{- if (hasPrefix $token "env:") -}}
+    {{- $token = getenv (strings.TrimPrefix "env:" .token) -}}
+{{- end -}}
+{{- $qs := querify (slice "access_token" $token) -}}
+{{- $mapSlice := slice "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static" -}}
+{{- with .marker -}}
+    {{- $mapSlice = append . $mapSlice -}}
+{{- end -}}
+{{- $mapSlice = append .location .size $mapSlice -}}
+{{- $mapUrl := delimit $mapSlice "/" -}}
+{{- $img := .params -}}
+{{- with (resources.GetRemote (printf "%s?%s" $mapUrl $qs)) -}}
+    {{- $img = merge $img (dict "src" .RelPermalink) -}}
+{{- else -}}
+    {{- errorf "Could not get remote resource %q" (printf "%s?%s" $mapUrl $qs) -}}
+{{- end -}}
+{{- if .map2x -}}
+    {{- with (resources.GetRemote (printf "%s@2x?%s" $mapUrl $qs)) -}}
+        {{- $img = merge $img (dict "srcset" (printf "%s 2x, %s 1x" .RelPermalink $img.src)) -}}
+    {{- else -}}
+        {{- warnf "Could not get 2x remote resource %q" (printf "%s?%s" $mapUrl $qs) -}}
+    {{- end -}}
+{{- end -}}
+{{- with .link -}}
+<a href="{{ . }}" rel="nopener" target="_blank">
+{{- end -}}
+<img{{ range $attr, $val := $img }} {{ printf "%s=%q" $attr $val | safeHTMLAttr }}{{ end }}>
+{{- with .link -}}
+</a>
+{{- end -}}

@@ -1,5 +1,5 @@
 {{- $opts := dict "location" (.Get "location") "size" (.Get "size") "token" (.Get "token") "map2x" (default false (.Get "map2x")) }}
 {{- with (.Get "class") }}
-{{- $opts = merge $opts (dict "class" .) }}
+{{- $opts = merge $opts (dict "params" (dict "class" .)) }}
 {{- end }}
 {{- partial "mapbox" $opts }}
