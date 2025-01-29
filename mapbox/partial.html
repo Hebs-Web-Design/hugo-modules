@@ -1,6 +1,4 @@
 {{- $token := .token -}}
-{{- warnf $token -}}
-{{- warnf .location -}}
 {{- if (hasPrefix $token "env:") -}}
     {{- $token = getenv (strings.TrimPrefix "env:" .token) -}}
 {{- end -}}
