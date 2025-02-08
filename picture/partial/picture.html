@@ -290,6 +290,9 @@
 {{- with .alt -}}
     {{- $attrs = merge $attrs (dict "alt" .) -}}
 {{- end -}}
+{{- with .style -}}
+    {{- $attrs = merge $attrs (dict "style" .) -}}
+{{- end -}}
 {{- if .lazy -}}
     {{- $attrs = merge $attrs (dict "loading" "lazy") -}}
 {{- end -}}
