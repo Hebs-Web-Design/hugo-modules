@@ -1,0 +1,7 @@
+[module]
+  [module.hugoVersion]
+    min = "v0.121.2"
+
+  [[module.mounts]]
+    source = "footer.html"
+    target = "layouts/partials/components/footer.html"
