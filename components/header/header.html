@@ -1,17 +1,13 @@
-{{- $currentPage := . }}
-{{- $menu := index .Site.Menus (default "main" .Site.Params.components.header.menu) }}
+{{- $currentPage := . -}}
+{{- $menu := index .Site.Menus (default "main" .Site.Params.components.header.menu) -}}
 <header class="bg-white" x-data="toggler">
     <div class="mx-auto flex h-24 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
-      <a id="header-logo-link" class="block text-teal-600" href="#">
+      <a class="block text-teal-600" href="{{ relref . "/" }}">
         <span class="sr-only">Home</span>
         {{- with .Site.Params.components.logo -}}
             {{- $logo := . -}}
-            {{- if $logo.inline -}}
-                {{- os.ReadFile $logo.asset | safeHTML -}}
-            {{- else -}}
-                {{- with resources.Get $logo.asset -}}
-                    <img id="{{ default "header-logo" $logo.id }}" src="{{ .RelPermalink }}" alt={{ default "Logo" $logo.alt }}>
-                {{- end -}}
+            {{- with resources.Get $logo.asset -}}
+                <img id="{{ default "header-logo" $logo.id }}" src="{{ .RelPermalink }}" alt="{{ default "Logo" $logo.alt }}"{{ with $logo.class}} class="{{ . }}"{{ end }}>
             {{- end -}}
         {{- end -}}
       </a>

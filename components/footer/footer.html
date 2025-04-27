@@ -4,12 +4,8 @@
             <div class="flex justify-center sm:justify-start">
             {{- with .Site.Params.components.logo -}}
                 {{- $logo := . -}}
-                {{- if $logo.inline -}}
-                    {{- os.ReadFile $logo.asset | safeHTML -}}
-                {{- else -}}
-                    {{- with resources.Get $logo.asset -}}
-                        <img id="{{ default "header-logo" $logo.id }}" src="{{ .RelPermalink }}" alt={{ default "Logo" $logo.alt }}>
-                    {{- end -}}
+                {{- with resources.Get $logo.asset -}}
+                    <img id="{{ default "footer-logo" $logo.id }}" src="{{ .RelPermalink }}" alt="{{ default "Logo" $logo.alt }}"{{ with $logo.class}} class="{{ . }}"{{ end }}>
                 {{- end -}}
             {{- end -}}
             </div>
