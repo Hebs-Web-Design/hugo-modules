@@ -4,50 +4,40 @@
 
 1. Add to hugo module config:
    ```toml
-   [build]
-     writeStats = true
+   [build.buidStats]
+     enable = true
    
    [[build.cachebusters]]
-     source = "assets/watching/hugo_stats\\.json"
-     target = "tailwind.css"
+     source = "assets/notwatching/hugo_stats\\.json"
+     target = "css"
    
    [[build.cachebusters]]
      source = "(postcss|tailwind)\\.config\\.js"
      target = "css"
 
-   [[build.cachebusters]]
-     source = "assets/.*\\.(js|ts|jsx|tsx)"
-     target = "js"
-
-   [[build.cachebusters]]
-     source = "assets/.*\\.(.*)$"
-     target = "$1"
+   [[module.imports]]
+     path = "github.com/hebs-web-design/hugo-modules/tailwindcss/v4"
   
    [[module.mounts]]
      source = "hugo_stats.json"
-     target = "assets/watching/hugo_stats.json"
-
-   [[module.imports]]
-     path = "github.com/hebs-web-design/hugo-modules/tailwindcss/v3"
-     
+     target = "assets/notwatching/hugo_stats.json"
+     disableWatch = true
+   
    [[module.mounts]]
      source = "assets"
      target = "assets"
    ```
 2. `hugo mod npm pack`
 3. `npm install`
-4. Include CSS using provided partial:
-    ```hugo
-    {{- partial "tailwind" . }}
-    ```
-    
-    or concatenate the provided CSS with your own
+4. Create "assets/css/main.css":
+    ```css
+    @import "tailwindcss";
+    /* If you have hugo_stats.json in your .gitignore file make sure to add it here */
+    @source "hugo_stats.json";
 
+    /* Include any additional CSS here */
+    ```
+5. Include CSS using provided partial:
     ```hugo
-    {{- $options := dict "inlineImports" true }}
-    {{- $css := slice (resources.Get "css/your.css" | postCSS $options) (resources.Get "css/tailwind.css" | postCSS $options) | resources.Concat "js/bundle.css" }}
-    {{- if hugo.IsProduction }}
-        {{- $css = $css | minify | fingerprint | resources.PostProcess }}
-    {{- end }}
-    <link rel="stylesheet" href="{{ $css.RelPermalink }}">
+    {{- partialCached "tailwind" . -}}
     ```

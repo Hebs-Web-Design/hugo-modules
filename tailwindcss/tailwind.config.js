@@ -1,16 +1,8 @@
-// tailwind.config.js
-module.exports = {
-    content: ['./hugo_stats.json'],
-    darkMode: 'media', // or 'media' or 'class'
-    theme: {},
-    variants: {
-        extend: {
-            filter: ['dark'],
-            invert: ['dark'],
-        }
-    },
-    plugins: [
-        require('@tailwindcss/forms'),
-        require('@tailwindcss/typography'),
-    ],
-}
+/*
+This file is present to satisy a requiremenet of the Tailwind CSS IntelliSense
+extension for Visual Studio Code.
+
+https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
+
+The rest of this file is intentionally empty.
+*/
