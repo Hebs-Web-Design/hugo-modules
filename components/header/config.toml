@@ -1,0 +1,13 @@
+[module]
+  [module.hugoVersion]
+    min = "v0.121.2"
+  
+  [[module.imports]]
+    path = "github.com/hebs-web-design/hugo-modules/alpinejs/v3"
+
+  [[module.imports]]
+    path = "github.com/hebs-web-design/hugo-modules/alpinejs/toggler"
+
+  [[module.mounts]]
+    source = "header.html"
+    target = "layouts/partials/components/header.html"

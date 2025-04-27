@@ -1,0 +1,49 @@
+{{- $currentPage := . }}
+{{- $menu := index .Site.Menus (default "main" .Site.Params.components.header.menu) }}
+<header class="bg-white" x-data="toggler">
+    <div class="mx-auto flex h-24 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
+      <a class="block text-teal-600" href="#">
+        <span class="sr-only">Home</span>
+        {{- with resource.Get .Site.Params.components.logo -}}
+        <img alt="Logo" src="{{ .RelPermalink }}">
+        {{- end -}}
+      </a>
+  
+      <div class="flex flex-1 items-center justify-end md:justify-between">
+        <nav aria-label="Global" class="hidden md:block">
+          <ul class="flex items-center gap-6 text-sm">
+            {{- range $n, $m := $menu }}
+            <li>
+              <a class="text-gray-500 transition hover:text-gray-500/75" href="{{ .URL }}"> {{ .Title }}</a>
+            </li>
+            {{- end -}}
+          </ul>
+        </nav>
+  
+        {{- with .Site.Params.components.header.button -}}
+        <div class="flex items-center gap-4">
+          <div class="sm:flex sm:gap-4">
+            <a class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700" href="{{ .URL }}">
+              {{- .Title -}}
+            </a>
+          </div>
+          {{- end -}}
+  
+          <button class="block rounded-sm bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden" @click="toggle">
+            <span class="sr-only">Toggle menu</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div role="menu" class="absolute end-0 top-28 z-auto w-56 overflow-hidden rounded border border-gray-300 bg-white shadow-sm md:hidden" x-show="open" x-cloak>      
+        {{- range $n, $m := $menu }}
+        <a href="{{ .URL }}" class="block px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900" role="menuitem">
+        {{- .Title -}}
+        </a>
+        {{- end -}}
+    </div>
+  </header>
+  
