@@ -1,0 +1,8 @@
+{{- $basecolor := default "teal" site.Params.components.color -}}
+{{- if .alt -}}
+<a class="inline-block rounded-sm border border-{{ $basecolor }}-600 px-12 py-3 text-sm font-medium text-{{ $basecolor }}-600 hover:bg-{{ $basecolor }}-600 hover:text-white focus:ring-3 focus:outline-hidden" href="{{ .href }}">
+{{- else -}}
+<a class="inline-block rounded-sm border border-{{ $basecolor }}-600 bg-{{ $basecolor }}-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-{{ $basecolor }}-600 focus:ring-3 focus:outline-hidden" href="{{ .href }}">
+{{- end -}}
+{{- .text -}}
+</a>

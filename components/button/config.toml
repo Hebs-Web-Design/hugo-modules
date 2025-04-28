@@ -1,0 +1,11 @@
+[module]
+  [module.hugoVersion]
+    min = "v0.121.2"
+
+  [[module.mounts]]
+    source = "button.html"
+    target = "layouts/partials/components/button.html"
+
+  [[module.mounts]]
+    source = "shortcode.html"
+    target = "layouts/shortcodes/components/button.html"
