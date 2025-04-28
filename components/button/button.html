@@ -1,8 +1,15 @@
 {{- $basecolor := default "teal" site.Params.components.color -}}
-{{- if .alt -}}
-<a class="inline-block rounded-sm border border-{{ $basecolor }}-600 px-12 py-3 text-sm font-medium text-{{ $basecolor }}-600 hover:bg-{{ $basecolor }}-600 hover:text-white focus:ring-3 focus:outline-hidden" href="{{ .href }}">
-{{- else -}}
-<a class="inline-block rounded-sm border border-{{ $basecolor }}-600 bg-{{ $basecolor }}-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-{{ $basecolor }}-600 focus:ring-3 focus:outline-hidden" href="{{ .href }}">
+{{- $attrList := slice "href" "x-show" "@click" "x-text" -}}
+{{- $attrs := dict -}}
+{{- range $attr, $value := . -}}
+{{-   if collections.In $attrList $attr -}}
+{{-     $attrs = merge $attrs (dict $attr $value) -}}
+{{-    end -}}
 {{- end -}}
-{{- .text -}}
-</a>
+{{- $classes := slice "not-prose" "cursor-pointer" "inline-block" "rounded-sm" "border" "px-12" "py-3" "text-sm" "font-medium" "focus:ring-3" "focus:outline-hidden" (printf "border-%s-600" $basecolor) -}}
+{{- if .alt -}}
+{{-   $classes = collections.Append $classes (slice  (printf "text-%s-600" $basecolor) (printf "hover:bg-%s-600" $basecolor) "hover:text-white") -}}
+{{- else -}}
+{{-   $classes = collections.Append $classes (slice "text-white" (printf "bg-%s-600" $basecolor) "hover:bg-transparent" (printf "hover:text-%s-600" $basecolor)) -}}
+{{- end -}}
+<a class="{{ collections.Delimit $classes " " }}"{{ range $attr, $value := $attrs }} {{ printf "%s=%q" $attr $value | safeHTMLAttr }}{{ end }}{{ if isset . "x-cloak" }} x-cloak{{ end }}>{{ .text }}</a>
