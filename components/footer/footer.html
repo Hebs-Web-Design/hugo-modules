@@ -2,7 +2,7 @@
     <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8 mt-4">
         <div class="sm:flex sm:items-center sm:justify-between">
             <div class="flex justify-center sm:justify-start">
-            {{- with .Site.Params.components.logo -}}
+            {{- with site.Params.components.logo -}}
                 {{- $logo := . -}}
                 {{- with resources.Get $logo.asset -}}
                     <img id="{{ default "footer-logo" $logo.id }}" src="{{ .RelPermalink }}" alt="{{ default "Logo" $logo.alt }}"{{ with $logo.class}} class="{{ . }}"{{ end }}>
