@@ -1,6 +1,6 @@
 {{- $currentPage := . -}}
 {{- $menu := index .Site.Menus (default "main" .Site.Params.components.header.menu) -}}
-{{- $basecolor := default .Site.Params.components.color "teal" -}}
+{{- $basecolor := default "teal" .Site.Params.components.color -}}
 <header class="bg-white" x-data="toggler">
     <div class="mx-auto flex h-24 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
       <a class="block text-{{ $basecolor }}-600" href="{{ relref . "/" }}">
