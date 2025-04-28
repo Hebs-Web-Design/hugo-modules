@@ -1,15 +1,23 @@
 {{- $currentPage := . -}}
 {{- $menu := index .Site.Menus (default "main" .Site.Params.components.header.menu) -}}
+{{- $basecolor := default .Site.Params.components.color "teal" -}}
 <header class="bg-white" x-data="toggler">
     <div class="mx-auto flex h-24 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
-      <a class="block text-teal-600" href="{{ relref . "/" }}">
+      <a class="block text-{{ $basecolor }}-600" href="{{ relref . "/" }}">
         <span class="sr-only">Home</span>
-        {{- with .Site.Params.components.logo -}}
-            {{- $logo := . -}}
-            {{- with resources.Get $logo.asset -}}
-                <img id="{{ default "header-logo" $logo.id }}" src="{{ .RelPermalink }}" alt="{{ default "Logo" $logo.alt }}"{{ with $logo.class}} class="{{ . }}"{{ end }}>
-            {{- end -}}
-        {{- end -}}
+        <div class="flex flex-row">
+          <div>
+          {{- with .Site.Params.components.logo -}}
+              {{- $logo := . -}}
+              {{- with resources.Get $logo.asset -}}
+                  <img id="{{ default "header-logo" $logo.id }}" src="{{ .RelPermalink }}" alt="{{ default "Logo" $logo.alt }}"{{ with $logo.class}} class="{{ . }}"{{ end }}>
+              {{- end -}}
+          {{- end -}}
+          </div>
+          {{- with .Site.Params.components.header.title -}}
+          <div class="text-xl text-semibold ml-1 self-center">{{ . }}</div>
+          {{- end -}}
+        </div>
       </a>
   
       <div class="flex flex-1 items-center justify-end md:justify-between">
@@ -26,7 +34,7 @@
         {{- with .Site.Params.components.header.button -}}
         <div class="flex items-center gap-4">
           <div class="sm:flex sm:gap-4">
-            <a class="block rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-teal-700" href="{{ compare.Default (urls.RelRef $currentPage .PageRef) .URL }}">
+            <a class="block rounded-md bg-{{ $basecolor }}-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-{{ $basecolor }}-700" href="{{ compare.Default (urls.RelRef $currentPage .PageRef) .URL }}">
               {{- .Title -}}
             </a>
           </div>
