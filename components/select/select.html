@@ -14,7 +14,7 @@
         {{- end -}}
         {{- else with (index . "x-for") -}}
         <template x-for="item in {{ . }}">
-            <option value="item.value" x-text="item.text"></option>
+            <option value="item.id" x-text="item.value"></option>
         </template>
         {{- end -}}
         </select>
