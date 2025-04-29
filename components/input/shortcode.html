@@ -1,1 +1,5 @@
-{{- partial "components/input" (dict "id" (.Get "id") "type" (.Get "type") "label" (.Get "label")) -}}
+{{- $opts := dict "label" (.Get "label") -}}
+{{- with index . "id" }}{{ $opts = merge $opts (dict "id" (.Get "id")) }}{{ end -}}
+{{- with index . "type" }}{{ $opts = merge $opts (dict "type" (.Get "type")) }}{{ end -}}
+{{- with index . "x-model" }}{{ $opts = merge $opts (dict "x-model" (.Get "x-model")) }}{{ end -}}
+{{- partial "components/input" $opts -}}
