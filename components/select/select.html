@@ -1,7 +1,7 @@
 <div{{ with (index . "x-data") }} x-data="{{ . }}"{{ end }}>
     <label{{ with .id }} for="{{ . }}"{{ end }}>
         <span class="text-sm font-medium text-gray-700">{{ .label }}</span>
-        <select{{ with .id }} id="{{ . }}" {{ end }} name="{{ anchorize .label }}" class="mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm">
+        <select{{ with .id }} id="{{ . }}" {{ end }} name="{{ anchorize .label }}" class="mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm"{{ with index . "x-model" }} x-model="{{ . | safeHTMLAttr  }}"{{ end }}>
             <option value="">Please select</option>
             {{- with .list -}}
             {{- range . -}}
