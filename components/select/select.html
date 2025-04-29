@@ -9,7 +9,7 @@
             {{- end -}}
             {{- else with (index . "x-for") -}}
             <template x-for="item in {{ . }}">
-                <option value="item.id" x-text="item.value"></option>
+                <option :value="item.id" x-text="item.value"></option>
             </template>
             {{- end -}}
         </select>
