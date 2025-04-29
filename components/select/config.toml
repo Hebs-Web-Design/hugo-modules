@@ -3,9 +3,9 @@
     min = "v0.121.2"
 
   [[module.mounts]]
-    source = "input.html"
-    target = "layouts/partials/components/input.html"
+    source = "select.html"
+    target = "layouts/partials/components/select.html"
 
   [[module.mounts]]
     source = "shortcode.html"
-    target = "layouts/shortcodes/components/input.html"
+    target = "layouts/shortcodes/components/select.html"
