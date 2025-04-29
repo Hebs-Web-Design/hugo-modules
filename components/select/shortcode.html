@@ -1,0 +1,6 @@
+{{- $opts := dict "label" (.Get "label") -}}
+{{- with index . "id" }}{{ $opts = merge $opts (dict "id" (.Get "id")) }}{{ end -}}
+{{- with index . "x-for" }}{{ $opts = merge $opts (dict "x-for" (.Get "x-for")) }}{{ end -}}
+{{- with index . "x-model" }}{{ $opts = merge $opts (dict "x-model" (.Get "x-model")) }}{{ end -}}
+{{- with index . "list" }}{{ $opts = merge $opts (dict "list" (.Get "list")) }}{{ end -}}
+{{- partial "components/select" $opts -}}

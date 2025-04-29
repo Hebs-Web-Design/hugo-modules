@@ -1,0 +1,22 @@
+<div x-data>
+    <label x-id="{{ default "['select']" .id }}" :for="{{ default "$id('select')" .id }}" >
+        <span class="text-sm font-medium text-gray-700"> {{ .label }} </span>
+
+        <select
+        name="{{ anchorize .label }}"
+        id="{{ default "$id('select')" .id }}"
+        class="mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm"
+        >
+        <option value="">Please select</option>
+        {{- with .list -}}
+        {{- range . -}}
+        <option value="{{ .value }}">{{ .text }}</option>
+        {{- end -}}
+        {{- else with (index . "x-for") -}}
+        <template x-for="item in {{ . }}">
+            <option value="item.value" x-text="item.text"></option>
+        </template>
+        {{- end -}}
+        </select>
+    </label>
+</div>
