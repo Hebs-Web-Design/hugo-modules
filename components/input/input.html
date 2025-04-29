@@ -1,4 +1,4 @@
-<label{{ with .id }} for="{{ . }}"{{ end }} class="not-prose">
+<label{{ with .id }} for="{{ . | safeHTMLAttr }}"{{ end }} class="not-prose">
     <span class="text-sm font-medium text-gray-700">{{ .label }}</span>
-    <input{{ with .type }} type="{{ . }}"{{ end }}{{ with .id }} type="{{ . }}"{{ end }} class="mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm"{{ with index . "x-model" }} x-model="{{ . }}"{{ end }}{{ with index . ":value" }} :value="{{ . }}"{{ end }}>
+    <input{{ with .type }} type="{{ . }}"{{ end }}{{ with .id }} id="{{ . | safeHTMLAttr }}"{{ end }} class="mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm"{{ with index . "x-model" }} x-model="{{ . | safeHTMLAttr  }}"{{ end }}{{ with index . ":value" }} :value="{{ . | safeHTMLAttr }}"{{ end }}>
 </label>
