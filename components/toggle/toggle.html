@@ -1,37 +1,40 @@
 {{- $basecolor := default "teal" site.Params.components.color -}}
-<div class="pl-2 mb-1 place-self-end">
+<div
+    {{- with (index . "x-data") }} x-data="{{ . }}"{{ end -}}
+    {{- with index . "x-cloak" }} x-cloak{{ end -}}
+>
     <label
-    for="{{ .id }}"
-    {{- with (index . "title") }} title="{{ . }}"{{ end -}}
-    {{- with (index . ":title") }} :title="{{ . }}"{{ end -}}
-    class="relative block h-8 w-14 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-{{ $basecolor }}-500 cursor-pointer"
-  >
-    <input
-        type="checkbox"
-        id="{{ .id }}"
-        class="peer sr-only"
-        {{- with (index . "x-model") }} x-model="{{ . }}"{{ end -}}
+        for="{{ .id }}"
+        {{- with (index . "title") }} title="{{ . }}"{{ end -}}
+        {{- with (index . ":title") }} :title="{{ . }}"{{ end -}}
+        class="relative block h-8 w-14 rounded-full bg-gray-300 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-{{ $basecolor }}-500 cursor-pointer"
     >
-  
-    <span
-      class="absolute inset-y-0 start-0 m-1 grid size-6 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-6 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block"
-    >
-    {{- with .icons -}}
-        {{- if reflect.IsSlice . -}}
-            {{- /* If .icons is a slice then work out which to use */ -}}
-            {{- if eq (len .) 1 -}}
-                {{- /* Just use the first for a slice of one item */ -}}
-                {{- partial "b-icon" (dict "icon" (index . 0) "class" (printf "size-4 text-%s-700" $basecolor)) -}}
-            {{- else if ge (len .) 2 -}}
-                {{/* For longer slices only use the first two */}}
-                {{- partial "b-icon" (dict "icon" (index . 0) "class" "size-4 text-gray-500") -}}
-                {{- partial "b-icon" (dict "icon" (index . 1) "class" (printf "size-4 text-%s-700" $basecolor)) -}}
+        <input
+            type="checkbox"
+            id="{{ .id }}"
+            class="peer sr-only"
+            {{- with (index . "x-model") }} x-model="{{ . }}"{{ end -}}
+        >
+
+        <span
+            class="absolute inset-y-0 start-0 m-1 grid size-6 place-content-center rounded-full bg-white text-gray-700 transition-[inset-inline-start] peer-checked:start-6 peer-checked:*:first:hidden *:last:hidden peer-checked:*:last:block"
+        >
+        {{- with .icons -}}
+            {{- if reflect.IsSlice . -}}
+                {{- /* If .icons is a slice then work out which to use */ -}}
+                {{- if eq (len .) 1 -}}
+                    {{- /* Just use the first for a slice of one item */ -}}
+                    {{- partial "b-icon" (dict "icon" (index . 0) "class" (printf "size-4 text-%s-700" $basecolor)) -}}
+                {{- else if ge (len .) 2 -}}
+                    {{/* For longer slices only use the first two */}}
+                    {{- partial "b-icon" (dict "icon" (index . 0) "class" "size-4 text-gray-500") -}}
+                    {{- partial "b-icon" (dict "icon" (index . 1) "class" (printf "size-4 text-%s-700" $basecolor)) -}}
+                {{- end -}}
+            {{- else -}}
+                {{- /* If it wasn't a slice then use the string as the icon */ -}}
+                {{- partial "b-icon" (dict "icon" . "class" (printf "size-4 text-%s-700" $basecolor)) -}}
             {{- end -}}
-        {{- else -}}
-            {{- /* If it wasn't a slice then use the string as the icon */ -}}
-            {{- partial "b-icon" (dict "icon" . "class" (printf "size-4 text-%s-700" $basecolor)) -}}
         {{- end -}}
-    {{- end -}}
-    </span>
-  </label> 
+        </span>
+    </label>
 </div>

@@ -3,4 +3,6 @@
 {{- with (.Get "icons") }}{{ $opts = merge $opts (dict "icons" .) }}{{ end -}}
 {{- with (.Get ":title") }}{{ $opts = merge $opts (dict ":title" .) }}{{ end -}}
 {{- with (.Get "x-model") }}{{ $opts = merge $opts (dict "x-model" .) }}{{ end -}}
+{{- with (.Get "x-data") }}{{ $opts = merge $opts (dict "x-data" .) }}{{ end -}}
+{{- with (.Get "x-cloak") }}{{ $opts = merge $opts (dict "x-cloak" .) }}{{ end -}}
 {{- partial "components/toggle" $opts -}}
