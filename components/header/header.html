@@ -34,7 +34,12 @@
         {{- with site.Params.components.header.button -}}
         <div class="flex items-center gap-4">
           <div class="sm:flex sm:gap-4">
-            <a class="block rounded-md bg-{{ $basecolor }}-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-{{ $basecolor }}-700" href="{{ compare.Default (urls.RelRef $currentPage .PageRef) .URL }}">
+            <a
+              class="block rounded-md bg-{{ $basecolor }}-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-{{ $basecolor }}-700"
+              href="{{ compare.Default (urls.RelRef $currentPage .PageRef) .URL }}"
+              {{- with index . ":href" }} :href="{{ safeHTMLAttr . | safeURL }}"{{ end -}}
+              {{- with index . "x-text" }} x-text="{{ . | safeHTMLAttr }}"{{ end -}}
+            >
               {{- .Title -}}
             </a>
           </div>
@@ -49,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div role="menu" class="absolute end-0 top-28 z-auto w-56 overflow-hidden rounded border border-gray-300 bg-white shadow-sm md:hidden" x-show="open" x-cloak>      
+    <div role="menu" class="absolute end-0 top-18 z-auto w-56 overflow-hidden rounded border border-gray-300 bg-white shadow-sm md:hidden" x-show="open" x-cloak>      
         {{- range $n, $m := $menu }}
         <a href="{{ .URL }}" class="block px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900" role="menuitem">
         {{- .Name -}}
