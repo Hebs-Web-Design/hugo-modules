@@ -21,11 +21,11 @@
             <option value="" disabled>Please select</option>
             {{- with .list -}}
             {{- range . -}}
-            <option value="{{ .value }}">{{ .text }}</option>
+            <option{{ with .class}} class="{{ . }}"{{ end }} value="{{ .id }}">{{ .value }}</option>
             {{- end -}}
             {{- else with (index . "x-for") -}}
             <template x-for="item in {{ . }}">
-                <option :value="item.id" x-text="item.value"></option>
+                <option :value="item.id" :class="item.class || ''" x-text="item.value"></option>
             </template>
             {{- end -}}
         </select>
