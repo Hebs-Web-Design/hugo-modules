@@ -27,7 +27,6 @@
                 {{- partial "b-icon" (dict "icon" (index . 0) "class" "size-4 text-gray-500") -}}
                 {{- partial "b-icon" (dict "icon" (index . 1) "class" (printf "size-4 text-%s-700" $basecolor)) -}}
             {{- end -}}
-        {{- end -}}
         {{- else -}}
             {{- /* If it wasn't a slice then use the string as the icon */ -}}
             {{- partial "b-icon" (dict "icon" . "class" (printf "size-4 text-%s-700" $basecolor)) -}}
