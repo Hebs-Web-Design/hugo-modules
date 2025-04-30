@@ -1,4 +1,4 @@
-{{- $opts := dict ("id" (.Get "id"))-}}
+{{- $opts := dict ("id" (.Get "id")) -}}
 {{- with (.Get "title") }}{{ $opts = merge $opts (dict "title" .) }}{{ end -}}
 {{- with (.Get "icons") }}{{ $opts = merge $opts (dict "icons" .) }}{{ end -}}
 {{- with (.Get ":title") }}{{ $opts = merge $opts (dict ":title" .) }}{{ end -}}
