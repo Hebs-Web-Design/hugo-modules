@@ -3,5 +3,6 @@
 {{- with index . "x-data" }}{{ $opts = merge $opts (dict "x-data" (.Get "x-data")) }}{{ end -}}
 {{- with index . "x-for" }}{{ $opts = merge $opts (dict "x-for" (.Get "x-for")) }}{{ end -}}
 {{- with index . "x-model" }}{{ $opts = merge $opts (dict "x-model" (.Get "x-model")) }}{{ end -}}
+{{- with index . "x-text" }}{{ $opts = merge $opts (dict "x-text" (.Get "x-text")) }}{{ end -}}
 {{- with index . "list" }}{{ $opts = merge $opts (dict "list" (.Get "list")) }}{{ end -}}
 {{- partial "components/select" $opts -}}

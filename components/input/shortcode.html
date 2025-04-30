@@ -2,5 +2,6 @@
 {{- with index . "id" }}{{ $opts = merge $opts (dict "id" (.Get "id")) }}{{ end -}}
 {{- with index . "type" }}{{ $opts = merge $opts (dict "type" (.Get "type")) }}{{ end -}}
 {{- with index . "x-model" }}{{ $opts = merge $opts (dict "x-model" (.Get "x-model")) }}{{ end -}}
+{{- with index . "x-text" }}{{ $opts = merge $opts (dict "x-text" (.Get "x-text")) }}{{ end -}}
 {{- with index . ":value" }}{{ $opts = merge $opts (dict ":value" (.Get ":value")) }}{{ end -}}
 {{- partial "components/input" $opts -}}
