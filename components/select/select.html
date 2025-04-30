@@ -1,7 +1,23 @@
-<div{{ with (index . "x-data") }} x-data="{{ . }}"{{ end }}>
-    <label{{ with .id }} for="{{ . }}"{{ end }}>
-        <span class="text-sm font-medium text-gray-700"{{ with index . "x-text" }} x-text="{{ . | safeHTMLAttr }}"{{ end }}>{{ .label }}</span>
-        <select{{ with .id }} id="{{ . }}" {{ end }} name="{{ anchorize .label }}" class="mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm"{{ with index . "x-model" }} x-model.fill="{{ . | safeHTMLAttr  }}"{{ end }}>
+{{- $basecolor := default "teal" site.Params.components.color -}}
+<div
+    {{- with (index . "x-data") }} x-data="{{ . }}"{{ end -}}
+    {{- with index . "x-cloak" }} x-cloak{{ end -}}
+>
+    <label
+        {{- with .id }} for="{{ . }}"{{ end -}}
+    >
+        <span
+            class="text-sm font-medium text-gray-700"
+            {{- with index . "x-text" }} x-text="{{ . | safeHTMLAttr }}"{{ end -}}
+        >
+            {{- .label -}}
+        </span>
+        <select
+            class="peer mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm user-invalid:ring-red-500 user-valid:ring-{{ $basecolor }}-600"
+            {{- with .id }} id="{{ . }}"{{ end -}}
+            {{- with index . "x-model" }} x-model.fill="{{ . | safeHTMLAttr  }}"{{ end -}}
+            {{- with .required }} required{{ end -}}
+        >
             <option value="" disabled>Please select</option>
             {{- with .list -}}
             {{- range . -}}
@@ -13,5 +29,8 @@
             </template>
             {{- end -}}
         </select>
+        {{- with .invalid -}}
+        <span class="hidden peer-user-invalid:block text-red-500 text-sm italic">{{ . }}</span>
+        {{- end -}}
     </label>
 </div>
