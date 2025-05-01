@@ -13,11 +13,11 @@
     <input
         class="mt-0.5 w-full rounded border-gray-300 shadow-sm sm:text-sm peer user-invalid:ring-red-500 out-of-range:ring-red-500 user-valid:ring-{{ $basecolor }}-600"
         {{- with .type }} type="{{ . }}"
-        {{- if eq . "number" -}}
-        {{- with $.min -}} min="{{ . }}"{{ end -}}
-        {{- with $.max -}} max="{{ . }}"{{ end -}}
-        {{- with $.step -}} step="{{ . }}"{{ end -}}
-        {{- end -}}
+        {{-   if eq . "number" -}}
+        {{-     with $.min -}} min="{{ . }}"{{ end -}}
+        {{-     with $.max -}} max="{{ . }}"{{ end -}}
+        {{-     with $.step -}} step="{{ . }}"{{ end -}}
+        {{-   end -}}
         {{- end -}}
         {{- with .id }} id="{{ . | safeHTMLAttr }}"{{ end -}}
         {{- with index . "x-model" }} x-model.fill="{{ . | safeHTMLAttr  }}"{{ end -}}
