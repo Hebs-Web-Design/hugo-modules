@@ -1,0 +1,30 @@
+{{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
+{{- $variant := (default "24/solid" .variant) -}}
+{{- $scratch := newScratch -}}
+{{- range $attr, $value := . -}}
+{{-   $scratch.Set $attr $value -}}
+{{- end -}}
+{{- with .icon -}}
+{{-   $icon := resources.Get (printf "heroicons/%s/%s.svg" $variant .) -}}
+{{-   with $icon -}}
+{{-     $scratch.Set "content" $icon.Content -}}
+{{-   else -}}
+{{-     errorf "Could not load the %q variant of %q" $variant . -}}
+{{-   end -}}
+{{-   $svg := $scratch.Get "content" -}}
+{{-   range $attr := $attrList -}}
+{{-     with ($scratch.Get $attr) -}}
+{{-       if (eq $attr "title") -}}
+{{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg -}}
+{{-       else if (eq $attr ":title") -}}
+{{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title x-text=\"%s\"></title>\n</svg>" .) $svg -}}
+{{-       else if (eq $attr "x-cloak") -}}
+{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $attr) $svg -}}
+{{-       else -}}
+{{-         $value := delimit (slice $attr (printf "\"%s\"" .)) "=" -}}
+{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $value) $svg -}}
+{{-       end -}}
+{{-     end -}}
+{{-   end -}}
+{{-   $svg | safeHTML -}}
+{{- end -}}

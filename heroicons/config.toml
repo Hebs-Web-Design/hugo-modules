@@ -1,0 +1,16 @@
+[module]
+  [[module.imports]]
+    path = "github.com/tailwindlabs/heroicons"
+
+  [[module.imports.mounts]]
+    source = "optimized"
+    target = "assets/heroicons"
+
+  [[module.mounts]]
+    source = "partial.html"
+    target = "layouts/partials/h-icon.html"
+
+  [[module.mounts]]
+    source = "shortcode.html"
+    target = "layouts/shortcodes/h-icon.html"
+    
