@@ -1,4 +1,4 @@
-module github.com/hebs-web-design/hugo-modules/heroicons
+module github.com/hebs-web-design/hugo-modules/heroicons/v2
 
 go 1.24
 

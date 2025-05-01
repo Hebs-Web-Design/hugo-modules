@@ -1,5 +1,18 @@
 {{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
-{{- $variant := (default "24/solid" .variant) -}}
+{{- $variant := "" -}}
+{{- with .variant -}}
+{{-   if ne . "outline" "solid" "mini" "micro" -}}
+{{-     errorf "Invalid variant %q" . -}}
+{{-   end -}}
+{{- if eq . "outline" -}}
+{{-   $variant = "24/outline" -}}
+{{- else if eq . "solid" -}}
+{{-   $variant = "24/solid" -}}
+{{- else if eq . "mini" -}}
+{{-   $variant = "20/solid" -}}
+{{- else if eq . "micro" -}}
+{{-   $variant = "16/solid" -}}
+{{- end -}}
 {{- $scratch := newScratch -}}
 {{- range $attr, $value := . -}}
 {{-   $scratch.Set $attr $value -}}

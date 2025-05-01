@@ -33,7 +33,7 @@ The following options can be passed to the partial (via a "dict") or the shortco
 
 * icon : The name of the Bootstrap Icon to show (requred).
 * class : CSS class to apply to SVG
-* variant : Choose and alternate variant, one of `24/solid`, `24/outline`, `20/solid` or `16/solid`. Defaults to `24/solid`
+* variant : Choose and alternate variant, one of `outline`, `solid`, `mini` or `micro`. Defaults to `outline`
 * title : Adds a `<title>` element to the SVG output (optional)
 * :class : Allows setting the class via Alpine.js (see https://alpinejs.dev/directives/bind#shorthand-syntax for more information)
 * :title : Allows setting the title via Alpine.js
