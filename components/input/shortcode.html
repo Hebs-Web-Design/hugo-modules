@@ -1,13 +1,16 @@
 {{- $opts := dict "label" (.Get "label") -}}
-{{- with index . "id" }}{{ $opts = merge $opts (dict "id" (.Get "id")) }}{{ end -}}
-{{- with index . "type" }}{{ $opts = merge $opts (dict "type" (.Get "type")) }}{{ end -}}
-{{- with index . "min" }}{{ $opts = merge $opts (dict "min" (.Get "min")) }}{{ end -}}
-{{- with index . "max" }}{{ $opts = merge $opts (dict "max" (.Get "max")) }}{{ end -}}
-{{- with index . "step" }}{{ $opts = merge $opts (dict "step" (.Get "step")) }}{{ end -}}
-{{- with index . "required" }}{{ $opts = merge $opts (dict "required" (.Get "required")) }}{{ end -}}
-{{- with index . "x-model" }}{{ $opts = merge $opts (dict "x-model" (.Get "x-model")) }}{{ end -}}
-{{- with index . "x-text" }}{{ $opts = merge $opts (dict "x-text" (.Get "x-text")) }}{{ end -}}
-{{- with index . "x-cloak" }}{{ $opts = merge $opts (dict "x-cloak" (.Get "x-cloak")) }}{{ end -}}
-{{- with index . ":value" }}{{ $opts = merge $opts (dict ":value" (.Get ":value")) }}{{ end -}}
-{{- with index . "invalid" }}{{ $opts = merge $opts (dict "invalid" (.Get "invalid")) }}{{ end -}}
+{{- /* standard options */ -}}
+{{- with (.Get "id") }}{{ $opts = merge $opts (dict "id" .) }}{{ end -}}
+{{- with (.Get "type") }}{{ $opts = merge $opts (dict "type" .) }}{{ end -}}
+{{- with (.Get "min") }}{{ $opts = merge $opts (dict "min" .) }}{{ end -}}
+{{- with (.Get "max") }}{{ $opts = merge $opts (dict "max" .) }}{{ end -}}
+{{- with (.Get "step") }}{{ $opts = merge $opts (dict "step" .) }}{{ end -}}
+{{- with (.Get "required") }}{{ $opts = merge $opts (dict "required" .) }}{{ end -}}
+{{- /* alpinejs options */ -}}
+{{- with (.Get "x-show") }}{{ $opts = merge $opts (dict "x-show" .) }}{{ end -}}
+{{- with (.Get "x-model") }}{{ $opts = merge $opts (dict "x-model" .) }}{{ end -}}
+{{- with (.Get "x-cloak") }}{{ $opts = merge $opts (dict "x-cloak" .) }}{{ end -}}
+{{- with (.Get ":value") }}{{ $opts = merge $opts (dict ":value" .) }}{{ end -}}
+{{- /* extra options */ -}}
+{{- with (.Get "invalid") }}{{ $opts = merge $opts (dict "invalid" .) }}{{ end -}}
 {{- partial "components/input" $opts -}}

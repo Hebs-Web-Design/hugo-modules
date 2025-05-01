@@ -1,6 +1,7 @@
 {{- $basecolor := default "teal" site.Params.components.color -}}
 <label
     {{- with .id }} for="{{ . | safeHTMLAttr }}"{{ end -}}
+    {{- with index . "x-show" }} x-show="{{ . }}"{{ end -}}
     {{- with index . "x-cloak" }} x-cloak{{ end -}}
 >
     <span
