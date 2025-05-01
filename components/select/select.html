@@ -23,10 +23,12 @@
             {{- range . -}}
             <option{{ with .class}} class="{{ . }}"{{ end }} value="{{ .id }}">{{ with .value }}{{ . }}{{ else }}{{ strings.FirstUpper .id }}{{ end }}</option>
             {{- end -}}
-            {{- else with (index . "x-for") -}}
+            {{- else -}}
+            {{- with (index . "x-for") -}}
             <template x-for="item in {{ . }}">
                 <option :value="item.id" :class="item.class || ''" x-text="item.value"></option>
             </template>
+            {{- end -}}
             {{- end -}}
         </select>
         {{- with .invalid -}}
