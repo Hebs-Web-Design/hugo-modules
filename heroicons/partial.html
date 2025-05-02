@@ -4,6 +4,7 @@
 {{-   if ne . "outline" "solid" "mini" "micro" -}}
 {{-     errorf "Invalid variant %q defaulting to %q" . $variant -}}
 {{-   end -}}
+{{- end -}}
 {{- if eq . "outline" -}}
 {{-   $variant = "24/outline" -}}
 {{- else if eq . "solid" -}}
