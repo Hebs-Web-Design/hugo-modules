@@ -1,22 +1,24 @@
 {{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
-{{- $variantDir := "outline" -}}
+{{- $variantDir := "24/outline" -}}
 {{- with .variant -}}
 {{-   if ne . "outline" "solid" "mini" "micro" -}}
 {{-     warnf "Invalid variant %q defaulting location to %q" . $variantDir -}}
+{{-   else -}}
+{{-     if eq . "outline" -}}
+{{-       $variantDir = "24/outline" -}}
+{{-     else if eq . "solid" -}}
+{{-       $variantDir = "24/solid" -}}
+{{-     else if eq . "mini" -}}
+{{-       $variantDir = "20/solid" -}}
+{{-     else if eq . "micro" -}}
+{{-       $variantDir = "16/solid" -}}
+{{-     end -}}
 {{-   end -}}
 {{- end -}}
-{{- if eq . "outline" -}}
-{{-   $variantDir = "24/outline" -}}
-{{- else if eq . "solid" -}}
-{{-   $variantDir = "24/solid" -}}
-{{- else if eq . "mini" -}}
-{{-   $variantDir = "20/solid" -}}
-{{- else if eq . "micro" -}}
-{{-   $variantDir = "16/solid" -}}
-{{- end -}}
-{{- $scratch := newScratch -}}
+{{- $opts := dict -}}
 {{- range $attr, $value := . -}}
-{{-   $scratch.Set $attr $value -}}
+{{-   if -}}
+{{-   $opts = merge $opts (dict $attr $value) -}}
 {{- end -}}
 {{- with $icon := .icon -}}
 {{-   $iconPath := printf "heroicons/%s/%s.svg" $variantDir $icon -}}
