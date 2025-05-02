@@ -1,4 +1,6 @@
 [module]
+  _merge = "deep"
+
   [module.hugoVersion]
     min = "v0.146.0"
 
