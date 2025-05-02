@@ -1,5 +1,5 @@
 {{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
-{{- $variantDir := "24/outline" -}}
+{{- $variantDir := "outline" -}}
 {{- with .variant -}}
 {{-   if ne . "outline" "solid" "mini" "micro" -}}
 {{-     warnf "Invalid variant %q defaulting location to %q" . $variantDir -}}
@@ -18,8 +18,9 @@
 {{- range $attr, $value := . -}}
 {{-   $scratch.Set $attr $value -}}
 {{- end -}}
-{{- with .icon -}}
-{{-   with (resources.Get (printf "heroicons/%s/%s.svg" $variantDir .)) -}}
+{{- with $icon := .icon -}}
+{{-   $iconPath := printf "heroicons/%s/%s.svg" $variantDir $icon -}}
+{{-   with (resources.Get (printf "heroicons/%s/%s.svg" $variantDir $icon)) -}}
 {{-     $svg := .Content -}}
 {{-     range $attr := $attrList -}}
 {{-       with ($scratch.Get $attr) -}}
@@ -37,7 +38,7 @@
 {{-     end -}}
 {{-     $svg | safeHTML -}}
 {{-   else -}}
-{{-     errorf "Could not load the %q variant of %q" $variant . -}}
+{{-     errorf "Could not load %q" $iconPath -}}
 {{-   end -}}
 {{- else -}}
 {{-   warnf "No icon provided for %q" templates.Current.Name -}}
