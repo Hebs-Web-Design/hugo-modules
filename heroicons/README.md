@@ -4,7 +4,7 @@ Hugo module to embed SVG icons from [heroicons](https://github.com/tailwindlabs/
 
 ```toml
 [[module.imports]]
-path = "github.com/hebs-web-design/hugo-modules/heroicons"
+path = "github.com/hebs-web-design/hugo-modules/heroicons/v2"
 ```
 
 ## Usage
@@ -40,7 +40,6 @@ The following options can be passed to the partial (via a "dict") or the shortco
 * x-show : See https://alpinejs.dev/directives/show
 * @click : See https://alpinejs.dev/directives/on#shorthand-syntax
 * x-cloak : See https://alpinejs.dev/directives/cloak
-
 
 When calling the shortcode using positional parameters only "icon" can be set.
 
