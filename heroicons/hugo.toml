@@ -3,6 +3,7 @@
     path = "github.com/tailwindlabs/heroicons"
 
   [[module.imports.mounts]]
+    includeFiles = "**.svg"
     source = "optimized"
     target = "assets/heroicons"
 

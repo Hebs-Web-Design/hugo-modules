@@ -1,44 +1,44 @@
 {{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
-{{- $variant := "outline" -}}
+{{- $variantDir := "24/outline" -}}
 {{- with .variant -}}
 {{-   if ne . "outline" "solid" "mini" "micro" -}}
-{{-     errorf "Invalid variant %q defaulting to %q" . $variant -}}
+{{-     warnf "Invalid variant %q defaulting location to %q" . $variantDir -}}
 {{-   end -}}
 {{- end -}}
 {{- if eq . "outline" -}}
-{{-   $variant = "24/outline" -}}
+{{-   $variantDir = "24/outline" -}}
 {{- else if eq . "solid" -}}
-{{-   $variant = "24/solid" -}}
+{{-   $variantDir = "24/solid" -}}
 {{- else if eq . "mini" -}}
-{{-   $variant = "20/solid" -}}
+{{-   $variantDir = "20/solid" -}}
 {{- else if eq . "micro" -}}
-{{-   $variant = "16/solid" -}}
+{{-   $variantDir = "16/solid" -}}
 {{- end -}}
 {{- $scratch := newScratch -}}
 {{- range $attr, $value := . -}}
 {{-   $scratch.Set $attr $value -}}
 {{- end -}}
 {{- with .icon -}}
-{{-   $icon := resources.Get (printf "heroicons/%s/%s.svg" $variant .) -}}
-{{-   with $icon -}}
-{{-     $scratch.Set "content" $icon.Content -}}
+{{-   with (resources.Get (printf "heroicons/%s/%s.svg" $variantDir .)) -}}
+{{-     $svg := .Content -}}
+{{-     range $attr := $attrList -}}
+{{-       with ($scratch.Get $attr) -}}
+{{-         if (eq $attr "title") -}}
+{{-           $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg -}}
+{{-         else if (eq $attr ":title") -}}
+{{-           $svg = replaceRE "(.*)</svg>" (printf "$1\n<title x-text=\"%s\"></title>\n</svg>" .) $svg -}}
+{{-         else if (eq $attr "x-cloak") -}}
+{{-           $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $attr) $svg -}}
+{{-         else -}}
+{{-           $value := delimit (slice $attr (printf "\"%s\"" .)) "=" -}}
+{{-           $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $value) $svg -}}
+{{-         end -}}
+{{-       end -}}
+{{-     end -}}
+{{-     $svg | safeHTML -}}
 {{-   else -}}
 {{-     errorf "Could not load the %q variant of %q" $variant . -}}
 {{-   end -}}
-{{-   $svg := $scratch.Get "content" -}}
-{{-   range $attr := $attrList -}}
-{{-     with ($scratch.Get $attr) -}}
-{{-       if (eq $attr "title") -}}
-{{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg -}}
-{{-       else if (eq $attr ":title") -}}
-{{-         $svg = replaceRE "(.*)</svg>" (printf "$1\n<title x-text=\"%s\"></title>\n</svg>" .) $svg -}}
-{{-       else if (eq $attr "x-cloak") -}}
-{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $attr) $svg -}}
-{{-       else -}}
-{{-         $value := delimit (slice $attr (printf "\"%s\"" .)) "=" -}}
-{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $value) $svg -}}
-{{-       end -}}
-{{-     end -}}
-{{-   end -}}
-{{-   $svg | safeHTML -}}
+{{- else -}}
+{{-   warnf "No icon provided for %q" templates.Current.Name -}}
 {{- end -}}
