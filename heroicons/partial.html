@@ -1,8 +1,8 @@
 {{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
-{{- $variant := "" -}}
+{{- $variant := "outline" -}}
 {{- with .variant -}}
 {{-   if ne . "outline" "solid" "mini" "micro" -}}
-{{-     errorf "Invalid variant %q" . -}}
+{{-     errorf "Invalid variant %q defaulting to %q" . $variant -}}
 {{-   end -}}
 {{- if eq . "outline" -}}
 {{-   $variant = "24/outline" -}}
