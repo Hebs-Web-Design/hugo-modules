@@ -1,5 +1,6 @@
 {{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
 {{- $variantDir := "24/outline" -}}
+{{- /* set path to svg based on variant */ -}}
 {{- with .variant -}}
 {{-   if ne . "outline" "solid" "mini" "micro" -}}
 {{-     warnf "Invalid variant %q defaulting location to %q" . $variantDir -}}
@@ -15,29 +16,31 @@
 {{-     end -}}
 {{-   end -}}
 {{- end -}}
+{{- /* set options from context if they are in our list of attributes */ -}}
 {{- $opts := dict -}}
 {{- range $attr, $value := . -}}
-{{-   if -}}
-{{-   $opts = merge $opts (dict $attr $value) -}}
+{{-   if collections.In $attrList $attr -}}
+{{-     $opts = merge $opts (dict $attr $value) -}}
+{{-   end -}}
 {{- end -}}
 {{- with $icon := .icon -}}
 {{-   $iconPath := printf "heroicons/%s/%s.svg" $variantDir $icon -}}
+{{- /* load icon contents */ -}}
 {{-   with (resources.Get (printf "heroicons/%s/%s.svg" $variantDir $icon)) -}}
 {{-     $svg := .Content -}}
-{{-     range $attr := $attrList -}}
-{{-       with ($scratch.Get $attr) -}}
-{{-         if (eq $attr "title") -}}
-{{-           $svg = replaceRE "(.*)</svg>" (printf "$1\n<title>%s</title>\n</svg>" .) $svg -}}
-{{-         else if (eq $attr ":title") -}}
-{{-           $svg = replaceRE "(.*)</svg>" (printf "$1\n<title x-text=\"%s\"></title>\n</svg>" .) $svg -}}
-{{-         else if (eq $attr "x-cloak") -}}
-{{-           $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $attr) $svg -}}
-{{-         else -}}
-{{-           $value := delimit (slice $attr (printf "\"%s\"" .)) "=" -}}
-{{-           $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $value) $svg -}}
-{{-         end -}}
+{{- /* get attributes to set from options map */ -}}
+{{-     range $k, $v := $opts -}}
+{{-       if eq $k "title" -}}
+{{-         $svg = replaceRE "(.*)</svg>" (printf "$1  <title>%s</title>\n</svg>" .) $svg -}}
+{{-       else if eq $k ":title" -}}
+{{-         $svg = replaceRE "(.*)</svg>" (printf "$1  <title x-text=%q></title>\n</svg>" .) $svg -}}
+{{-       else if eq $k "x-cloak" -}}
+{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $k) $svg -}}
+{{-       else -}}
+{{-         $svg = replaceRE "<svg (.*)" (printf "<svg %s=%q $1" $k $v) $svg -}}
 {{-       end -}}
 {{-     end -}}
+{{- /* output modified svg */ -}}
 {{-     $svg | safeHTML -}}
 {{-   else -}}
 {{-     errorf "Could not load %q" $iconPath -}}
