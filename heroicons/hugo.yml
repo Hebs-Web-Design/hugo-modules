@@ -1,0 +1,15 @@
+module:
+  hugoVersion:
+    min: v0.146.0
+  imports:
+    - path: github.com/hebs-web-design/hugo-modules/utilities
+    - path: github.com/tailwindlabs/heroicons
+      mounts:
+        - includeFiles: "**.svg"
+          source: optimized
+          target: assets/heroicons
+  mounts:
+    - source: partial.html
+      target: layouts/partials/h-icon.html
+    - source: shortcode.html
+      target: layouts/shortcodes/h-icon.html
