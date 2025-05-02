@@ -1,0 +1,14 @@
+{{- $options := dict -}}
+{{- if .IsNamedParams -}}
+{{-   $options = merge $options dict "href" (.Get "href") -}}
+{{-   with .Get "class" }}{{ $options = merge $options (dict "class" .) }}{{ end -}}
+{{-   with .Get "title" }}{{ $options = merge $options (dict "title" .) }}{{ end -}}
+{{-   with .Get ":class" }}{{ $options = merge $options (dict ":class" .) }}{{ end -}}
+{{-   with .Get ":title" }}{{ $options = merge $options (dict ":title" .) }}{{ end -}}
+{{-   with .Get "x-show" }}{{ $options = merge $options (dict "x-show" .) }}{{ end -}}
+{{-   with .Get "x-cloak" }}{{ $options = merge $options (dict "x-cloak" .) }}{{ end -}}
+{{-   with .Get "@click" }}{{ $options = merge $options (dict "@click" .) }}{{ end -}}
+{{- else -}}
+{{-   $options = dict "href" (.Get 0) -}}
+{{- end -}}
+{{- partial "svg" $options -}}

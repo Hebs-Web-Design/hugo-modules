@@ -1,0 +1,35 @@
+{{- /* get path to SVG */ -}}
+{{- $href := "" -}}
+{{- with .href -}}
+{{-   $href = . -}}
+{{- else -}}
+{{-   errorf "No href provided in %q" templates.Current.Name -}}
+{{- end -}}
+{{- $attrList := slice "class" ":class" "title" ":title" "x-show" "@click" "x-cloak" -}}
+{{- /* set options from context if they are in our list of attributes */ -}}
+{{- $opts := dict -}}
+{{- range $attr, $value := . -}}
+{{-   if collections.In $attrList $attr -}}
+{{-     $opts = merge $opts (dict $attr $value) -}}
+{{-   end -}}
+{{- end -}}
+{{- /* load svg contents */ -}}
+{{- with resources.Get $href -}}
+{{-   $svg := .Content -}}
+{{- /* get attributes to set from options map */ -}}
+{{-   range $k, $v := $opts -}}
+{{-     if eq $k "title" -}}
+{{-       $svg = replaceRE "(.*)</svg>" (printf "$1  <title>%s</title>\n</svg>" .) $svg -}}
+{{-     else if eq $k ":title" -}}
+{{-       $svg = replaceRE "(.*)</svg>" (printf "$1  <title x-text=%q></title>\n</svg>" .) $svg -}}
+{{-     else if eq $k "x-cloak" -}}
+{{-       $svg = replaceRE "<svg (.*)" (printf "<svg %s $1" $k) $svg -}}
+{{-     else -}}
+{{-       $svg = replaceRE "<svg (.*)" (printf "<svg %s=%q $1" $k $v) $svg -}}
+{{-     end -}}
+{{-   end -}}
+{{- /* output modified svg */ -}}
+{{-   $svg | safeHTML -}}
+{{- else -}}
+{{-   errorf "Could not load %q in %q" $href templates.Current.Name -}}
+{{- end -}}
