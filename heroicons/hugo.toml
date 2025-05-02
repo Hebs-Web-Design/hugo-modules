@@ -1,20 +1,15 @@
 [module]
-  _merge = "deep"
-
   [module.hugoVersion]
     min = "v0.146.0"
 
   [[module.imports]]
     path = "github.com/tailwindlabs/heroicons"
 
-  [[module.imports]]
-    path = "github.com/hebs-web-design/hugo-modules/utilities"
-
   [[module.imports.mounts]]
     includeFiles = "**.svg"
     source = "optimized"
     target = "assets/heroicons"
-
+  
   [[module.mounts]]
     source = "partial.html"
     target = "layouts/partials/h-icon.html"
@@ -22,4 +17,6 @@
   [[module.mounts]]
     source = "shortcode.html"
     target = "layouts/shortcodes/h-icon.html"
-    
+
+  [[module.imports]]
+    path = "github.com/hebs-web-design/hugo-modules/utilities"
