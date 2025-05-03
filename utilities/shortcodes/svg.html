@@ -1,6 +1,6 @@
 {{- $options := dict -}}
 {{- if .IsNamedParams -}}
-{{-   $options = merge $options dict "href" (.Get "href") -}}
+{{-   $options = merge $options (dict "href" (.Get "href")) -}}
 {{-   with .Get "class" }}{{ $options = merge $options (dict "class" .) }}{{ end -}}
 {{-   with .Get "title" }}{{ $options = merge $options (dict "title" .) }}{{ end -}}
 {{-   with .Get ":class" }}{{ $options = merge $options (dict ":class" .) }}{{ end -}}
