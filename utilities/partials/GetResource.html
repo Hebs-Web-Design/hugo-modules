@@ -1,13 +1,16 @@
-{{- $name := .name }}
-{{- $scratch := newScratch }}
-{{- with .Page }}
-    {{- with .Resources.Get $name }}
-        {{- $scratch.Set "resource" . }}
-    {{- else }}
-        {{- $scratch.Set "resource" (resources.Get $name) }}
-    {{- end }}
-{{- else }}
-    {{- $scratch.Set "resource" (resources.Get $name) }}
-{{- end}}
-{{- $resource := $scratch.Get "resource" }}
-{{- return $resource }}
+{{- $name := .name -}}
+{{- $scratch := newScratch -}}
+{{- /* was a .Page provided? */ -}}
+{{- with .Page -}}
+{{- /* try to get resource from .Page.Resources.Get first */ -}}
+{{-   with .Resources.Get $name -}}
+{{-     $scratch.Set "resource" . -}}
+{{- /* fall back to global resources.Get first */ -}}
+{{-   else -}}
+{{-     $scratch.Set "resource" (resources.Get $name) -}}
+{{-   end -}}
+{{- /* get from global resources.Get call */ -}}
+{{- else -}}
+{{-   $scratch.Set "resource" (resources.Get $name) -}}
+{{- end -}}
+{{- return ($scratch.Get "resource") -}}

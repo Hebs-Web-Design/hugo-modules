@@ -14,7 +14,11 @@
 {{-   end -}}
 {{- end -}}
 {{- /* load svg contents */ -}}
-{{- with resources.Get $href -}}
+{{- $r := dict "name" $href -}}
+{{- with .Page -}}
+{{-   $r = $r | append . -}}
+{{- end -}}
+{{- with (partial "GetResource" $r) -}}
 {{-   $svg := .Content -}}
 {{- /* get attributes to set from options map */ -}}
 {{-   range $k, $v := $opts -}}
