@@ -2,3 +2,4 @@ github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21400.160 h1:RWZDYyOdsSrn
 github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21400.160/go.mod h1:tWh5rYhaSFloG0EzWi/fZ6YLVuG2Q8nepYntdPEjKfc=
 github.com/hebs-web-design/hugo-modules/tailwindcss/v3 v3.141.21500 h1:yXW2h5EKGYGy9FZAnB+AZmhdZaaTt1/qCO6m/JuTn6I=
 github.com/hebs-web-design/hugo-modules/tailwindcss/v3 v3.141.21500/go.mod h1:RcNFatDjMIiqF4uROMRk349NgXvde8jqSHOQgOHNgNs=
+github.com/hebs-web-design/hugo-modules/tailwindcss/v4 v4.110.141/go.mod h1:twf5WIxbv21cCZy4Z0RPZsO0lF7GzrW3ZgIGsH9HyWA=
