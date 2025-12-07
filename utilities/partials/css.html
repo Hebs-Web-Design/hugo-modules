@@ -1,9 +1,6 @@
 {{ $options := dict "inlineImports" true -}}
 {{- $css := resources.Get "css/main.css" | postCSS $options -}}
-{{- $preload := dict "as" "style" -}}
 {{- if hugo.IsProduction -}}
     {{- $css = $css | minify | fingerprint | resources.PostProcess -}}
 {{- end -}}
-{{- $preload = merge $preload (dict "href" $css.RelPermalink) -}}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
-{{- page.Scratch.Add "preload" (slice $preload) -}}

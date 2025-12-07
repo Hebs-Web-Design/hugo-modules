@@ -1,8 +1,5 @@
 {{- $js := resources.Get "js/main.js" | js.Build -}}
-{{- $preload := dict "as" "script" -}}
 {{- if hugo.IsProduction -}}
     {{- $js = $js | minify | fingerprint -}}
 {{- end -}}
-{{- $preload = merge $preload (dict "href" $js.RelPermalink) -}}
-<script src="{{ $js.RelPermalink }}" async></script>
-{{- page.Scratch.Add "preload" (slice $preload) -}}
+<script src="{{ $js.RelPermalink }}"{{ with $js.Data.Integrity }} integrity="{{ . }}"{{ end }} crossorigin="anonymous" async></script>
