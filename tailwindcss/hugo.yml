@@ -5,3 +5,5 @@ module:
   mounts:
     - source: tailwind.html
       target: layouts/partials/tailwind.html
+    - source: tailwind.css
+      target: assetss/css/main.css
