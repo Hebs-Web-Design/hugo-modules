@@ -6,4 +6,4 @@ module:
     - source: tailwind.html
       target: layouts/partials/tailwind.html
     - source: tailwind.css
-      target: assets/css/main.css
+      target: assets/css/tailwind.css
