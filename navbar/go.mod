@@ -1,8 +1,6 @@
 module github.com/hebs-web-design/hugo-modules/navbar
 
-go 1.22
-
-toolchain go1.22.5
+go 1.25
 
 require (
 	github.com/hebs-web-design/hugo-modules/alpinejs/search v1.4.2 // indirect
