@@ -2,4 +2,6 @@ module github.com/hebs-web-design/hugo-modules/alpinejs/carousel
 
 go 1.25
 
-require github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21400.190 indirect // indirect
+replace github.com/hebs-web-design/hugo-modules/alpinejs/v3 => ../
+
+require github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21500.190 // indirect
