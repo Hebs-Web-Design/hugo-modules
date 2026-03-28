@@ -4,7 +4,7 @@
 
 1. Add to hugo module config:
    ```toml
-   [build.buidStats]
+   [build.buildStats]
      enable = true
    
    [[build.cachebusters]]
