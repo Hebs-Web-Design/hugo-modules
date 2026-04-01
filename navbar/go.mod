@@ -4,6 +4,6 @@ go 1.25
 
 require (
 	github.com/hebs-web-design/hugo-modules/alpinejs/search v1.4.2 // indirect
-	github.com/hebs-web-design/hugo-modules/alpinejs/toggler v1.5.2 // indirect
+	github.com/hebs-web-design/hugo-modules/alpinejs/toggler v1.5.4 // indirect
 	github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21400.190 // indirect
 )
