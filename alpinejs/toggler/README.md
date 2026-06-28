@@ -4,6 +4,16 @@ This is a simple toggler that can be used to toggle the visibly state of an obje
 
 This may be a modal, a menu or anything else.
 
+## Hugo Import
+
+Add this to your Hugo project's `hugo.toml`:
+
+```toml
+[module]
+  [[module.imports]]
+    path = "github.com/gohugoio/hugo-mod-alpinejs/alpinejs/v3"
+```
+
 ## Usage
 
 Use this javascript:
