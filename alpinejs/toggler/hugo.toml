@@ -1,8 +1,5 @@
 [module]
 
-  [[module.imports]]
-    path = "github.com/hebs-web-design/hugo-modules/alpinejs/v3"
-
   [[module.mounts]]
     source = "toggler.js"
     target = "assets/js/alpinejs/toggler.js"
