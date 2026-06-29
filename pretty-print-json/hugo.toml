@@ -1,0 +1,2 @@
+[[module.imports]]
+path = 'github.com/Hebs-Web-Design/hugo-modules/pretty-print-json/v3'

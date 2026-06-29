@@ -1,0 +1,70 @@
+# Renovate post-script.
+#
+# When Renovate opens a PR bumping the npm versions in package.json, this
+# workflow regenerates the Hugo Module wrappers with npmtohugomod and commits the
+# result back onto the Renovate branch. The outcome is a single PR with the
+# version bump *and* the regenerated wrappers, ready to merge.
+#
+# After merging to main, run `npmtohugomod release` and push the tags as
+# documented in README.md ("Updates").
+name: Renovate post-script
+
+on:
+  pull_request:
+    paths:
+      - pretty-print-json/package.json
+      - qr/package.json
+
+# The push below uses the default GITHUB_TOKEN, which needs write access to the
+# repo contents. For Dependabot-triggered runs the token is read-only unless
+# elevated here.
+permissions:
+  contents: write
+
+concurrency:
+  group: renovate-npmtohugomod-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    # Only act on Renovate's own PRs.
+    if: github.actor == 'renovate[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the Renovate branch
+        uses: actions/checkout@v4
+        with:
+          # Check out the PR head branch (not the detached merge ref) so we can
+          # commit back to it. persist-credentials (default true) keeps the
+          # GITHUB_TOKEN configured for the later git push.
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+
+      - name: Install npmtohugomod
+        run: go install github.com/gohugoio/npmtohugomod@latest
+
+      - parallel:
+        - name: Regenerate the Hugo Module wrappers for pretty-print-json
+          run: |
+            npmtohugomod
+          working-directory: ./pretty-print-json
+        - name: Regenerate the Hugo Module wrappers for qr
+          run: |
+            npmtohugomod
+          working-directory: ./qr
+
+      - name: Commit and push the regenerated wrappers
+        run: |
+          git config user.name 'renovate[bot]'
+          git config user.email '29139614+renovate[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo "npmtohugomod produced no changes; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Regenerate Hugo Module wrappers (npmtohugomod)"
+          git push origin HEAD:${{ github.head_ref }}
