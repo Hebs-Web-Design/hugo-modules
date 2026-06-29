@@ -1,0 +1,9 @@
+{
+  "name": "qr",
+  "version": "v0.6.0",
+  "dependencies": null,
+  "dist": {
+    "shasum": "00c3d080dc76adf5d3754d9ad7ff0f9263dee2e0",
+    "tarball": "https://registry.npmjs.org/qr/-/qr-0.6.0.tgz"
+  }
+}

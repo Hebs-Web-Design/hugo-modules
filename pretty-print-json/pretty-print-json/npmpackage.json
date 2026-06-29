@@ -1,0 +1,9 @@
+{
+  "name": "pretty-print-json",
+  "version": "v3.0.8",
+  "dependencies": null,
+  "dist": {
+    "shasum": "ae59295e5a7a604c7fe78e197ed2b0d94e240e8a",
+    "tarball": "https://registry.npmjs.org/pretty-print-json/-/pretty-print-json-3.0.8.tgz"
+  }
+}
