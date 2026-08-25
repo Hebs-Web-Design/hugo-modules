@@ -1,6 +1,6 @@
-github.com/hebs-web-design/hugo-modules/alpinejs/search v1.4.2 h1:bo3KnzxuzfUntV9VgckXsYj4l2C2Bmq3AhWnUWz9N0c=
-github.com/hebs-web-design/hugo-modules/alpinejs/search v1.4.2/go.mod h1:TF2dZeVkkP/+NY8oMGcEPTy+/6ZJU3qFzmyZp2sKEx8=
-github.com/hebs-web-design/hugo-modules/alpinejs/toggler v1.5.2 h1:MyqnYXidgj3LzJk/AzaWWrDgfk8KgRkOPnCeg7Loyd4=
-github.com/hebs-web-design/hugo-modules/alpinejs/toggler v1.5.2/go.mod h1:rC5x4zo0x7PvIOuqVylcACie7fp7hAfD40i7yHSQor8=
-github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21400.160 h1:RWZDYyOdsSrn3ilsVYGPZERJ32Yi9MNJLD8Q7D2zG+Y=
-github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21400.160/go.mod h1:tWh5rYhaSFloG0EzWi/fZ6YLVuG2Q8nepYntdPEjKfc=
+github.com/hebs-web-design/hugo-modules/alpinejs/search v1.4.3 h1:goG0FPY2cVzoQaRb2Rnu4lO9L83MEj3Qq8GVsZe+Bu8=
+github.com/hebs-web-design/hugo-modules/alpinejs/search v1.4.3/go.mod h1:5Qb2QsWu5qdVOda2qbNsP0rL6su13c/YbrXDuhGfJSs=
+github.com/hebs-web-design/hugo-modules/alpinejs/toggler v1.6.0 h1:LOlRPuJlzu9HkxLkUaCTC7KUZeAmMq+5GoyEs3pTL68=
+github.com/hebs-web-design/hugo-modules/alpinejs/toggler v1.6.0/go.mod h1:jkqFNm8ePAeFxFxtaYf60BQwoyDUEGASvQeWzkHxNUU=
+github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21500.190 h1:t/q3mx0ht5oU0uslyOxcdiMS+7RmbrfHRX44vWL8fEg=
+github.com/hebs-web-design/hugo-modules/alpinejs/v3 v3.21500.190/go.mod h1:0DhrFI+6VkZ24KsPQSqlAZFCy2+4Axb5Hm/yl3rpg08=

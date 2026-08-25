@@ -1,7 +1,0 @@
-[[module.mounts]]
-  source = "package/dist"
-  target = "assets/pretty-print-json"
-
-[[module.mounts]]
-  source = "package/dist/pretty-print-json.js"
-  target = "assets/pretty-print-json/index.esm.js"
