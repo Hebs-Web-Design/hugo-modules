@@ -53,16 +53,16 @@
             <div class="{{ $textclass }} cursor-pointer transition" x-ref="menu{{ $n }}" @click="toggle">
               {{- if .Page }}
               <a class="{{ $textclass }}{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-                {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
                 {{- .Title -}}
               </a>
               {{- else }}
               <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="{{ $activeclass }}"{{ end }}>
-                {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
                 {{- .Title -}}
               </span>
               {{- end -}}
-              {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "inline ml-2" "width" "16") -}}
+              {{- partial "b-icon.html" (dict "icon" "chevron-down" "class" "inline ml-2 size-4") -}}
             </div>
             <div class="{{ $dividerclass }} border-t-2 w-52 rounded-b-lg drop-shadow-lg bg-white"
               x-show="open"
@@ -72,7 +72,7 @@
                 {{- range .Children -}}
                 <li class="lg:px-4 py-2 text-sm">
                   <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-                    {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                    {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
                     {{- .Title -}}
                   </a>
                 </li>
@@ -82,12 +82,12 @@
           </div>
           {{- else if .Params.button -}}
           <a class="{{ $buttonclass }} min-w-0 rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
-            {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+            {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
             {{ .Title -}}
           </a>
           {{- else -}}
           <a class="{{ $textclass }} transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
-            {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+            {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
             {{ .Title -}}
           </a>
           {{- end }}
@@ -123,12 +123,12 @@
           <li class="{{ $textclass }}">
             {{- if .Page }}
             <a class="{{ $textclass }} focus:outline-none{{ if or ($currentPage.IsMenuCurrent .Menu .) ($currentPage.HasMenuCurrent .Menu .) }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-              {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+              {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
               {{- .Title -}}
             </a>
             {{- else }}
             <span{{ if $currentPage.HasMenuCurrent .Menu . }} class="{{ $activeclass }}"{{ end }}>
-              {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+              {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
               {{- .Title -}}
             </span>
             {{- end }}
@@ -138,7 +138,7 @@
               {{- range .Children }}
               <li class="py-2 text-sm">
                 <a class="{{ $textclass }} focus:outline-none transition{{ if $currentPage.IsMenuCurrent .Menu . }} {{ $activeclass }}{{ end }}" href="{{ .URL }}">
-                  {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+                  {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
                   {{- .Title -}}
                 </a>
               </li>
@@ -148,12 +148,12 @@
         </ul>
         {{- else if .Params.button }}
         <a class="{{ $buttonclass }} min-w-max rounded-full px-2 py-4 transition hover:brightness-110 hover:drop-shadow-lg no-underline" href="{{ .URL }}">
-          {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+          {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
           {{- .Title -}}
         </a>
         {{- else }}
         <a class="{{ $textclass }} focus:outline-none transition{{ if $currentPage.IsMenuCurrent .Menu . }} font-bold{{ end }}" href="{{ .URL }}">
-          {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1" "width" "20" "height" "20") }}{{ end -}}
+          {{- with .Params.icon }}{{ partial "b-icon" (dict "icon" . "class" "inline mr-1 size-5") }}{{ end -}}
           {{- .Title -}}
         </a>
         {{- end}}
